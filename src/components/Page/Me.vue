@@ -23,5 +23,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .ceshi{
+  width:640px;
+  height: 200px;
+  border: 1px solid red;
+  font-size: 16px;
 }
 </style>

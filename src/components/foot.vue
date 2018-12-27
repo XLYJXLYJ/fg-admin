@@ -1,6 +1,6 @@
 <template>
   <div>
-    <tabbar>
+    <tabbar class="foot">
       <tabbar-item link="/Statistics" :selected="$route.path == '/Statistics'">
         <img slot="icon" src="../assets/statistics_icon@3x.png">
         <img slot="icon-active" src="../assets/statistics_icon_choose@3x.png">
@@ -38,5 +38,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
+.foot{
+  width: 100%;
+  position: fixed;
+  bottom: 0px;
+}
 </style>
