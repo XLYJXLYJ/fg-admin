@@ -1,16 +1,102 @@
 <template>
   <div class="statistics_contain">
-      <div class="head">
-        <img src="../../assets/statistics_icon_back@2x.png" class="close_icon">
-        <span class="close">关闭</span>
-        <span class='fg-center'>凡购运营中心后台</span>
-        <img class="reload" src="../../assets/statistics_icon_refresh@2x.png">
+      <VHead></VHead>
+      <div class="team_situation">
+        <div class="team_situation_head">
+          <img src="../../assets/statistics_icon_team@2x.png">
+          <span>团队状况</span>
+        </div>
+        <div class="team_situation_line"></div>
+        <!-- <ul>
+          <li>
+            <span class="circle"> </span><span>直属：</span><span class="number">4000</span>
+          </li>
+          <li>
+            <span class="circle"></span><span>推荐：</span><span class="number">16000</span>
+          </li>
+          <li>
+            <span class="circle"></span><span>运营商：</span><span class="number">600</span>
+          </li>
+        </ul> -->
+        <div class="team_situation_right">
+          <v-chart
+            :data="data"
+            :padding="[0, 'auto']">
+            <v-tooltip disabled />
+            <v-scale y :options="yOptions" />
+            <v-pie :radius="0.6" :inner-radius="0.8" series-field="name" :colors="['#FE5D4D','#3BA4FF','#737DDE']" />
+            <v-legend :options="legendOptions" />
+            <v-guide type="html" :options="htmlOptions" />
+          </v-chart>
+        </div>
+        <div class="team_situation_right_line"></div>
       </div>
-      <div class="team_situation"></div>
-      <div class="data_statistics"></div>
-      <div class="revenue_statistics"></div>
+      <div class="data_statistics">
+        <div class="data_statistics_head">
+          <img src="../../assets/statistics_icon_data@2x.png">
+          <span>数据统计</span>
+        </div>
+        <div class="data_statistics_line"></div>
+        <div class="data_statistics_middle">
+          <div class="data_statistics_middle_center_box">
+            <button class="data_statistics_middle_button1" :class="{select_button:is_select_buttn,no_select_button:!is_select_buttn}" @click="IsSelectButton1()">今日</button>
+            <button class="data_statistics_middle_button2" :class="{select_button:!is_select_buttn,no_select_button:is_select_buttn}" @click="IsSelectButton2()">昨日</button>
+          </div>
+        </div>
+        <div class="data_statistics_foot">
+          <ul>
+            <li>
+              <span class="data_statistics_foot_money_number">10</span>
+              <p>新增团队人数</p>
+            </li>
+            <li>
+              <span class="data_statistics_foot_money_number">18</span>
+              <p>付款笔数</p>
+            </li>
+            <li>
+              <span class="data_statistics_foot_money_icon">￥</span>
+              <span class="data_statistics_foot_money_number">860.65</span>
+              <p>消费收益预估</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="revenue_statistics">
+        <div class="revenue_statistics_head">
+          <img src="../../assets/statistics_icon_profit@2x.png">
+          <span>收益统计</span>
+        </div>
+        <div class="revenue_statistics_line"></div>
+        <div class="revenue_statistics_middle">
+          <div class="revenue_statistics_middle_center_box">
+            <span class="revenue_statistics_money_icon">￥</span>
+            <span class="revenue_statistics_money_number">36980.36</span>
+            <p>累计收益</p>
+          </div>
+        </div>
+        <div class="revenue_statistics_foot">
+          <ul>
+            <li>
+              <span class="revenue_statistics_foot_money_icon">￥</span>
+              <span class="revenue_statistics_foot_money_number">8860.65</span>
+              <p>上月结算</p>
+            </li>
+            <li>
+              <span class="revenue_statistics_foot_money_icon">￥</span>
+              <span class="revenue_statistics_foot_money_number">7860.65</span>
+              <p>本月预估</p>
+            </li>
+            <li>
+              <span class="revenue_statistics_foot_money_icon">￥</span>
+              <span class="revenue_statistics_foot_money_number">9860.65</span>
+              <p>上月预估</p>
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="team_statistics_box">
         <div class="team_statistics"><span>团队统计</span><img src="../../assets/statistics_icon_enter@2x.png"></div>
+        <div class="team_statistics_line"></div>
         <div class="team_member_statement"><span>团队会员对账单</span><img src="../../assets/statistics_icon_enter@2x.png"></div>
       </div>
       <foot></foot>
@@ -18,16 +104,59 @@
 </template>
 
 <script>
+import { VChart, VLine, VArea, VTooltip, VLegend, VBar, VPie, VGuide, VScale } from 'vux'
 import foot from '@/components/foot'
+import VHead from '@/components/header'
+const data = [
+  { name: '股票类', percent: 83.59, a: '1' },
+  { name: '债券类', percent: 2.17, a: '1' },
+  { name: '现金类', percent: 14.24, a: '1' }
+]
+
+const map = {}
+data.map(obj => {
+  map[obj.name] = obj.percent + '%'
+})
+
 export default {
-  name: 'Statistics',
+  components: {
+    VChart,
+    VLine,
+    VArea,
+    VTooltip,
+    VLegend,
+    VBar,
+    VPie,
+    VGuide,
+    VScale,
+    foot,
+    VHead
+  },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      is_select_buttn: true,
+      map,
+      htmlOptions: {
+        position: [ '50%', '45%' ],
+        html: `
+          <div style="width: 250px;height: 40px;text-align: center;">
+            <div style="font-size: 16px">总资产</div>
+            <div style="font-size: 24px">133.08 亿</div>
+          </div>`
+      },
+      legendOptions: {
+        position: 'left',
+        itemFormatter (val) {
+          return val + '  ' + map[val]
+        }
+      },
+      yOptions: {
+        formatter (val) {
+          return val * 100 + '%'
+        }
+      },
+      data
     }
-  },
-  components: {
-    foot
   }
 }
 </script>
@@ -42,110 +171,407 @@ export default {
   padding: 0px;
   background-color: #F5F5F5;
   padding-bottom: 105px;
-  .head{
-    height: 64px;
-    width: 100%;
-    position: fixed;
-    top: 0px;
-    z-index: 1000;
-    .close_icon{
-      width: 17px;
-      height: 30px;
-      position: absolute;
-      top: 17px;
-      left: 20px;
-    }
-    .close{
-      width: 58px;
-      height: 27px;
-      position: absolute;
-      top: 17px;
-      left: 72px;
-      font-size: 29px;
-      color: #333333;
-      font-weight: Regular;
-      font-family: PingFang-SC-Regular;
-    }
-    .fg-center{
-      width: 236px;
-      height: 27px;
-      position: absolute;
-      top: 17px;
-      left: 202px;
-      color: #333333;
-      font-size: 29px;
-      font-weight: Regular;
-      font-family: PingFang-SC-Regular;
-    }
-    .reload{
-      width: 30px;
-      height: 30px;
-      position: absolute;
-      top: 20px;
-      right: 20px;
-    }
-  }
   .team_situation{
     height: 428px;
     width: 599px;
-    border: 1px solid red;
     position: relative;
     left: 20px;
     top: 84px;
     z-index: 100;
+    background-color: #fff;
+      .team_situation_head{
+      height: 67px;
+      width: 599px;
+      position: relative;
+      left: 0px;
+      top: 0px;
+      img{
+        height: 34px;
+        width: 34px;
+        position: absolute;
+        left: 20px;
+        top: 16px;
+      }
+      span{
+        height: 28px;
+        width: 118px;
+        position: absolute;
+        left: 63px;
+        top: 19px;
+        font-family: PingFang-SC-Bold;
+        font-weight: Bold;
+        color: #333333;
+        font-size: 29px;
+      }
+    }
+    .team_situation_line{
+      height: 1px;
+      width: 579px;
+      position: absolute;
+      left: 20px;
+      top: 67px;
+      background-color: #E8E8EA;
+      z-index: 1000;
+    }
+    .team_situation_right_line{
+      height: 20px;
+      width: 599px;
+      position: absolute;
+      left: 0px;
+      top: 428px;
+      background-color: #F5F5F5;
+      z-index: 1000;
+    }
+    .team_situation_right{
+      width:599px;
+      height: 200px!important;
+      position: absolute;
+      top: 67px;
+    }
+    .noselect{
+      height: 200px!important;
+    }
   }
   .data_statistics{
     height: 294px;
     width: 599px;
-    border: 1px solid red;
     position: relative;
     left: 20px;
     top: 104px;
     z-index: 100;
+    background-color: #fff;
+    .data_statistics_head{
+      height: 67px;
+      width: 599px;
+      position: relative;
+      left: 0px;
+      top: 0px;
+      img{
+        height: 34px;
+        width: 34px;
+        position: absolute;
+        left: 20px;
+        top: 16px;
+      }
+      span{
+        height: 28px;
+        width: 118px;
+        position: absolute;
+        left: 63px;
+        top: 19px;
+        font-family: PingFang-SC-Bold;
+        font-weight: Bold;
+        color: #333333;
+        font-size: 29px;
+      }
+    }
+    .data_statistics_line{
+      height: 1px;
+      width: 579px;
+      position: absolute;
+      left: 20px;
+      top: 67px;
+      background-color: #E8E8EA;
+      z-index: 1000;
+    }
+    .data_statistics_middle{
+      position: absolute;
+      left: 20px;
+      top: 88px;
+      width:558px;
+      height:140px;
+      .data_statistics_middle_button1{
+        position: absolute;
+        left: 150px;
+        top: 0px;
+        width:130px;
+        height:49px;
+        font-size: 24px;
+        color: #FF5100;
+        border: 1px solid #FF5100;
+        font-weight: Regular;
+        font-family: PingFang-SC-Regular;
+        border-radius:9px 0px 0px 9px;
+      }
+      .data_statistics_middle_button2{
+        position: absolute;
+        left: 280px;
+        top: 0px;
+        width:130px;
+        height:49px;
+        font-size: 24px;
+        color: #FF5100;
+        border: 1px solid #FF5100;
+        font-weight: Regular;
+        font-family: PingFang-SC-Regular;
+        border-radius:0px 9px 9px 0px;
+      }
+    }
+    .data_statistics_foot{
+      position: absolute;
+      left: 20px;
+      top: 139px;
+      width:558px;
+      height:155px;
+      ul{
+        width: 100%;
+        height: 100%;
+        li{
+          float: left;
+          width: 186px;
+          height: 100%;
+          position: relative;
+          text-align: center;
+          .data_statistics_foot_money_icon{
+            position: absolute;
+            left: 21px;
+            top: 64px;
+            width:26px;
+            height:16px;
+            color: #333;
+            font-family: PingFang-SC-Bold;
+            font-weight: Bold;
+            font-size: 20px;
+          }
+          .data_statistics_foot_money_number{
+            position: relative;
+            top: 58px;
+            width:26px;
+            height:23px;
+            color: #333;
+            font-family: PingFang-SC-Bold;
+            font-weight: Bold;
+            margin: 0 auto;
+            font-size:29px;
+          }
+          p{
+            position: absolute;
+            left: 22px;
+            top: 98px;
+            width:146px;
+            height:23px;
+            color: #999;
+            font-size:24px;
+            font-family: PingFang-SC-Bold;
+            font-weight: Regular;
+          }
+        }
+      }
+    }
   }
   .revenue_statistics{
     height: 383px;
     width: 599px;
-    border: 1px solid red;
     position: relative;
     left: 20px;
     top: 124px;
     z-index: 100;
+    background-color: #fff;
+    .revenue_statistics_head{
+      height: 67px;
+      width: 599px;
+      position: relative;
+      left: 0px;
+      top: 0px;
+      img{
+        height: 34px;
+        width: 34px;
+        position: absolute;
+        left: 20px;
+        top: 16px;
+      }
+      span{
+        height: 28px;
+        width: 118px;
+        position: absolute;
+        left: 63px;
+        top: 19px;
+        font-family: PingFang-SC-Bold;
+        font-weight: Bold;
+        color: #333333;
+        font-size: 29px;
+      }
+    }
+    .revenue_statistics_line{
+      height: 1px;
+      width: 579px;
+      position: absolute;
+      left: 20px;
+      top: 67px;
+      background-color: #E8E8EA;
+    }
+    .revenue_statistics_middle{
+      position: absolute;
+      left: 20px;
+      top: 88px;
+      width:558px;
+      height:140px;
+      background:linear-gradient(-90deg,rgba(255,81,0,1),rgba(255,143,0,1));
+      border-radius:9px;
+      .revenue_statistics_middle_center_box{
+        text-align: center;
+        position: relative;
+        top: 38px;
+        width: 100%;
+        min-height: 40px;
+        .revenue_statistics_money_icon{
+        top: 38px;
+        width:28px;
+        height:40px;
+        color: #fff;
+        font-family: PingFang-SC-Bold;
+        font-weight: Bold;
+        font-size: 22px;
+        }
+        .revenue_statistics_money_number{
+          width:558px;
+          height:140px;
+          color: #fff;
+          font-family: PingFang-SC-Bold;
+          font-weight: Bold;
+          font-size: 29px;
+        }
+        p{
+          margin: 0 auto;
+          width:82px;
+          height:20px;
+          color: #fff;
+          font-family: PingFang-SC-Bold;
+          font-weight: Regular;
+          font-size: 20px;
+          margin-top: 19px;
+        }
+      }
+    }
+    .revenue_statistics_foot{
+      position: absolute;
+      left: 20px;
+      top: 228px;
+      width:558px;
+      height:155px;
+      ul{
+        width: 100%;
+        height: 100%;
+        li{
+          float: left;
+          width: 186px;
+          height: 100%;
+          position: relative;
+          text-align: center;
+          .revenue_statistics_foot_money_icon{
+            position: absolute;
+            left: 21px;
+            top: 60px;
+            width:26px;
+            height:16px;
+            color: #333;
+            font-family: PingFang-SC-Bold;
+            font-weight: Bold;
+            font-size: 20px;
+          }
+          .revenue_statistics_foot_money_number{
+            position: absolute;
+            left: 46px;
+            top: 57px;
+            width:26px;
+            height:23px;
+            color: #333;
+            font-family: PingFang-SC-Bold;
+            font-weight: Bold;
+            font-size: 29px;
+          }
+          p{
+            position: absolute;
+            left: 41px;
+            top: 98px;
+            width:96px;
+            height:23px;
+            color: #999;
+            font-size:24px;
+            font-family: PingFang-SC-Bold;
+            font-weight: Regular;
+          }
+        }
+      }
+    }
   }
   .team_statistics_box{
     height: 150px;
     width: 599px;
-    border: 1px solid red;
     position: relative;
     left: 20px;
     top: 144px;
     z-index: 100;
+    background-color: #fff;
     .team_statistics{
       height: 75px;
       width: 599px;
-      border: 1px solid red;
       position: absolute;
       left: 0px;
       top: 0px;
       z-index: 100;
+      font-size: 29px;
+      span{
+        position: absolute;
+        top: 24px;
+        left: 20px;
+        height: 27px;
+        width:118px;
+        font-weight: Regular;
+        font-family: PingFang-SC-Regular;
+      }
       img{
+        position: absolute;
+        top: 25px;
+        right: 20px;
         height: 23px;
         width:13px;
       }
     }
+    .team_statistics_line{
+      height: 1px;
+      width: 579px;
+      position: absolute;
+      left: 20px;
+      top: 75px;
+      z-index: 100;
+      background-color: #E8E8EA;
+    }
     .team_member_statement{
       height: 75px;
       width: 599px;
-      border: 1px solid red;
       position: absolute;
       left: 0px;
       top: 75px;
       z-index: 100;
+      font-size: 29px;
+      color: #333333;
+      span{
+        position: absolute;
+        top: 24px;
+        left: 20px;
+        height: 27px;
+        width:208px;
+        color: #333333;
+        font-weight: Regular;
+        font-family: PingFang-SC-Regular;
+      }
       img{
+        position: absolute;
+        top: 25px;
+        right: 20px;
         height: 23px;
         width:13px;
       }
     }
   }
+}
+.select_button{
+  background-color: #FF5100;
+  color: #fff!important;
+}
+.no_select_button{
+  background-color: #fff!important;
+  color: #FF5100;
 }
 </style>

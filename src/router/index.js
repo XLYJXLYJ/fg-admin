@@ -21,6 +21,10 @@ export default new Router({
     {
       path: '/Me',
       component: resolve => require(['@/components/Page/Me'], resolve)
+    },
+    {
+      path: '/Editpassage',
+      component: resolve => require(['@/components/Page/Editpassage'], resolve)
     }
   ]
 })

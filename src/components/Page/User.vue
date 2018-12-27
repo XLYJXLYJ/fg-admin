@@ -1,12 +1,14 @@
 <template>
   <div>
-      <h1>User</h1>
-      <foot></foot>
+    <VHead></VHead>
+    <h1>User</h1>
+    <foot></foot>
   </div>
 </template>
 
 <script>
 import foot from '@/components/foot'
+import VHead from '@/components/header'
 export default {
   name: 'Statistics',
   data () {
@@ -15,7 +17,8 @@ export default {
     }
   },
   components: {
-    foot
+    foot,
+    VHead
   }
 }
 </script>
