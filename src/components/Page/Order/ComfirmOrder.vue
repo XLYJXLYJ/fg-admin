@@ -122,7 +122,6 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            z-index: 1000;
         }
         .order_detail_line{
             width:599px;

@@ -1,11 +1,23 @@
 <template>
     <div class="head">
-        <img src="../assets/statistics_icon_back@2x.png" class="close_icon">
-        <span class="close">关闭</span>
+        <img src="../assets/statistics_icon_back@2x.png" class="close_icon" @click="Back">
+        <span class="close" @click="Back">关闭</span>
         <span class='fg-center'>凡购运营中心后台</span>
-        <img class="reload" src="../assets/statistics_icon_refresh@2x.png">
+        <img class="reload" src="../assets/statistics_icon_refresh@2x.png" @click="Reload">
     </div>
 </template>
+<script>
+export default {
+  methods: {
+    Reload () {
+      this.$router.go(0)
+    },
+    Back () {
+      this.$router.go(-1)
+    }
+  }
+}
+</script>
 <style lang="less" scoped>
 .head{
     height: 64px;

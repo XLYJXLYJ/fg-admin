@@ -6,6 +6,19 @@ import router from '@/router'
 import App from '@/App'
 import store from '@/vuex/store'
 import 'lib-flexible/flexible.js'
+import md5 from 'js-md5'
+import { Alert } from 'vux'
+import axios from 'axios'
+
+Vue.prototype.axios = axios
+
+Vue.component('alert', Alert)
+
+Vue.prototype.$md5 = md5
+
+Vue.prototype.BackFunction = function () {
+  this.$router.go(-1)
+}
 
 FastClick.attach(document.body)
 

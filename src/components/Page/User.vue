@@ -13,9 +13,9 @@
       </div>
       <div class="tab_class">
         <ul>
-          <li><router-link to="/user/Paymentuser" class="tab_class_user">注册时间</router-link></li>
-          <li><router-link to="/user/Comfirmuser" class="tab_class_user mg40">团队总数</router-link></li>
-          <li><router-link to="/user/Lostuser" class="tab_class_user mg80">直属</router-link></li>
+          <li><router-link to="/User/UserTime" class="tab_class_user">注册时间</router-link></li>
+          <li><router-link to="/User/UserNumber" class="tab_class_user mg40">团队总数</router-link></li>
+          <li><router-link to="/User/UserDirectly" class="tab_class_user mg80">直属</router-link></li>
         </ul> 
         <router-view></router-view>
       </div>

@@ -95,9 +95,9 @@
         </div>
       </div>
       <div class="team_statistics_box">
-        <div class="team_statistics"><span>团队统计</span><img src="../../assets/statistics_icon_enter@2x.png"></div>
-        <div class="team_statistics_line"></div>
-        <div class="team_member_statement"><span>团队会员对账单</span><img src="../../assets/statistics_icon_enter@2x.png"></div>
+        <router-link to='/StatisticsDetail'><div class="team_statistics"><span>团队统计</span><img src="../../assets/statistics_icon_enter@2x.png"></div></router-link>
+        <!-- <div class="team_statistics_line"></div>
+        <div class="team_member_statement"><span>团队会员对账单</span><img src="../../assets/statistics_icon_enter@2x.png"></div> -->
       </div>
       <foot></foot>
   </div>
@@ -498,7 +498,7 @@ export default {
     }
   }
   .team_statistics_box{
-    height: 150px;
+    height: 75px;
     width: 599px;
     position: relative;
     left: 20px;
@@ -519,6 +519,7 @@ export default {
         left: 20px;
         height: 27px;
         width:118px;
+        color: #333;
         font-weight: Regular;
         font-family: PingFang-SC-Regular;
       }

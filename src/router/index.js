@@ -8,11 +8,30 @@ export default new Router({
     {path: '/', redirect: '/Statistics'},
     {
       path: '/Statistics',
+      name: 'Statistics',
       component: resolve => require(['@/components/Page/Statistics'], resolve)
     },
     {
+      path: '/StatisticsDetail',
+      component: resolve => require(['@/components/Page/Statistics/StatisticsDetail'], resolve)
+    },
+    {
       path: '/User',
-      component: resolve => require(['@/components/Page/User'], resolve)
+      component: resolve => require(['@/components/Page/User'], resolve),
+      children: [
+        {
+          path: '/User/UserTime',
+          component: resolve => require(['@/components/Page/User/UserDetail'], resolve)
+        },
+        {
+          path: '/User/UserNumber',
+          component: resolve => require(['@/components/Page/User/UserDetail'], resolve)
+        },
+        {
+          path: '/User/UserDirectly',
+          component: resolve => require(['@/components/Page/User/UserDetail'], resolve)
+        }
+      ]
     },
     {
       path: '/Order',

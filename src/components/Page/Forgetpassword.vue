@@ -2,24 +2,45 @@
   <div>
     <VHead></VHead>
     <div class="change_password">
+      <alert v-model="alert_show">{{error_type}}</alert>
       <div class="me">
-          <img src="../../assets/statistics_icon_back2@2x.png">
+          <img src="../../assets/statistics_icon_back2@2x.png" @click="BackFunction()">
           <p>忘记密码</p>
       </div>
+      <form>
+      <!-- 第一个表单 -->
+      <img class="one_close" src="../../assets/delete@2x.png" v-show="forget_password_phone" @click="ClearPhone()">
       <div class="get_identifying_code">
-        <input type="text" placeholder="请输入您的手机号">
+        <input type="text" v-model="phone" placeholder="请输入您的手机号" autocomplete="off" @focus.stop.prevent="ForgetPasswordPhoneFocus()" @blur.stop.prevent="ForgetPasswordPhoneBlur()">
       </div>
+      <!-- 第二个表单 -->
+      <img class="two_close" src="../../assets/delete@2x.png" v-show="forget_password_picture_code" @click="ClearForgetPasswordPictureCode()">
+      <div class="get_picture_identifying_code">
+        <input type="text" v-model="picture_code" placeholder="请输入您的图形验证码" autocomplete="off" @focus.stop.prevent="ForgetPasswordPictureCodeFocus()" @blur.stop.prevent="ForgetPasswordPictureCodeBlur()">
+        <img :src="get_picture_identifying_code" @click="ReloadImgCode()">
+      </div>
+      <!-- 第三个表单 -->
+      <img class="three_close" src="../../assets/delete@2x.png" v-show="forget_password_phone_code" @click="ClearForgetPasswordPhoneCode()">
       <div class="get_phone_identifying_code">
-        <input type="text" placeholder="请输入您的验证码">
-        <button>获取验证码</button>
+        <input type="text" v-model="phone_code" placeholder="请输入您的手机验证码" autocomplete="off" @focus.stop.prevent="ForgetPasswordPhoneCodeFocus()" @blur.stop.prevent="ForgetPasswordPhoneCodeBlur()">
+        <button @click.stop="GetCodeNumber">获取验证码</button>
       </div>
+      <!-- 第四个表单 -->
+      <img class="four_close" src="../../assets/delete@2x.png" v-show="forget_password_password" @click="ClearForgetPasswordPassword()">
+      <img src="../../assets/password_icon_eye@2x.png" class="register_show_passage" @click="SwitchPassword()">
       <div class="set_password">
-        <input type="text" placeholder="请输入6-16位字母和数字组合新密码">
+        <input :type="text_or_password" v-model="password" placeholder="请输入6-16位字母和数字组合新密码" autocomplete="off" @focus.stop.prevent="ForgetPasswordPasswordFocus()" @blur.stop.prevent="ForgetPasswordPasswordBlur()">
       </div>
-      <img src="../../assets/password_icon_eye@2x.png" class="register_show_passage">
+      <!-- 第五个表单 -->
+      <img class="five_close" src="../../assets/delete@2x.png" v-show="forget_password_comfirm_password" @click="ClearForgetPasswordComfirmPassword()">
+      <img src="../../assets/password_icon_eye@2x.png" class="confirm_register_show_passage" @click="SwitchConfirmPassword()">
+      <div class="confirm_set_password">
+        <input :type="confirm_text_or_password" v-model="confirm_password" placeholder="请输入6-16位字母和数字组合新密码" autocomplete="off" @focus.stop.prevent="ForgetPasswordComfirmPasswordFocus()" @blur.stop.prevent="ForgetPasswordComfirmPasswordBlur()">
+      </div>
       <div class="setpassword_confirm">
-        <button>确定</button>
+      <button @click="ConfirmChangePassword()" :class="{forget_password_button:is_forget_password_button,ok_forget_password_button:!is_forget_password_button}">确定</button>
       </div>
+      </form>
     </div>
     <foot></foot>
   </div>
@@ -28,11 +49,202 @@
 <script>
 import foot from '@/components/foot'
 import VHead from '@/components/header'
+import Qs from 'qs'
 export default {
   name: 'Editpassage',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      get_picture_identifying_code: '', // 图形验证码
+      phone: '', // 手机号
+      codeTime: '', // 时间戳
+      picture_code: '', // 图片验证码
+      phone_code: '', // 手机验证码
+      password: '', // 输入密码
+      confirm_password: '', // 确认密码
+      error_type: '', // 错误类型
+      alert_show: false, // 是否弹出错误
+      is_forget_password_button: true, // 默认确认提交按钮不可点击
+      text_or_password: 'password', // 默认密码不可见
+      confirm_text_or_password: 'password', // 默认确认密码不可见
+      forget_password_phone: false, // 默认输入手机号小图标不可见
+      forget_password_picture_code: false, // 默认输入图形验证码小图标不可见
+      forget_password_phone_code: false, // 默认输入手机号验证码小图标不可见
+      forget_password_password: false, // 默认输入密码小图标不可见
+      forget_password_comfirm_password: false // 默认输入确认密码小图标不可见
+    }
+  },
+  watch: {
+    'phone': function () {
+      this.IsShowLoginButtonColor()
+    },
+    'picture_code': function () {
+      this.IsShowLoginButtonColor()
+    },
+    'phone_code': function () {
+      this.IsShowLoginButtonColor()
+    },
+    'password': function () {
+      this.IsShowLoginButtonColor()
+    },
+    'confirm_password': function () {
+      this.IsShowLoginButtonColor()
+    }
+  },
+  created () {
+    this.GetImgCode()
+  },
+  methods: {
+    // 第一个表单函数
+    ForgetPasswordPhoneBlur () {
+      this.forget_password_phone = false
+    },
+    ForgetPasswordPhoneFocus () {
+      this.forget_password_phone = true
+    },
+    ClearPhone () {
+      this.phone = ''
+    },
+    // 第二个表单函数
+    ForgetPasswordPictureCodeBlur () {
+      this.forget_password_picture_code = false
+    },
+    ForgetPasswordPictureCodeFocus () {
+      this.forget_password_picture_code = true
+    },
+    ClearForgetPasswordPictureCode () {
+      this.picture_code = ''
+    },
+    // 第三个表单函数
+    ForgetPasswordPhoneCodeBlur () {
+      this.forget_password_phone_code = false
+    },
+    ForgetPasswordPhoneCodeFocus () {
+      this.forget_password_phone_code = true
+    },
+    ClearForgetPasswordPhoneCode () {
+      this.phone_code = ''
+    },
+    // 第四个表单函数
+    ForgetPasswordPasswordBlur () {
+      this.forget_password_password = false
+    },
+    ForgetPasswordPasswordFocus () {
+      this.forget_password_password = true
+    },
+    ClearForgetPasswordPassword () {
+      this.password = ''
+    },
+    // 第五个表单函数
+    ForgetPasswordComfirmPasswordBlur () {
+      this.forget_password_comfirm_password = false
+    },
+    ForgetPasswordComfirmPasswordFocus () {
+      this.forget_password_comfirm_password = true
+    },
+    ClearForgetPasswordComfirmPassword () {
+      this.confirm_password = ''
+    },
+    SwitchPassword () {
+      if (this.text_or_password === 'text') {
+        this.text_or_password = 'password'
+      } else {
+        this.text_or_password = 'text'
+      }
+    },
+    SwitchConfirmPassword () {
+      if (this.confirm_text_or_password === 'text') {
+        this.confirm_text_or_password = 'password'
+      } else {
+        this.confirm_text_or_password = 'text'
+      }
+    },
+    // 图片验证码
+    GetImgCode () {
+      this.codeTime = Date.parse(new Date())
+      this.axios.get('/media/imgCode?codeTime=' + this.codeTime)
+      .then(response => {
+        if (response.data.data) {
+          this.get_picture_identifying_code = response.data.data
+        } else {
+          this.error_type = '服务端错误，请稍后登录'
+          this.alert_show = true
+        }
+      })
+    },
+    // 刷新验证码
+    ReloadImgCode () {
+      this.GetImgCode()
+    },
+    // 手机验证码
+    GetCodeNumber () {
+      if (!this.phone) {
+        this.error_type = '请先填写手机号'
+        this.alert_show = true
+      } else if (!this.picture_code) {
+        this.error_type = '请先填写图形验证码'
+        this.alert_show = true
+      } else {
+        let concertcodeTime = this.codeTime + this.picture_code
+        concertcodeTime = concertcodeTime.toString()
+        let data = {
+          mobile: this.phone.toString(),
+          codeTime: concertcodeTime,
+          imgCode: this.picture_code
+        }
+        data = Qs.stringify(data)
+        this.axios.post('/media/ssm/send/imgCode?' + data)
+        .then(response => {
+          if (response.data.data) {
+            this.GetImgCode()
+          } else {
+            this.error_type = '服务端错误，请稍后请求'
+            this.alert_show = true
+          }
+        })
+      }
+    },
+    IsShowLoginButtonColor () {
+      if (this.phone && this.password && this.phone_code && this.password && this.confirm_password) {
+        this.is_forget_password_button = false
+      } else {
+        this.is_forget_password_button = true
+      }
+    },
+    // 确认修改密码
+    ConfirmChangePassword () {
+      let regpassword = /^[a-zA-Z0-9]\w{6,16}$/
+      let data = {
+        mobile: this.phone.toString(),
+        password: this.$md5(this.confirm_password),
+        verifiCode: this.phone_code
+      }
+      if (!this.phone) {
+        this.error_type = '手机号不能为空'
+        this.alert_show = true
+      } else if (!this.picture_code) {
+        this.error_type = '图形验证码不能为空'
+        this.alert_show = true
+      } else if (!this.phone_code) {
+        this.error_type = '手机验证码不能为空'
+        this.alert_show = true
+      } else if (!regpassword.test(this.password)) {
+        this.error_type = '密码长度（6~20 英文+数字）'
+        this.alert_show = true
+      } else if (this.formRegister.password !== this.formRegister.checkPassword) {
+        this.error_type = '密码输入不一致'
+        this.alert_show = true
+      } else {
+        data = Qs.stringify(data)
+        this.axios.get('/media/info/modifyPassword?' + data)
+        .then(response => {
+          if (response.data.data) {
+            this.get_picture_identifying_code = response.data.data
+          } else {
+            this.error_type = '服务端错误，请稍后登录'
+            this.alert_show = true
+          }
+        })
+      }
     }
   },
   components: {
@@ -96,9 +308,38 @@ export default {
         right: 26px; 
     }
   }
-  .get_phone_identifying_code{
+  .get_picture_identifying_code{
     position: absolute;
     top: 355px;
+    left: 34px;
+    width: 572px;
+    height: 93px;
+    background-color: #fff;
+    border-bottom: 1px solid #E8E8EA;
+    input{
+        width: 336px;
+        height: 29px;
+        position: absolute;
+        top: 33px;
+        left: 26px;
+        font-size: 29px;
+    }
+    img{
+        width: 137px;
+        height: 51px;
+        position: absolute;
+        top: 21px;
+        right: 26px; 
+        color: #fff;
+        font-size:24px;
+        font-family:PingFang-SC-Regular;
+        font-weight:Regular;
+        border-radius: 9px;
+    }
+  }
+  .get_phone_identifying_code{
+    position: absolute;
+    top: 449px;
     left: 34px;
     width: 572px;
     height: 94px;
@@ -128,7 +369,33 @@ export default {
   }
   .set_password{
     position: absolute;
-    top: 450px;
+    top: 544px;
+    left: 34px;
+    width: 572px;
+    height: 94px;
+    background-color: #fff;
+    border-bottom: 1px solid #E8E8EA;
+    input{
+        width: 496px;
+        height: 29px;
+        position: absolute;
+        top: 33px;
+        left: 26px;
+        font-size: 29px;
+    }
+    .change_password_line{
+      position: absolute;
+      top: 1px;
+      left: 26px;
+      width:580px;
+      height:1px;
+      background:#E8E8EA;
+      z-index: 1000;
+    }
+  }
+  .confirm_set_password{
+    position: absolute;
+    top: 638px;
     left: 34px;
     width: 572px;
     height: 94px;
@@ -156,12 +423,21 @@ export default {
     width:38px;
     height: 22px;
     position: absolute;
-    top: 492px;
+    top: 584px;
     left: 550px;
+    z-index: 1000;
+  }
+  .confirm_register_show_passage{
+    width:38px;
+    height: 22px;
+    position: absolute;
+    top: 678px;
+    left: 550px;
+    z-index: 1000;
   }
   .setpassword_confirm{
     position: absolute;
-    top: 608px;
+    top: 796px;
     width: 100%;
     height: 94px;
     text-align: center;
@@ -171,11 +447,58 @@ export default {
       font-size:27px;
       font-family:PingFang-SC-Regular;
       font-weight:Regular;
-      color:#FF5100;
       margin: 0 auto;
       margin-top:33px;
       border-radius: 9px;
     }
+    .forget_password_button{
+      background: #E8E8EA;
+      color: #333;
+    }
+    .ok_forget_password_button{
+      background: #FF5100;
+      color: #fff;
+    }
+  }
+  .one_close{
+    width:24px;
+    height: 24px;
+    position: absolute;
+    top: 298px;
+    left: 559px;
+    z-index: 1000;
+  }
+  .two_close{
+    width:24px;
+    height: 24px;
+    position: absolute;
+    top: 392px;
+    left: 407px;
+    z-index: 1000;
+  }
+  .three_close{
+    width:24px;
+    height: 24px;
+    position: absolute;
+    top: 486px;
+    left: 407px;
+    z-index: 1000;
+  }
+  .four_close{
+    width:24px;
+    height: 24px;
+    position: absolute;
+    top: 580px;
+    left: 499px;
+    z-index: 1000;
+  }
+  .five_close{
+    width:24px;
+    height: 24px;
+    position: absolute;
+    top: 674px;
+    left: 499px;
+    z-index: 1000;
   }
 }
 </style>
