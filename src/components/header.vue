@@ -22,7 +22,7 @@
       left: 20px;
     }
     .close{
-      width: 58px;
+      width: 60px;
       height: 27px;
       position: absolute;
       top: 17px;

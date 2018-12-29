@@ -18,7 +18,7 @@
             <span class="circle"></span><span>运营商：</span><span class="number">600</span>
           </li>
         </ul> -->
-        <div class="team_situation_right">
+        <!-- <div class="team_situation_right">
           <v-chart
             :data="data"
             :padding="[0, 'auto']">
@@ -28,7 +28,7 @@
             <v-legend :options="legendOptions" />
             <v-guide type="html" :options="htmlOptions" />
           </v-chart>
-        </div>
+        </div> -->
         <div class="team_situation_right_line"></div>
       </div>
       <div class="data_statistics">
@@ -108,9 +108,9 @@ import { VChart, VLine, VArea, VTooltip, VLegend, VBar, VPie, VGuide, VScale } f
 import foot from '@/components/foot'
 import VHead from '@/components/header'
 const data = [
-  { name: '股票类', percent: 83.59, a: '1' },
-  { name: '债券类', percent: 2.17, a: '1' },
-  { name: '现金类', percent: 14.24, a: '1' }
+  { name: '直属', percent: 83.59, a: '1' },
+  { name: '运营商', percent: 2.17, a: '1' },
+  { name: '团队人数', percent: 3000, a: '1' }
 ]
 
 const map = {}
@@ -137,11 +137,11 @@ export default {
       is_select_buttn: true,
       map,
       htmlOptions: {
-        position: [ '50%', '45%' ],
+        position: [ '50%', '50%' ],
         html: `
           <div style="width: 250px;height: 40px;text-align: center;">
-            <div style="font-size: 16px">总资产</div>
-            <div style="font-size: 24px">133.08 亿</div>
+            <div style="font-size: 24px">20%</div>
+            <div style="font-size: 16px;margin-top:10px;color:#999">直属</div>
           </div>`
       },
       legendOptions: {
@@ -185,6 +185,7 @@ export default {
       position: relative;
       left: 0px;
       top: 0px;
+      z-index: 1000;
       img{
         height: 34px;
         width: 34px;
@@ -226,7 +227,8 @@ export default {
       width:599px;
       height: 200px!important;
       position: absolute;
-      top: 67px;
+      top: 0px;
+      z-index: -100;
     }
     .noselect{
       height: 200px!important;
@@ -348,7 +350,7 @@ export default {
             position: absolute;
             left: 22px;
             top: 98px;
-            width:146px;
+            width:150px;
             height:23px;
             color: #999;
             font-size:24px;
@@ -433,7 +435,7 @@ export default {
         }
         p{
           margin: 0 auto;
-          width:82px;
+          width:84px;
           height:20px;
           color: #fff;
           font-family: PingFang-SC-Bold;
@@ -484,7 +486,7 @@ export default {
             position: absolute;
             left: 41px;
             top: 98px;
-            width:96px;
+            width:100px;
             height:23px;
             color: #999;
             font-size:24px;

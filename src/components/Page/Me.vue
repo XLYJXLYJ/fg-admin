@@ -77,8 +77,8 @@ export default {
       color: #333;
       font-size:29px;
       margin-top: 24px;
-      font-family: PingFang-SC-Medium;
-      font-weight: Medium;
+      font-family: PingFang-SC-Regular;
+      font-weight: Regular;
     }
   }
   .edit_password{
@@ -89,13 +89,13 @@ export default {
     background-color: #fff;
     p{
       width: 118px;
-      height: 27px;
+      height: 29px;
       position: absolute;
       top: 33px;
       left: 26px;
       color: #333;
       font-size: 29px;
-      font-family: PingFang-SC-Medium;
+      font-family: PingFang-SC-Regular;
       font-weight: Regular;
     }
     button{
@@ -127,17 +127,17 @@ export default {
     background-color: #fff;
     p{
       width: 236px;
-      height: 27px;
+      height: 31px;
       position: absolute;
       top: 33px;
       left: 26px;
       color: #333;
       font-size: 29px;
-      font-family: PingFang-SC-Medium;
+      font-family: PingFang-SC-Regular;
       font-weight: Regular;
     }
     span{
-      width: 72px;
+      width: 76px;
       height: 23px;
       position: absolute;
       top: 36px;
@@ -162,7 +162,7 @@ export default {
     height: 94px;
     background-color: #fff;
     p{
-      width:109px;
+      width:112px;
       height:26px;
       font-size:27px;
       font-family:PingFang-SC-Regular;

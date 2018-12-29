@@ -16,7 +16,21 @@ export default new Router({
     },
     {
       path: '/Order',
-      component: resolve => require(['@/components/Page/Order'], resolve)
+      component: resolve => require(['@/components/Page/Order'], resolve),
+      children: [
+        {
+          path: '/Order/PaymentOrder',
+          component: resolve => require(['@/components/Page/Order/PaymentOrder'], resolve)
+        },
+        {
+          path: '/Order/ComfirmOrder',
+          component: resolve => require(['@/components/Page/Order/ComfirmOrder'], resolve)
+        },
+        {
+          path: '/Order/LostOrder',
+          component: resolve => require(['@/components/Page/Order/LostOrder'], resolve)
+        }
+      ]
     },
     {
       path: '/Me',
@@ -25,6 +39,14 @@ export default new Router({
     {
       path: '/Editpassage',
       component: resolve => require(['@/components/Page/Editpassage'], resolve)
+    },
+    {
+      path: '/Login',
+      component: resolve => require(['@/components/Page/Login'], resolve)
+    },
+    {
+      path: '/Forgetpassword',
+      component: resolve => require(['@/components/Page/Forgetpassword'], resolve)
     }
   ]
 })

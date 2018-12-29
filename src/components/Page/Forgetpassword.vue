@@ -1,29 +1,22 @@
 <template>
   <div>
     <VHead></VHead>
-    <div class="setpassword_center">
+    <div class="change_password">
       <div class="me">
           <img src="../../assets/statistics_icon_back2@2x.png">
-          <p>修改密码</p>
-      </div>
-      <div class="account">
-        <p>账号：135****0365</p>
-        <div class="setpassword_center_line"></div>
+          <p>忘记密码</p>
       </div>
       <div class="get_identifying_code">
-        <input type="text" placeholder="请输入图形验证码">
-        <img src="">
-        <div class="setpassword_center_line"></div>
+        <input type="text" placeholder="请输入您的手机号">
       </div>
       <div class="get_phone_identifying_code">
-        <input type="text" placeholder="请输入验证码">
+        <input type="text" placeholder="请输入您的验证码">
         <button>获取验证码</button>
-        <div class="setpassword_center_line"></div>
       </div>
       <div class="set_password">
         <input type="text" placeholder="请输入6-16位字母和数字组合新密码">
-        <div class="setpassword_center_line"></div>
       </div>
+      <img src="../../assets/password_icon_eye@2x.png" class="register_show_passage">
       <div class="setpassword_confirm">
         <button>确定</button>
       </div>
@@ -51,11 +44,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-.setpassword_center{
+.change_password{
   width: 100%;
   height: 100%;
   position: absolute;
-  background-color: #F5F5F5;
+  background-color: #fff;
   .me{
     position: absolute;
     top: 65px;
@@ -79,39 +72,14 @@ export default {
       font-weight: Regular;
     }
   }
-  .account{
-    position: absolute;
-    top: 166px;
-    width: 100%;
-    height: 94px;
-    background-color: #fff;
-    p{
-      width: 290px;
-      height: 27px;
-      position: absolute;
-      top: 33px;
-      left: 26px;
-      color: #333;
-      font-size: 29px;
-      font-family: PingFang-SC-Regular;
-      font-weight: Regular;
-    }
-    .setpassword_center_line{
-      position: relative;
-      top: 94px;
-      left: 26px;
-      width:614px;
-      height:1px;
-      background:#E8E8EA;
-      z-index: 1000;
-    }
-  }
   .get_identifying_code{
     position: absolute;
     top: 260px;
-    width: 100%;
+    left: 34px;
+    width: 572px;
     height: 94px;
     background-color: #fff;
+    border-bottom: 1px solid #E8E8EA;
     input{
         width: 336px;
         height: 29px;
@@ -127,22 +95,15 @@ export default {
         top: 21px;
         right: 26px; 
     }
-    .setpassword_center_line{
-      position: relative;
-      top: 94px;
-      left: 26px;
-      width:614px;
-      height:1px;
-      background:#E8E8EA;
-      z-index: 1000;
-    }
   }
   .get_phone_identifying_code{
     position: absolute;
-    top: 354px;
-    width: 100%;
+    top: 355px;
+    left: 34px;
+    width: 572px;
     height: 94px;
     background-color: #fff;
+    border-bottom: 1px solid #E8E8EA;
     input{
         width: 336px;
         height: 29px;
@@ -164,22 +125,15 @@ export default {
         font-weight:Regular;
         border-radius: 9px;
     }
-    .setpassword_center_line{
-      position: relative;
-      top: 94px;
-      left: 26px;
-      width:614px;
-      height:1px;
-      background:#E8E8EA;
-      z-index: 1000;
-    }
   }
   .set_password{
     position: absolute;
-    top: 448px;
-    width: 100%;
+    top: 450px;
+    left: 34px;
+    width: 572px;
     height: 94px;
     background-color: #fff;
+    border-bottom: 1px solid #E8E8EA;
     input{
         width: 496px;
         height: 29px;
@@ -188,19 +142,26 @@ export default {
         left: 26px;
         font-size: 29px;
     }
-    .setpassword_center_line{
+    .change_password_line{
       position: absolute;
       top: 1px;
       left: 26px;
-      width:614px;
+      width:580px;
       height:1px;
       background:#E8E8EA;
       z-index: 1000;
     }
   }
+  .register_show_passage{
+    width:38px;
+    height: 22px;
+    position: absolute;
+    top: 492px;
+    left: 550px;
+  }
   .setpassword_confirm{
     position: absolute;
-    top: 613px;
+    top: 608px;
     width: 100%;
     height: 94px;
     text-align: center;
