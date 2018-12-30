@@ -2,82 +2,7 @@
 <div>
     <div class="lost_order_detail">
         <ul>
-            <li>
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
-            <li>
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
-            <li>
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
-            <li>
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
-            <li>
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
-            <li>
+            <li v-for="(item, index) in getComfirmOrderList" :key="index">
                 <p class="order_number">订单号：305769570069360624</p>
                 <div class="order_contain">
                     <img src="../../../assets/user_icon_search@2x.png" alt="">
@@ -96,6 +21,34 @@
     </div>
 </div>
 </template>
+<script>
+import func from '@/common/func'
+export default {
+  data () {
+    return  {
+      tkStatus: '',
+      getComfirmOrderList:''
+    }
+  },
+  computed: {
+    listenUserType () {
+      return this.$store.state.userType
+    }
+  },
+  mounted () {
+    this.GetComfirmOrder()
+  },
+  methods: {
+    GetComfirmOrder () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8870/auth/itoc/listOrderInfo?userId=' + uid + '&tkStatus=13',
+      response => {
+        this.getComfirmOrderList = response.data.data.records
+      })
+    }
+  }
+}
+</script>
 <style lang="less" scoped>
 .lost_order_detail{
   width: 640px;
@@ -112,8 +65,8 @@
         margin-top: 17px;
         position: relative;
         .order_number{
-            width:344px;
-            height:24px;
+            width:348px;
+            height:26px;
             font-size:20px;
             font-family:PingFang-SC-Regular;
             font-weight:bold;
@@ -214,7 +167,7 @@
                 left: 440px;
             }
             .one_belong{
-                width:200px;
+                width:210px;
                 height:16px;
                 font-size:15px;
                 font-family:PingFang-SC-Regular;
@@ -225,7 +178,7 @@
                 left: 0px;
             }
             .two_belong{
-                width:200px;
+                width:210px;
                 height:16px;
                 font-size:15px;
                 font-family:PingFang-SC-Regular;
@@ -236,7 +189,7 @@
                 left: 200px;
             }
             .three_belong{
-                width:200px;
+                width:210px;
                 height:16px;
                 font-size:15px;
                 font-family:PingFang-SC-Regular;

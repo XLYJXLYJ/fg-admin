@@ -21,6 +21,7 @@ export default new Router({
       children: [
         {
           path: '/User/UserTime',
+          name: 'UserTime',
           component: resolve => require(['@/components/Page/User/UserDetail'], resolve)
         },
         {
@@ -34,12 +35,16 @@ export default new Router({
       ]
     },
     {
+      path: '/UserDetailOne',
+      component: resolve => require(['@/components/Page/User/UserDetailOne'], resolve)
+    },
+    {
       path: '/Order',
       component: resolve => require(['@/components/Page/Order'], resolve),
       children: [
         {
           path: '/Order/PaymentOrder',
-          component: resolve => require(['@/components/Page/Order/PaymentOrder'], resolve)
+          component: resolve => require(['@/components/Page/Order/ComfirmOrder'], resolve)
         },
         {
           path: '/Order/ComfirmOrder',
@@ -47,7 +52,7 @@ export default new Router({
         },
         {
           path: '/Order/LostOrder',
-          component: resolve => require(['@/components/Page/Order/LostOrder'], resolve)
+          component: resolve => require(['@/components/Page/Order/ComfirmOrder'], resolve)
         }
       ]
     },

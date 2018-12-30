@@ -97,7 +97,21 @@ export default {
         this.axios.post('user/login/password?' + data)
         .then(response => {
           if (response.data.data.loginToken) {
-            localStorage.setItem('loginToken', response.data.data.loginToken)
+            let getToken = response.data.data.loginToken
+            localStorage.setItem('loginToken', getToken)
+            this.axios.get('/user/auth/query?osType=0', {
+              headers: {'token': getToken}
+            })
+            .then(response => {
+              let uid = response.data.data.userId
+              let headImg = response.data.data.headImg
+              let mobile = response.data.data.mobile
+              let nickname = response.data.data.nickname
+              localStorage.setItem('uid', uid)
+              localStorage.setItem('headImg', headImg)
+              localStorage.setItem('mobile', mobile)
+              localStorage.setItem('nickname', nickname)
+            })
             this.$router.push({name: 'Statistics'})
           } else {
             this.error_type = '服务端错误，请稍后登录'

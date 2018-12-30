@@ -1,11 +1,17 @@
 <template>
   <div>
     <VHead></VHead>
+      <confirm v-model="show"
+      title="温馨提示"
+      @on-cancel="onCancel"
+      @on-confirm="onConfirm">
+      <p style="text-align:center;">是否退出登录</p>
+      </confirm>
     <div class="me_center">
       <div class="me"><p>我的</p></div>
       <div class="edit_password">
         <p>修改密码</p>
-        <button>修改</button>
+        <button><router-link to="/Forgetpassword">修改</router-link></button>
         <div class="me_center_line"></div>
       </div>
       <div class="me_center_contract">
@@ -14,46 +20,44 @@
         <img src="../../assets/statistics_icon_enter@2x.png">
       </div>
       <div class="logout">
-        <p @click.native="doShowToast">退出登录</p>
+        <button @click.stop="DoShowToast()">退出登录</button>
       </div>
-    </div>
-
-    <div v-transfer-dom>
-      <x-dialog v-model="showToast" class="dialog-demo">
-        <div @click="showToast=false">
-          <span class="vux-close"></span>
-        </div>
-      </x-dialog>
     </div>
     <foot></foot>
   </div>
 </template>
 
 <script>
+import func from '@/common/func'
+import { Confirm } from 'vux'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
-import { XDialog, TransferDomDirective as TransferDom } from 'vux'
 export default {
   name: 'Statistics',
   data () {
     return {
-      showToast: false
+      show: false // 是否弹出确定框
     }
   },
-  directives: {
-    TransferDom
-  },
   methods: {
-    doShowToast () {
-      this.$vux.toast.show({
-        text: 'toast'
+    onCancel () {
+      this.show = false
+    },
+    onConfirm () {
+      func.ajaxGet('http://47.107.48.61:8830/logout',
+      response => {
+        localStorage.setItem('uid', '')
+        this.$router.push({name: 'Statistics'})
       })
+    },
+    DoShowToast () {
+      this.show = true
     }
   },
   components: {
     foot,
     VHead,
-    XDialog
+    Confirm
   }
 }
 </script>
@@ -108,6 +112,9 @@ export default {
       background:#FF5100;
       border-radius:9px;
       font-size: 24px;
+      a{
+        color: #fff;
+      }
     }
     .me_center_line{
       position: relative;
@@ -116,7 +123,7 @@ export default {
       width:614px;
       height:1px;
       background:#E8E8EA;
-      z-index: 1000;
+      z-index: 100;
     }
   }
   .me_center_contract{
@@ -160,10 +167,10 @@ export default {
     top: 425px;
     width: 100%;
     height: 94px;
-    background-color: #fff;
-    p{
-      width:112px;
-      height:26px;
+    button{
+      background-color: #fff;
+      width:100%;
+      height:94px;
       font-size:27px;
       font-family:PingFang-SC-Regular;
       font-weight:bold;

@@ -2,91 +2,16 @@
 <div>
     <div class="order_detail">
         <ul>
-            <li>
+            <li v-for="(item, index) in getComfirmOrderList" :key="index">
                 <p class="order_number">订单号：305769570069360624</p>
                 <div class="order_contain">
                     <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
+                    <p class="order_title">{{adzoneName}}</p>
+                    <span class="order_time">创建日：{{createTime}}</span>
                     <span class="operation_enter">运营中心收益:￥0.00</span>
                     <span class="carrieroperator">运营商收益:￥0.00</span>
                     <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
-            <li>
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
-            <li>
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
-            <li>
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
-            <li>
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
-            <li>
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
+                    <span class="up_income">上级收益:￥{{upUserCommission}}</span>
                     <span class="one_belong">一级归属:13189630598</span>
                     <span class="two_belong">二级归属:13189630598</span>
                     <span class="three_belong">三级归属:13189630598</span>
@@ -96,6 +21,78 @@
     </div>
 </div>
 </template>
+<script>
+import func from '@/common/func'
+export default {
+  data () {
+    return  {
+      tkStatus: '',
+      getComfirmOrderList:'',
+      upUserCommission: '', // 上级收益
+      adzoneName: '', // 订单名称
+      createTime: '' // 创建时间
+    }
+  },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/Order/PaymentOrder') {
+        this.GetPayOrder()
+      } else if (to.path === '/Order/ComfirmOrder') {
+        this.GetComfirmOrder()
+      } else {
+        this.GetLostOrder()
+      }
+    },
+    listenUserType: function () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=' + this.$store.state.userType,
+        response => {
+          this.getGetUserDetailList = response.data.data.records
+        })
+    },
+    '$route.path': function () {
+      this.orderText = this.$route.params.orderText
+      if (this.orderText) {
+        func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?&tradeId=' + this.orderText,
+        response => {
+          this.getGetUserDetailList = response.data.data.records
+        })
+      }
+    }
+  },
+  computed: {
+    listenUserType () {
+      return this.$store.state.userType
+    }
+  },
+  mounted () {
+    this.GetComfirmOrder()
+  },
+  methods: {
+     GetPayOrder () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8870/auth/itoc/listOrderInfo?userId=' + uid + '&tkStatus=12',
+      response => {
+        this.getComfirmOrderList = response.data.data.records
+      })
+    },
+    GetComfirmOrder () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8870/auth/itoc/listOrderInfo?userId=' + uid + '&tkStatus=14',
+      response => {
+        this.getComfirmOrderList = response.data.data.records
+      })
+    },
+    GetLostOrder () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8870/auth/itoc/listOrderInfo?userId=' + uid + '&tkStatus=13',
+      response => {
+        this.getComfirmOrderList = response.data.data.records
+      })
+    }
+  }
+}
+</script>
 <style lang="less" scoped>
 .order_detail{
   width: 640px;

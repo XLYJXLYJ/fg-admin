@@ -18,8 +18,8 @@
             <span class="circle"></span><span>运营商：</span><span class="number">600</span>
           </li>
         </ul> -->
-        <!-- <div class="team_situation_right">
-          <v-chart
+        <div class="team_situation_right">
+          <v-chart style="border: 1px solid red;"
             :data="data"
             :padding="[0, 'auto']">
             <v-tooltip disabled />
@@ -28,7 +28,7 @@
             <v-legend :options="legendOptions" />
             <v-guide type="html" :options="htmlOptions" />
           </v-chart>
-        </div> -->
+        </div>
         <div class="team_situation_right_line"></div>
       </div>
       <div class="data_statistics">
@@ -39,23 +39,23 @@
         <div class="data_statistics_line"></div>
         <div class="data_statistics_middle">
           <div class="data_statistics_middle_center_box">
-            <button class="data_statistics_middle_button1" :class="{select_button:is_select_buttn,no_select_button:!is_select_buttn}" @click="IsSelectButton1()">今日</button>
-            <button class="data_statistics_middle_button2" :class="{select_button:!is_select_buttn,no_select_button:is_select_buttn}" @click="IsSelectButton2()">昨日</button>
+            <button class="data_statistics_middle_button1" :class="{select_button:is_select_buttn,no_select_button:!is_select_buttn}" @click.stop.prevent="IsSelectButton1()">今日</button>
+            <button class="data_statistics_middle_button2" :class="{select_button:!is_select_buttn,no_select_button:is_select_buttn}" @click.stop.prevent="IsSelectButton2()">昨日</button>
           </div>
         </div>
         <div class="data_statistics_foot">
           <ul>
             <li>
-              <span class="data_statistics_foot_money_number">10</span>
+              <span class="data_statistics_foot_money_number">{{newTeam}}</span>
               <p>新增团队人数</p>
             </li>
             <li>
-              <span class="data_statistics_foot_money_number">18</span>
+              <span class="data_statistics_foot_money_number">{{payCount}}</span>
               <p>付款笔数</p>
             </li>
             <li>
               <span class="data_statistics_foot_money_icon">￥</span>
-              <span class="data_statistics_foot_money_number">860.65</span>
+              <span class="data_statistics_foot_money_number">{{commission}}</span>
               <p>消费收益预估</p>
             </li>
           </ul>
@@ -70,7 +70,7 @@
         <div class="revenue_statistics_middle">
           <div class="revenue_statistics_middle_center_box">
             <span class="revenue_statistics_money_icon">￥</span>
-            <span class="revenue_statistics_money_number">36980.36</span>
+            <span class="revenue_statistics_money_number">{{totalIncome}}</span>
             <p>累计收益</p>
           </div>
         </div>
@@ -78,17 +78,17 @@
           <ul>
             <li>
               <span class="revenue_statistics_foot_money_icon">￥</span>
-              <span class="revenue_statistics_foot_money_number">8860.65</span>
+              <span class="revenue_statistics_foot_money_number">{{lastMonthCommission}}</span>
               <p>上月结算</p>
             </li>
             <li>
               <span class="revenue_statistics_foot_money_icon">￥</span>
-              <span class="revenue_statistics_foot_money_number">7860.65</span>
+              <span class="revenue_statistics_foot_money_number">{{currentMonthTkMoney}}</span>
               <p>本月预估</p>
             </li>
             <li>
               <span class="revenue_statistics_foot_money_icon">￥</span>
-              <span class="revenue_statistics_foot_money_number">9860.65</span>
+              <span class="revenue_statistics_foot_money_number">{{lastMonthTkMoney}}</span>
               <p>上月预估</p>
             </li>
           </ul>
@@ -104,6 +104,7 @@
 </template>
 
 <script>
+import func from '@/common/func'
 import { VChart, VLine, VArea, VTooltip, VLegend, VBar, VPie, VGuide, VScale } from 'vux'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
@@ -135,6 +136,16 @@ export default {
   data () {
     return {
       is_select_buttn: true,
+      newTeam: '', // 新增团队人数
+      payCount: '', // 付款笔数
+      commission: '', // 今天的预估收益
+      yesterdayPayCount: '', // 昨天的付款笔数
+      yesterdayCommission: '', // 昨天的预估收益
+      lastMonthCommission: '', // 上月结算
+      currentMonthTkMoney: '', // 本月预估佣金
+      lastMonthTkMoney: '', // 上月预估
+      totalIncome: '', // 累计收益
+      beforeTime: '', // 今日与昨日
       map,
       htmlOptions: {
         position: [ '50%', '50%' ],
@@ -157,6 +168,76 @@ export default {
       },
       data
     }
+  },
+  mounted () {
+    this.GetTeamSituation()
+    this.IsSelectButton1()
+    this.GetrevenueStatistics()
+  },
+  methods: {
+    // GetTeamSituation () {
+    //   console.log(2222)
+    //   let uid = localStorage.getItem('uid')
+    //   let loginToken = localStorage.getItem('loginToken')
+    //   this.axios.get('/user/relation/auth/itocInfo?uid=' + uid, {
+    //     headers: {'token': loginToken}
+    //   })
+    //   .then(response => {
+    //     console.log(response)
+    //   })
+    // }
+    // 收益统计
+    GetrevenueStatistics () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8870/auth/findCommission?userId=' + uid,
+      response => {
+        this.lastMonthCommission = response.data.data.lastMonthCommission
+        this.currentMonthTkMoney = response.data.data.currentMonthTkMoney
+        this.lastMonthTkMoney = response.data.data.lastMonthTkMoney
+        this.totalIncome = response.data.data.totalIncome
+      })
+    },
+    // 今日数据统计
+    IsSelectButton1 () {
+      this.is_select_buttn = true
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8870/auth/findCommission?userId=' + uid,
+      response => {
+        this.payCount = response.data.data.payCount
+        this.commission = response.data.data.commission
+        this.GetDataStatistics()
+      })
+    },
+    // 昨日数据统计
+    IsSelectButton2 () {
+      this.is_select_buttn = false
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8870/auth/findCommission?userId=' + uid,
+      response => {
+        this.payCount = response.data.data.yesterdayPayCount
+        this.commission = response.data.data.yesterdayCommission
+        this.GetDataStatistics()
+      })
+    },
+    GetDataStatistics () {
+      let uid = localStorage.getItem('uid')
+      if (this.is_select_buttn === false) {
+        this.beforeTime = 1
+      } else {
+        this.beforeTime = 0
+      }
+      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocTeamSum?uid=' + uid + '&beforeTime=' + this.beforeTime,
+        response => {
+          this.newTeam = response.data.data
+        })
+    },
+    GetTeamSituation () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocInfo?uid=' + uid,
+        response => {
+          // console.log(response.data.data)
+        })
+    }
   }
 }
 </script>
@@ -170,7 +251,7 @@ export default {
   margin: 0px;
   padding: 0px;
   background-color: #F5F5F5;
-  padding-bottom: 105px;
+  padding-bottom: 35px;
   .team_situation{
     height: 428px;
     width: 599px;
@@ -229,6 +310,7 @@ export default {
       position: absolute;
       top: 0px;
       z-index: -100;
+      border: 1px solid red;
     }
     .noselect{
       height: 200px!important;
@@ -462,7 +544,7 @@ export default {
           text-align: center;
           .revenue_statistics_foot_money_icon{
             position: absolute;
-            left: 21px;
+            left: 41px;
             top: 60px;
             width:26px;
             height:16px;
@@ -475,12 +557,13 @@ export default {
             position: absolute;
             left: 46px;
             top: 57px;
-            width:26px;
+            width:96px;
             height:23px;
             color: #333;
             font-family: PingFang-SC-Bold;
             font-weight: Bold;
             font-size: 29px;
+            text-align: center;
           }
           p{
             position: absolute;

@@ -1,24 +1,34 @@
 <template>
   <div>
     <VHead></VHead>
+    <alert v-model="alert_show">{{error_type}}</alert>
     <div class="user">
-      <p>用户</p>
       <div class="user_search">
         <span class="search_icon">
-          <img src="../../assets/user_icon_search@2x.png" alt="">
-          <input type="text" placeholder="请输入手机号查找会员">
-          <button>搜索</button>
-          <p>全部会员</p>
+          <img src="../../assets/user_icon_search@2x.png" @click="SearchUser()">
+          <input type="text" placeholder="请输入手机号查找会员" v-model="userText">
+          <button @click="SearchUser()">搜索</button>
+          <p @click="AlertUserSelect">{{whichPerson}}</p>
         </span>
       </div>
+      <img src="../../assets/user_icon_tri.png" v-show="canvas_user_show">
       <div class="tab_class">
         <ul>
           <li><router-link to="/User/UserTime" class="tab_class_user">注册时间</router-link></li>
+          <img src="../../assets/user_icon_screen1@2x.png" v-show="user_icon_screen1" @click="SwitchUserIcon1()">
+          <img src="../../assets/user_icon_screen2@2x.png" v-show="user_icon_screen2" @click="SwitchUserIcon2()">
           <li><router-link to="/User/UserNumber" class="tab_class_user mg40">团队总数</router-link></li>
           <li><router-link to="/User/UserDirectly" class="tab_class_user mg80">直属</router-link></li>
         </ul> 
         <router-view></router-view>
       </div>
+    </div>
+    <div class="canvas_user" v-show="canvas_user_show">
+      <ul>
+        <li @click="GetAllPerson()">全部会员</li>
+        <li @click="GetSecondPerson()" style="border-top: 1px solid #E8E8EA;border-bottom: 1px solid #E8E8EA;">钻石会员</li>
+        <li @click="GetThreePerson()">运营商</li>
+      </ul>
     </div>
     <foot></foot>
   </div>
@@ -31,12 +41,56 @@ export default {
   name: 'Statistics',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      alert_show: false, // 是否显示弹出框
+      error_type: '', // 弹出框的弹出说明
+      canvas_user_show: false, // 默认关闭选择框
+      whichPerson: '全部会员', // 全部会员
+      userText: '', // 搜索的内容
+      user_icon_screen1: true, // 图片1
+      user_icon_screen2: false // 图片2
     }
+  },
+  mounted () {
+    this.$router.push({name: 'UserTime'})
   },
   methods: {
     onItemClick (index) {
       console.log('on item click:', index)
+    },
+    AlertUserSelect () {
+      this.canvas_user_show = !this.canvas_user_show
+    },
+    GetAllPerson () {
+      this.$store.state.userType = 0
+      this.canvas_user_show = false
+    },
+    GetSecondPerson () {
+      this.$store.state.userType = 1
+      this.whichPerson = '钻石会员'
+      this.canvas_user_show = false
+    },
+    GetThreePerson () {
+      this.$store.state.userType = 2
+      this.whichPerson = '运营商'
+      this.canvas_user_show = false
+    },
+    SearchUser () {
+      if (this.userText) {
+        this.$router.push(`/User/UserTime/?userText=` + this.userText)
+      } else {
+        this.error_type = '请输入手机号'
+        this.alert_show = true
+      }
+    },
+    SwitchUserIcon1 () {
+      this.user_icon_screen1 = false
+      this.user_icon_screen2 = true
+      this.$router.push(`/User/UserTime/?sort=registAsc`)
+    },
+    SwitchUserIcon2 () {
+      this.user_icon_screen1 = true
+      this.user_icon_screen2 = false
+      this.$router.push(`/User/UserTime/?sort=registDesc`)
     }
   },
   components: {
@@ -54,26 +108,39 @@ export default {
 .mg80{
   margin-left: 80px;
 }
+.canvas_user{
+  width: 319px;
+  height: 247px;
+  background: #fff;
+  position: absolute;
+  top: 168px;
+  left: 282px;
+  z-index: 1000;
+  opacity: 1;
+  ul{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    li{
+      height: 54px;
+      width: 100%;
+      font-size: 29px;
+      color:#000;
+      font-family:PingFang-SC-Regular;
+      font-weight:Regular;
+      padding-top:28px;
+    }
+  }
+}
 .user{
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background: #F5F5F5;
   width: 100%;
-  p{
-    position: absolute;
-    top: 98px;
-    left: 292px;
-    width:60px;
-    height:28px;
-    font-size:29px;
-    font-family:PingFang-SC-Medium;
-    font-weight:bold;
-    color:#333333;
-  }
   .user_search{
     position: absolute;
-    top: 150px;
+    top: 98px;
     left: 0px;
     width: 100%;
     height: 55px;
@@ -129,8 +196,16 @@ export default {
       }
     }
   }
+  img{
+    width: 36px;
+    height: 17px;
+    position: absolute;
+    top: 151px;
+    left: 555px;
+    z-index: 1000;
+  }
   .tab_class{
-    margin-top: 225px;
+    margin-top: 167px;
     margin-bottom: 67px;
     flex: 1;
     width: 640px;
@@ -141,6 +216,13 @@ export default {
       display: table-cell;
       vertical-align: middle;
       text-align: center; 
+      img{
+        width:12px;
+        height: 15px;
+        position: absolute;
+        left: 159px;
+        top: 191px;
+      }
       li{
         float: left;
         width:200px;

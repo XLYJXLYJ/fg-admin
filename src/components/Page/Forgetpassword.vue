@@ -27,13 +27,15 @@
       </div>
       <!-- 第四个表单 -->
       <img class="four_close" src="../../assets/delete@2x.png" v-show="forget_password_password" @click="ClearForgetPasswordPassword()">
-      <img src="../../assets/password_icon_eye@2x.png" class="register_show_passage" @click="SwitchPassword()">
+      <img src="../../assets/password_icon_eye1@2x.png" v-show="icon_eye_one" class="register_show_passage" @click="SwitchPassword()">
+      <img src="../../assets/password_icon_eye@2x.png" v-show="!icon_eye_one" class="register_show_passage" @click="SwitchPassword()">
       <div class="set_password">
         <input :type="text_or_password" v-model="password" placeholder="请输入6-16位字母和数字组合新密码" autocomplete="off" @focus.stop.prevent="ForgetPasswordPasswordFocus()" @blur.stop.prevent="ForgetPasswordPasswordBlur()">
       </div>
       <!-- 第五个表单 -->
       <img class="five_close" src="../../assets/delete@2x.png" v-show="forget_password_comfirm_password" @click="ClearForgetPasswordComfirmPassword()">
-      <img src="../../assets/password_icon_eye@2x.png" class="confirm_register_show_passage" @click="SwitchConfirmPassword()">
+      <img src="../../assets/password_icon_eye1@2x.png" v-show="icon_eye_two" class="confirm_register_show_passage" alt="" @click="SwitchConfirmPassword()">
+      <img src="../../assets/password_icon_eye@2x.png" v-show="!icon_eye_two" class="confirm_register_show_passage" @click="SwitchConfirmPassword()">
       <div class="confirm_set_password">
         <input :type="confirm_text_or_password" v-model="confirm_password" placeholder="请输入6-16位字母和数字组合新密码" autocomplete="off" @focus.stop.prevent="ForgetPasswordComfirmPasswordFocus()" @blur.stop.prevent="ForgetPasswordComfirmPasswordBlur()">
       </div>
@@ -70,7 +72,9 @@ export default {
       forget_password_picture_code: false, // 默认输入图形验证码小图标不可见
       forget_password_phone_code: false, // 默认输入手机号验证码小图标不可见
       forget_password_password: false, // 默认输入密码小图标不可见
-      forget_password_comfirm_password: false // 默认输入确认密码小图标不可见
+      forget_password_comfirm_password: false, // 默认输入确认密码小图标不可见
+      icon_eye_one: false, // 切换眼睛小图标
+      icon_eye_two: false // 切换眼睛小图标
     }
   },
   watch: {
@@ -144,18 +148,24 @@ export default {
     ClearForgetPasswordComfirmPassword () {
       this.confirm_password = ''
     },
+    // 密码是否可见
     SwitchPassword () {
       if (this.text_or_password === 'text') {
         this.text_or_password = 'password'
+        this.icon_eye_one = false
       } else {
         this.text_or_password = 'text'
+        this.icon_eye_one = true
       }
     },
+    // 密码是否可见
     SwitchConfirmPassword () {
       if (this.confirm_text_or_password === 'text') {
         this.confirm_text_or_password = 'password'
+        this.icon_eye_two = false
       } else {
         this.confirm_text_or_password = 'text'
+        this.icon_eye_two = true
       }
     },
     // 图片验证码

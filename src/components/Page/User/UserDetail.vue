@@ -2,88 +2,114 @@
 <div>
     <div class="user_detail">
         <ul>
-            <li>
-                <div class="user_contain">
-                    <img class="user_contain_headimg" src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="user_title">18050435245</p>
-                    <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
-                    <span class="user_name">小花</span>
-                    <span class="user_time">2018年12月26日</span>
-                    <span class="user_up">上级：13936213654</span>
-                    <span class="user_recommend">推荐：<span>2</span></span>
-                    <span class="user_direc">直属：<span>10</span></span>
-                    <span class="user_carrieroperator">运营商：<span>0</span></span>
-                </div>
-            </li>
-            <li>
-                 <div class="user_contain">
-                    <img class="user_contain_headimg" src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="user_title">18050435245</p>
-                    <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
-                    <span class="user_name">小花</span>
-                    <span class="user_time">2018年12月26日</span>
-                    <span class="user_up">上级：13936213654</span>
-                    <span class="user_recommend">推荐：<span>2</span></span>
-                    <span class="user_direc">直属：<span>10</span></span>
-                    <span class="user_carrieroperator">运营商：<span>0</span></span>
-                </div>
-            </li>
-            <li>
-                <div class="user_contain">
-                    <img class="user_contain_headimg" src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="user_title">18050435245</p>
-                    <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
-                    <span class="user_name">小花</span>
-                    <span class="user_time">2018年12月26日</span>
-                    <span class="user_up">上级：13936213654</span>
-                    <span class="user_recommend">推荐：<span>2</span></span>
-                    <span class="user_direc">直属：<span>10</span></span>
-                    <span class="user_carrieroperator">运营商：<span>0</span></span>
-                </div>
-            </li>
-            <li>
-                <div class="user_contain">
-                    <img class="user_contain_headimg" src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="user_title">18050435245</p>
-                    <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
-                    <span class="user_name">小花</span>
-                    <span class="user_time">2018年12月26日</span>
-                    <span class="user_up">上级：13936213654</span>
-                    <span class="user_recommend">推荐：<span>2</span></span>
-                    <span class="user_direc">直属：<span>10</span></span>
-                    <span class="user_carrieroperator">运营商：<span>0</span></span>
-                </div>
-            </li>
-            <li>
-                 <div class="user_contain">
-                    <img class="user_contain_headimg" src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="user_title">18050435245</p>
-                    <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
-                    <span class="user_name">小花</span>
-                    <span class="user_time">2018年12月26日</span>
-                    <span class="user_up">上级：13936213654</span>
-                    <span class="user_recommend">推荐：<span>2</span></span>
-                    <span class="user_direc">直属：<span>10</span></span>
-                    <span class="user_carrieroperator">运营商：<span>0</span></span>
-                </div>
-            </li>
-            <li>
-                <div class="user_contain">
-                    <img class="user_contain_headimg" src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="user_title">18050435245</p>
-                    <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
-                    <span class="user_name">小花</span>
-                    <span class="user_time">2018年12月26日</span>
-                    <span class="user_up">上级：13936213654</span>
-                    <span class="user_recommend">推荐：<span>2</span></span>
-                    <span class="user_direc">直属：<span>10</span></span>
-                    <span class="user_carrieroperator">运营商：<span>0</span></span>
-                </div>
+            <li v-for="item in getGetUserDetailList" :key='item.id'>
+                <router-link :to="{path:'/UserDetailOne?uid='+item.userId}">
+                    <div class="user_contain">
+                        <img class="user_contain_headimg" src="../../../assets/user_icon_search@2x.png" alt="">
+                        <p class="user_title">{{item.mobile}}</p>
+                        <div v-if="item.userType == 1">
+                            <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
+                        </div>
+                        <div v-else>
+                            <img class="grade_level_img" src="../../../assets/user_icon_diamondmembers@2x.png">
+                        </div>
+                        <span class="user_name">{{item.nickname}}</span>
+                        <span class="user_time">{{item.creatTime}}</span>
+                        <span class="user_up">上级：{{item.upMobile}}</span>
+                        <span class="user_recommend">推荐：<span>{{item.referCount}}</span></span>
+                        <span class="user_direc">直属：<span>{{item.underCount}}</span></span>
+                        <span class="user_carrieroperator">运营商：<span>{{item.agentCount}}</span></span>
+                    </div>
+                </router-link>
             </li>
         </ul>
     </div>
 </div>
 </template>
+<script>
+import func from '@/common/func'
+import foot from '@/components/foot'
+import VHead from '@/components/header'
+export default {
+  data () {
+    return {
+      getGetUserDetailList: '', // 循环数组
+      userText: '', // 搜索的内容
+      sort: '' // 时间排序
+    }
+  },
+  computed: {
+    listenUserType () {
+      return this.$store.state.userType
+    }
+  },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/User/UserTime') {
+        this.GetUserDetail()
+      } else if (to.path === '/User/UserNumber') {
+        this.GetUserDetailNumber()
+      } else {
+        this.GetUserDetailDirectly()
+      }
+    },
+    listenUserType: function () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=' + this.$store.state.userType,
+        response => {
+          this.getGetUserDetailList = response.data.data.records
+        })
+    },
+    '$route.path': function () {
+      this.userText = this.$route.params.userText
+      this.sort = this.$route.params.sort
+      let uid = localStorage.getItem('uid')
+      if (this.userText) {
+        func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&mobile=' + this.userText,
+        response => {
+          this.getGetUserDetailList = response.data.data.records
+        })
+      } else {
+        func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&sort=' + this.userText,
+        response => {
+          this.getGetUserDetailList = response.data.data.records
+        })
+      }
+    }
+  },
+  mounted () {
+    this.GetUserDetail()
+    this.userText = this.$route.params
+  },
+  methods: {
+    GetUserDetail () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=0',
+        response => {
+          this.getGetUserDetailList = response.data.data.records
+        })
+    },
+    GetUserDetailNumber () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=0&sort=teamDesc',
+        response => {
+          this.getGetUserDetailList = response.data.data.records
+        })
+    },
+    GetUserDetailDirectly () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=0&sort=underDesc',
+        response => {
+          this.getGetUserDetailList = response.data.data.records
+        })
+    }
+  },
+  components: {
+    foot,
+    VHead
+  }
+}
+</script>
 <style lang="less" scoped>
 .user_detail{
   width: 640px;
@@ -93,6 +119,7 @@
     width: 100%;
     min-height:400px;
     position: relative;
+    margin-bottom: 30px;
     li{
         width: 599px;
         height: 170px;

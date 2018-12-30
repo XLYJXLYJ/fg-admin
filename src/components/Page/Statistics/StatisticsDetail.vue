@@ -3,7 +3,7 @@
         <VHead></VHead>
         <div class="statistics_detail">
             <div class="me">
-                <img class="statistics_detail_back" src="../../../assets/statistics_icon_back@2x.png">
+                <img class="statistics_detail_back" src="../../../assets/statistics_icon_back@2x.png" @click="BackFunction()">
                 <p>团队会员收益</p>
                 <span>累计收益</span>
                 <img class="statistics_detail_select" src="../../../assets/user_icon_screen2@2x.png" alt="">
@@ -18,7 +18,7 @@
             <div class="statistics_detail_number">
             <ul>
             <li>
-                <span class="statistics_detail_phone">13150435245</span>
+                <span class="statistics_detail_phone">{{mobile}}</span>
                 <span class="statistics_detail_income">累计收益：￥630.24</span>
                 <p class="statistics_detail_name">小花</p>
                 <p class="statistics_detail_time">结算日期:2018-12-20</p>
@@ -60,16 +60,27 @@
     </div>
 </template>
 <script>
+import func from '@/common/func'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
 export default {
   name: 'StatisticsDetail',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      getStatisticsDetailList: '' // 循环数组
     }
   },
+  mounted () {
+    this.GetStatisticsDetail()
+  },
   methods: {
+    GetStatisticsDetail () {
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet('http://47.107.48.61:8830/auth/itoc/teamIncomes?uid=' + uid,
+      response => {
+        this.getStatisticsDetailList = response
+      })
+    }
   },
   components: {
     foot,

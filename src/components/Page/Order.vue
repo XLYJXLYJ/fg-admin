@@ -5,9 +5,9 @@
       <p>订单</p>
       <div class="order_search">
         <span class="search_icon">
-          <img src="../../assets/user_icon_search@2x.png" alt="">
-          <input type="text" placeholder="请输入订单号搜索">
-          <button>搜索</button>
+          <img src="../../assets/user_icon_search@2x.png">
+          <input type="text" placeholder="请输入订单号搜索" v-model="orderText">
+          <button @click="SearchOrder()">搜索</button>
         </span>
       </div>
       <div class="tab_class">
@@ -30,13 +30,21 @@ export default {
   name: 'Statistics',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      orderText:''
     }
   },
   methods: {
     onItemClick (index) {
       console.log('on item click:', index)
-    }
+    },
+    SearchUser () {
+      if (this.orderText) {
+        this.$router.push(`/Order/ComfirmOrder/?orderText=` + this.orderText)
+      } else {
+        this.error_type = '请输入手机号'
+        this.alert_show = true
+      }
+    },
   },
   components: {
     foot,

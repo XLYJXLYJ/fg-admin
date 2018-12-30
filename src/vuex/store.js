@@ -4,7 +4,8 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-  dpr: '' // 设备像素比
+  dpr: '', // 设备像素比
+  userType: '' // 用户类型
 }
 
 const actions = {
