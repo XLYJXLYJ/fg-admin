@@ -9,7 +9,8 @@
             <img class="login_phone_close" v-show="phone_show" src="../../assets/delete@2x.png" @click="ClosePhoneShow()">
             <input :type="is_show_password" class="login_pass" v-model="password" placeholder="请输入您的密码" @focus.stop.prevent="PasswordFocus()" @blur.stop.prevent="PasswordBlur()" autocomplete="off">
             <img class="password_close" src="../../assets/delete@2x.png" v-show="password_show" @click="ClosePasswordShow()">
-            <img src="../../assets/password_icon_eye@2x.png" class="show_password" @click="SwitchPassword()">
+            <img src="../../assets/password_icon_eye1@2x.png" v-show="icon_eye" class="show_password" @click="SwitchPassword()">
+            <img src="../../assets/password_icon_eye@2x.png" v-show="!icon_eye" class="show_password" @click="SwitchPassword()">
             <router-link to="/Forgetpassword"><span class="forget_password_button">忘记密码 ？</span></router-link>
             <button :class="{login_button:is_login_button,ok_login_button:!is_login_button}" @click.prevent="Loginbtn()">登录</button>    
         </form> 
@@ -29,7 +30,8 @@ export default {
       phone_show: false, // 账号的小图标是否显示
       password_show: false, // 密码清空的小图标是否显示
       is_show_password: 'password', // 是否显示密码
-      is_login_button: true // 默认登录按钮不可点击
+      is_login_button: true, // 默认登录按钮不可点击
+      icon_eye: '' // 密码是否可见小图标
     }
   },
   watch: {
@@ -71,8 +73,10 @@ export default {
     SwitchPassword () {
       if (this.is_show_password === 'text') {
         this.is_show_password = 'password'
+        this.icon_eye = true
       } else {
         this.is_show_password = 'text'
+        this.icon_eye = false
       }
     },
     Loginbtn () {
@@ -217,6 +221,7 @@ export default {
     font-weight:Regular;
     text-align: center;
     margin-top: 84px;
+    color: #fff;
   }
 }
 </style>

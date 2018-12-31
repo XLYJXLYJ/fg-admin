@@ -5,7 +5,8 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    {path: '/', redirect: '/Statistics'},
+    {path: '/', redirect: '/Login'},
+    {path: '/Order', redirect: '/Order/PaymentOrder'},
     {
       path: '/Statistics',
       name: 'Statistics',
@@ -61,11 +62,16 @@ export default new Router({
       component: resolve => require(['@/components/Page/Me'], resolve)
     },
     {
+      path: '/Contract',
+      component: resolve => require(['@/components/Page/Contract'], resolve)
+    },
+    {
       path: '/Editpassage',
       component: resolve => require(['@/components/Page/Editpassage'], resolve)
     },
     {
       path: '/Login',
+      name: 'Login',
       component: resolve => require(['@/components/Page/Login'], resolve)
     },
     {

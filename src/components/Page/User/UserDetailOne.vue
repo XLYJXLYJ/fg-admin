@@ -1,6 +1,13 @@
 <template>
   <div>
     <VHead></VHead>
+    <alert v-model="alert_show">{{error_type}}</alert>
+    <confirm v-model="show"
+      title="温馨提示"
+      @on-cancel="onCancel"
+      @on-confirm="onConfirm">
+      <p style="text-align:center;">确定要升级他为运营商吗？</p>
+    </confirm>
     <div class="user_detail_one">
         <alert v-model="alert_show">{{error_type}}</alert>
         <div class="me">
@@ -35,7 +42,7 @@
              @click="selectTimer(index)"
              :class="timeIndex === index ? 'active_class' : 'unactive_class' ">
                 <div class="user_contain">
-                    <img class="user_contain_headimg" :src="item.mobile" alt="">
+                    <img class="user_contain_headimg" src="../../../assets/girl.jpg" alt="">
                     <p class="user_title">{{item.mobile}}</p>
                     <div v-if="item.userType == 1">
                         <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
@@ -48,12 +55,13 @@
                 </div>
             </li>
         </ul>
-        <button>升级</button>
+        <button @click="DoShowToast()">升级</button>
     </div>
   </div>
 </template>
 
 <script>
+import { Confirm } from 'vux'
 import func from '@/common/func'
 import VHead from '@/components/header'
 // import Qs from 'qs'
@@ -72,7 +80,8 @@ export default {
       teamCount: '', // 团队总人数
       getGetUserDetailList: '', // 循环数组
       active: '', // 是否选中li样式
-      timeIndex: '' // 选中li
+      timeIndex: '', // 选中li
+      show: false // 是否弹出确定框
     }
   },
   mounted () {
@@ -102,10 +111,21 @@ export default {
     },
     selectTimer (index) {
       this.timeIndex = index
+    },
+    onCancel () {
+      this.show = false
+    },
+    onConfirm () {
+      this.error_type = '升级成功，你还有9次机会'
+      this.alert_show = true
+    },
+    DoShowToast () {
+      this.show = true
     }
   },
   components: {
-    VHead
+    VHead,
+    Confirm
   }
 }
 </script>

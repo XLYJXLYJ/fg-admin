@@ -1,23 +1,27 @@
 <template>
 <div>
     <div class="order_detail">
-        <ul>
-            <li v-for="(item, index) in getComfirmOrderList" :key="index">
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">{{adzoneName}}</p>
-                    <span class="order_time">创建日：{{createTime}}</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥{{upUserCommission}}</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
-        </ul>
+      <div class="no_order" v-show="noOrder">
+        <img src="../../../assets/user_icon_emptystate@2x.png">
+        <p>您还没有会员，继续加油哦~</p>
+      </div>
+      <ul v-show="!noOrder">
+        <li v-for="(item, index) in getComfirmOrderList" :key="index">
+            <p class="order_number">订单号：305769570069360624</p>
+            <div class="order_contain">
+                <img src="../../../assets/user_icon_search@2x.png" alt="">
+                <p class="order_title">{{adzoneName}}</p>
+                <span class="order_time">创建日：{{createTime}}</span>
+                <span class="operation_enter">运营中心收益:￥0.00</span>
+                <span class="carrieroperator">运营商收益:￥0.00</span>
+                <span class="one_income">一级收益:￥0.00</span>
+                <span class="up_income">上级收益:￥{{upUserCommission}}</span>
+                <span class="one_belong">一级归属:13189630598</span>
+                <span class="two_belong">二级归属:13189630598</span>
+                <span class="three_belong">三级归属:13189630598</span>
+            </div>
+        </li>
+      </ul>
     </div>
 </div>
 </template>
@@ -25,12 +29,13 @@
 import func from '@/common/func'
 export default {
   data () {
-    return  {
+    return {
       tkStatus: '',
-      getComfirmOrderList:'',
+      getComfirmOrderList: '',
       upUserCommission: '', // 上级收益
       adzoneName: '', // 订单名称
-      createTime: '' // 创建时间
+      createTime: '', // 创建时间
+      noOrder: false
     }
   },
   watch: {
@@ -47,7 +52,11 @@ export default {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=' + this.$store.state.userType,
         response => {
-          this.getGetUserDetailList = response.data.data.records
+          if (response.data.data.records.length) {
+            this.getGetUserDetailList = response.data.data.records
+          } else {
+            this.noOrder = true
+          }
         })
     },
     '$route.path': function () {
@@ -55,7 +64,11 @@ export default {
       if (this.orderText) {
         func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?&tradeId=' + this.orderText,
         response => {
-          this.getGetUserDetailList = response.data.data.records
+          if (!response.data.data.records) {
+            this.getGetUserDetailList = response.data.data.records
+          } else {
+            this.noOrder = true
+          }
         })
       }
     }
@@ -69,25 +82,37 @@ export default {
     this.GetComfirmOrder()
   },
   methods: {
-     GetPayOrder () {
+    GetPayOrder () {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8870/auth/itoc/listOrderInfo?userId=' + uid + '&tkStatus=12',
       response => {
-        this.getComfirmOrderList = response.data.data.records
+        if (response.data.data.records.length) {
+          this.getGetUserDetailList = response.data.data.records
+        } else {
+          this.noOrder = true
+        }
       })
     },
     GetComfirmOrder () {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8870/auth/itoc/listOrderInfo?userId=' + uid + '&tkStatus=14',
       response => {
-        this.getComfirmOrderList = response.data.data.records
+        if (response.data.data.records.length) {
+          this.getGetUserDetailList = response.data.data.records
+        } else {
+          this.noOrder = true
+        }
       })
     },
     GetLostOrder () {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8870/auth/itoc/listOrderInfo?userId=' + uid + '&tkStatus=13',
       response => {
-        this.getComfirmOrderList = response.data.data.records
+        if (response.data.data.records.length) {
+          this.getGetUserDetailList = response.data.data.records
+        } else {
+          this.noOrder = true
+        }
       })
     }
   }
@@ -98,6 +123,29 @@ export default {
   width: 640px;
   height: auto;
   position: relative;
+  .no_order{
+    width: 100%;
+    min-height:400px;
+    position: relative;
+    img{
+      position: absolute;
+      top: 142px;
+      left: 214px;
+      width:212px;
+      height:172px;
+    }
+    p{
+      position: absolute;
+      top: 350px;
+      left: 170px;
+      width:320px;
+      height:172px;
+      font-size: 22px;
+      color: #666;
+      font-family:PingFang-SC-Regular;
+      font-weight:Regular;
+    }
+  }
   ul{
     width: 100%;
     min-height:400px;

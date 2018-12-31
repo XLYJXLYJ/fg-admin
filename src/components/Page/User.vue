@@ -2,7 +2,7 @@
   <div>
     <VHead></VHead>
     <alert v-model="alert_show">{{error_type}}</alert>
-    <div class="user">
+    <div class="user" :class="{mask:ismask}">
       <div class="user_search">
         <span class="search_icon">
           <img src="../../assets/user_icon_search@2x.png" @click="SearchUser()">
@@ -17,8 +17,8 @@
           <li><router-link to="/User/UserTime" class="tab_class_user">注册时间</router-link></li>
           <img src="../../assets/user_icon_screen1@2x.png" v-show="user_icon_screen1" @click="SwitchUserIcon1()">
           <img src="../../assets/user_icon_screen2@2x.png" v-show="user_icon_screen2" @click="SwitchUserIcon2()">
-          <li><router-link to="/User/UserNumber" class="tab_class_user mg40">团队总数</router-link></li>
-          <li><router-link to="/User/UserDirectly" class="tab_class_user mg80">直属</router-link></li>
+          <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserNumber" class="tab_class_user mg40">团队总数</router-link></li>
+          <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserDirectly" class="tab_class_user mg80">直属</router-link></li>
         </ul> 
         <router-view></router-view>
       </div>
@@ -47,33 +47,41 @@ export default {
       whichPerson: '全部会员', // 全部会员
       userText: '', // 搜索的内容
       user_icon_screen1: true, // 图片1
-      user_icon_screen2: false // 图片2
+      user_icon_screen2: false, // 图片2
+      ismask: false // 遮罩层
     }
   },
   mounted () {
     this.$router.push({name: 'UserTime'})
   },
   methods: {
-    onItemClick (index) {
-      console.log('on item click:', index)
-    },
+    // 弹出提示框
     AlertUserSelect () {
       this.canvas_user_show = !this.canvas_user_show
+      this.ismask = !this.ismask
     },
+    // 查找全部用户
     GetAllPerson () {
       this.$store.state.userType = 0
+      this.whichPerson = '全部会员'
       this.canvas_user_show = false
+      this.ismask = false // 关闭遮罩层
     },
+    // 查找钻石用户
     GetSecondPerson () {
       this.$store.state.userType = 1
       this.whichPerson = '钻石会员'
       this.canvas_user_show = false
+      this.ismask = false // 关闭遮罩层
     },
+    // 查找运营商用户
     GetThreePerson () {
       this.$store.state.userType = 2
       this.whichPerson = '运营商'
       this.canvas_user_show = false
+      this.ismask = false // 关闭遮罩层
     },
+    // 查找用户
     SearchUser () {
       if (this.userText) {
         this.$router.push(`/User/UserTime/?userText=` + this.userText)
@@ -82,15 +90,22 @@ export default {
         this.alert_show = true
       }
     },
+    // 时间顺序
     SwitchUserIcon1 () {
       this.user_icon_screen1 = false
       this.user_icon_screen2 = true
       this.$router.push(`/User/UserTime/?sort=registAsc`)
     },
+    // 时间倒叙
     SwitchUserIcon2 () {
       this.user_icon_screen1 = true
       this.user_icon_screen2 = false
       this.$router.push(`/User/UserTime/?sort=registDesc`)
+    },
+    // 关闭时间小图标选中状态
+    CloseSwitchUserIcon () {
+      this.user_icon_screen1 = true
+      this.user_icon_screen2 = false
     }
   },
   components: {
@@ -108,6 +123,12 @@ export default {
 .mg80{
   margin-left: 80px;
 }
+.mask{
+  opacity: 0.4;
+  background: #999;
+  z-index: 1000;
+  pointer-events:none;
+}
 .canvas_user{
   width: 319px;
   height: 247px;
@@ -116,7 +137,6 @@ export default {
   top: 168px;
   left: 282px;
   z-index: 1000;
-  opacity: 1;
   ul{
     width: 100%;
     height: 100%;
@@ -230,11 +250,13 @@ export default {
         font-size:24px;
         font-family:PingFang-SC-Regular;
         font-weight:bold;
-        color:#333;
         line-height:31px;
         padding-top:14px;
         a{
           color:#333;
+        }
+        .router-link-active{
+          color:#FF5100!important;
         }
       }
     }

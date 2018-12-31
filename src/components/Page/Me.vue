@@ -14,11 +14,13 @@
         <button><router-link to="/Forgetpassword">修改</router-link></button>
         <div class="me_center_line"></div>
       </div>
-      <div class="me_center_contract">
-        <p>运营中心协议合同</p>
-        <span>已生效</span>
-        <img src="../../assets/statistics_icon_enter@2x.png">
-      </div>
+      <router-link to="/Contract">
+        <div class="me_center_contract">
+          <p>运营中心协议合同</p>
+          <span>已生效</span>
+          <img class="me_center_contract_img" src="../../assets/statistics_icon_enter@2x.png">
+        </div>
+      </router-link>
       <div class="logout">
         <button @click.stop="DoShowToast()">退出登录</button>
       </div>
@@ -47,7 +49,7 @@ export default {
       func.ajaxGet('http://47.107.48.61:8830/logout',
       response => {
         localStorage.setItem('uid', '')
-        this.$router.push({name: 'Statistics'})
+        this.$router.push({name: 'Login'})
       })
     },
     DoShowToast () {
@@ -154,12 +156,13 @@ export default {
       font-family: PingFang-SC-Medium;
       font-weight: Regular;
     }
-    img{
+    .me_center_contract_img{
       position: absolute;
       top: 35px;
       right: 26px;
       height: 23px;
       width:13px;
+      z-index: 1000;
     }
   }
   .logout{

@@ -1,28 +1,32 @@
 <template>
 <div>
     <div class="user_detail">
-        <ul>
-            <li v-for="item in getGetUserDetailList" :key='item.id'>
-                <router-link :to="{path:'/UserDetailOne?uid='+item.userId}">
-                    <div class="user_contain">
-                        <img class="user_contain_headimg" src="../../../assets/user_icon_search@2x.png" alt="">
-                        <p class="user_title">{{item.mobile}}</p>
-                        <div v-if="item.userType == 1">
-                            <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
-                        </div>
-                        <div v-else>
-                            <img class="grade_level_img" src="../../../assets/user_icon_diamondmembers@2x.png">
-                        </div>
-                        <span class="user_name">{{item.nickname}}</span>
-                        <span class="user_time">{{item.creatTime}}</span>
-                        <span class="user_up">上级：{{item.upMobile}}</span>
-                        <span class="user_recommend">推荐：<span>{{item.referCount}}</span></span>
-                        <span class="user_direc">直属：<span>{{item.underCount}}</span></span>
-                        <span class="user_carrieroperator">运营商：<span>{{item.agentCount}}</span></span>
-                    </div>
-                </router-link>
-            </li>
-        </ul>
+      <div class="no_user" v-show="noUser">
+        <img src="../../../assets/user_icon_emptystate@2x.png">
+        <p>您还没有会员，继续加油哦~</p>
+      </div>
+      <ul v-show="!noUser">
+          <li v-for="item in getGetUserDetailList" :key='item.id'>
+              <router-link :to="{path:'/UserDetailOne?uid='+item.userId}">
+                  <div class="user_contain">
+                      <img class="user_contain_headimg" src="../../../assets/girl.jpg" alt="">
+                      <p class="user_title">{{item.mobile}}</p>
+                      <div v-if="item.userType == 1">
+                          <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
+                      </div>
+                      <div v-else>
+                          <img class="grade_level_img" src="../../../assets/user_icon_diamondmembers@2x.png">
+                      </div>
+                      <span class="user_name">{{item.nickname}}</span>
+                      <span class="user_time">{{item.creatTime}}</span>
+                      <span class="user_up">上级：{{item.upMobile}}</span>
+                      <span class="user_recommend">推荐：<span>{{item.referCount}}</span></span>
+                      <span class="user_direc">直属：<span>{{item.underCount}}</span></span>
+                      <span class="user_carrieroperator">运营商：<span>{{item.agentCount}}</span></span>
+                  </div>
+              </router-link>
+          </li>
+      </ul>
     </div>
 </div>
 </template>
@@ -35,7 +39,8 @@ export default {
     return {
       getGetUserDetailList: '', // 循环数组
       userText: '', // 搜索的内容
-      sort: '' // 时间排序
+      sort: '', // 时间排序
+      noUser: ''
     }
   },
   computed: {
@@ -86,21 +91,33 @@ export default {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=0',
         response => {
-          this.getGetUserDetailList = response.data.data.records
+          if (response.data.data.records.length) {
+            this.getGetUserDetailList = response.data.data.records
+          } else {
+            this.noUser = true
+          }
         })
     },
     GetUserDetailNumber () {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=0&sort=teamDesc',
         response => {
-          this.getGetUserDetailList = response.data.data.records
+          if (response.data.data.records.length) {
+            this.getGetUserDetailList = response.data.data.records
+          } else {
+            this.noUser = true
+          }
         })
     },
     GetUserDetailDirectly () {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=0&sort=underDesc',
         response => {
-          this.getGetUserDetailList = response.data.data.records
+          if (response.data.data.records.length) {
+            this.getGetUserDetailList = response.data.data.records
+          } else {
+            this.noUser = true
+          }
         })
     }
   },
@@ -115,6 +132,29 @@ export default {
   width: 640px;
   height: auto;
   position: relative;
+  .no_user{
+    width: 100%;
+    min-height:400px;
+    position: relative;
+    img{
+      position: absolute;
+      top: 142px;
+      left: 214px;
+      width:212px;
+      height:172px;
+    }
+    p{
+      position: absolute;
+      top: 350px;
+      left: 170px;
+      width:320px;
+      height:172px;
+      font-size: 22px;
+      color: #666;
+      font-family:PingFang-SC-Regular;
+      font-weight:Regular;
+    }
+  }
   ul{
     width: 100%;
     min-height:400px;

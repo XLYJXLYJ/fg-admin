@@ -23,7 +23,7 @@
       <img class="three_close" src="../../assets/delete@2x.png" v-show="forget_password_phone_code" @click="ClearForgetPasswordPhoneCode()">
       <div class="get_phone_identifying_code">
         <input type="text" v-model="phone_code" placeholder="请输入您的手机验证码" autocomplete="off" @focus.stop.prevent="ForgetPasswordPhoneCodeFocus()" @blur.stop.prevent="ForgetPasswordPhoneCodeBlur()">
-        <button @click.stop="GetCodeNumber">获取验证码</button>
+        <button @click.stop="GetCodeNumber" :class="{getCodeNumber:btnTxtColor01 , getCodeNumberDisabled:btnTxtColor02}" :disabled="disabled">{{btnTxt}}</button>
       </div>
       <!-- 第四个表单 -->
       <img class="four_close" src="../../assets/delete@2x.png" v-show="forget_password_password" @click="ClearForgetPasswordPassword()">
@@ -44,12 +44,10 @@
       </div>
       </form>
     </div>
-    <foot></foot>
   </div>
 </template>
 
 <script>
-import foot from '@/components/foot'
 import VHead from '@/components/header'
 import Qs from 'qs'
 export default {
@@ -74,7 +72,12 @@ export default {
       forget_password_password: false, // 默认输入密码小图标不可见
       forget_password_comfirm_password: false, // 默认输入确认密码小图标不可见
       icon_eye_one: false, // 切换眼睛小图标
-      icon_eye_two: false // 切换眼睛小图标
+      icon_eye_two: false, // 切换眼睛小图标
+      time: 0, // 验证码时间初始化
+      btnTxt: '获取验证码', // 验证码按钮文字
+      btnTxtColor01: true, // 验证码按钮的颜色
+      btnTxtColor02: false, // 验证码按钮的颜色
+      disabled: false // 按钮是否可点击
     }
   },
   watch: {
@@ -204,10 +207,13 @@ export default {
         data = Qs.stringify(data)
         this.axios.post('/media/ssm/send/imgCode?' + data)
         .then(response => {
-          if (response.data.data) {
+          if (response.data.code === 200) {
             this.GetImgCode()
+            this.time = 60
+            this.disabled = true
+            this.Timer()
           } else {
-            this.error_type = '服务端错误，请稍后请求'
+            this.error_type = '图形验证码错误'
             this.alert_show = true
           }
         })
@@ -218,6 +224,23 @@ export default {
         this.is_forget_password_button = false
       } else {
         this.is_forget_password_button = true
+      }
+    },
+    // 验证60s
+    Timer () {
+      if (this.time > 0) {
+        this.time --
+        this.btnTxt = this.time + 's后重新发送'
+        setTimeout(this.Timer, 1000)
+        this.btnTxtColor01 = false
+        this.btnTxtColor02 = true
+        this.disabled = true
+      } else {
+        this.time = 0
+        this.btnTxt = '获取验证码'
+        this.disabled = false
+        this.btnTxtColor01 = true
+        this.btnTxtColor02 = false
       }
     },
     // 确认修改密码
@@ -258,7 +281,6 @@ export default {
     }
   },
   components: {
-    foot,
     VHead
   }
 }
@@ -363,7 +385,21 @@ export default {
         left: 26px;
         font-size: 29px;
     }
-    button{
+    .getCodeNumberDisabled{
+      width: 171px;
+      height: 51px;
+      position: absolute;
+      top: 21px;
+      right: 26px; 
+      color: #666;
+      background-color: #fff;
+      font-size:20px;
+      font-family:PingFang-SC-Regular;
+      font-weight:Regular;
+      border-radius: 9px;
+      border: 1px solid #999;
+    }
+    .getCodeNumber{
         width: 137px;
         height: 51px;
         position: absolute;
@@ -491,7 +527,7 @@ export default {
     height: 24px;
     position: absolute;
     top: 486px;
-    left: 407px;
+    left: 367px;
     z-index: 1000;
   }
   .four_close{

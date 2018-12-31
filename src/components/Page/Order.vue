@@ -30,7 +30,7 @@ export default {
   name: 'Statistics',
   data () {
     return {
-      orderText:''
+      orderText: ''
     }
   },
   methods: {
@@ -44,7 +44,7 @@ export default {
         this.error_type = '请输入手机号'
         this.alert_show = true
       }
-    },
+    }
   },
   components: {
     foot,
@@ -63,14 +63,16 @@ export default {
   width: 100%;
   p{
     position: absolute;
-    top: 98px;
-    left: 292px;
-    width:60px;
-    height:28px;
+    top: 64px;
+    padding-left: 292px;
+    width:100%;
+    height:98px;
     font-size:29px;
     font-family:PingFang-SC-Medium;
     font-weight:bold;
     color:#333333;
+    padding-top: 24px;
+    background: #fff;
   }
   .order_search{
     position: absolute;
@@ -78,6 +80,7 @@ export default {
     left: 0px;
     width: 100%;
     height: 55px;
+    background: #fff;
     .search_icon{
       width: 439px;
       height: 55px;
@@ -119,27 +122,42 @@ export default {
     }
   }
   .tab_class{
-    margin-top: 225px;
+    margin-top: 205px;
     margin-bottom: 67px;
     flex: 1;
-    width: 640px;
+    width: 100%;
     ul{
-      width:600px;
-      height: 57px;
+      width:640px;
+      height: 87px;
       margin: 0 auto;
       display: table-cell;
       vertical-align: middle;
-      text-align: center; 
+      text-align: center;
+      background: #fff; 
       li{
         float: left;
         width:200px;
-        height: 42px;
+        height: 62px;
         font-size:24px;
         font-family:PingFang-SC-Regular;
         font-weight:bold;
         color:#333;
         line-height:31px;
-        padding-top:14px;
+        padding-top:34px;
+        a{
+          color:#333;
+        }
+        .router-link-active{
+          color:#FF5100!important;
+        }
+        .router-link-active:after{
+          content:' ';
+          display:block;
+          width:68px;
+          padding-bottom: 20px;
+          border-bottom: 5px solid #FF5100;
+          margin: 0 auto;
+        }
       }
     }
   }

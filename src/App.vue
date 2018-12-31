@@ -67,5 +67,4 @@ color: transparent;
 input:focus:-ms-input-placeholder {
 color: transparent;
 }
-
 </style>

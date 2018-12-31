@@ -19,9 +19,9 @@
           </li>
         </ul> -->
         <div class="team_situation_right">
-          <v-chart style="border: 1px solid red;"
+          <v-chart id="canvas"
             :data="data"
-            :padding="[0, 'auto']">
+            :padding="[30, 'auto']">
             <v-tooltip disabled />
             <v-scale y :options="yOptions" />
             <v-pie :radius="0.6" :inner-radius="0.8" series-field="name" :colors="['#FE5D4D','#3BA4FF','#737DDE']" />
@@ -99,6 +99,7 @@
         <!-- <div class="team_statistics_line"></div>
         <div class="team_member_statement"><span>团队会员对账单</span><img src="../../assets/statistics_icon_enter@2x.png"></div> -->
       </div>
+      <p class="foot_text">已经到底咯~</p>
       <foot></foot>
   </div>
 </template>
@@ -244,6 +245,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+#canvas{
+  width: 644px!important;
+  height: 426px;
+  position: relative;
+  left: -26px;
+}
 .statistics_contain{
   width: 100%;
   min-height: 1390px;
@@ -251,7 +258,7 @@ export default {
   margin: 0px;
   padding: 0px;
   background-color: #F5F5F5;
-  padding-bottom: 35px;
+  padding-bottom: 85px;
   .team_situation{
     height: 428px;
     width: 599px;
@@ -291,7 +298,7 @@ export default {
       width: 579px;
       position: absolute;
       left: 20px;
-      top: 67px;
+      top: 68px;
       background-color: #E8E8EA;
       z-index: 1000;
     }
@@ -305,15 +312,11 @@ export default {
       z-index: 1000;
     }
     .team_situation_right{
-      width:599px;
+      width:549px;
       height: 200px!important;
       position: absolute;
       top: 0px;
       z-index: -100;
-      border: 1px solid red;
-    }
-    .noselect{
-      height: 200px!important;
     }
   }
   .data_statistics{
@@ -650,6 +653,17 @@ export default {
         width:13px;
       }
     }
+  }
+  .foot_text{
+    position: relative;
+    top: 170px;
+    left: 263px;
+    height: 23px;
+    width:130px;
+    font-size: 20px;
+    color: #999;
+    font-weight: Regular;
+    font-family: PingFang-SC-Regular;
   }
 }
 .select_button{
