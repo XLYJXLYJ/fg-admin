@@ -1,33 +1,38 @@
 <template>
   <div class="statistics_contain">
       <VHead></VHead>
+      <div class="left"></div>
+      <div class="right"></div>
       <div class="team_situation">
         <div class="team_situation_head">
           <img src="../../assets/statistics_icon_team@2x.png">
           <span>团队状况</span>
         </div>
         <div class="team_situation_line"></div>
-        <!-- <ul>
-          <li>
-            <span class="circle"> </span><span>直属：</span><span class="number">4000</span>
-          </li>
-          <li>
-            <span class="circle"></span><span>推荐：</span><span class="number">16000</span>
-          </li>
-          <li>
-            <span class="circle"></span><span>运营商：</span><span class="number">600</span>
-          </li>
-        </ul> -->
+        <div class="team_situation_data_number">
+          <ul>
+            <li>
+              <div class="circle" style="background:#FF5100"> </div><span>直属：</span><span class="number">{{underCount}}</span>
+            </li>
+            <li>
+              <div class="circle" style="background:#0057FF"> </div><span>推荐：</span><span class="number">{{referCount}}</span>
+            </li>
+            <li>
+              <div class="circle" style="background:#FF8F00"> </div><span>运营商：</span><span class="number">{{agentCount}}</span>
+            </li>
+          </ul>
+        </div>
         <div class="team_situation_right">
-          <v-chart id="canvas"
+          <!-- <v-chart id="canvas"
+            :prevent-render='GetTeamSituation()'
             :data="data"
             :padding="[30, 'auto']">
             <v-tooltip disabled />
             <v-scale y :options="yOptions" />
-            <v-pie :radius="0.6" :inner-radius="0.8" series-field="name" :colors="['#FE5D4D','#3BA4FF','#737DDE']" />
+            <v-pie :radius="0.6" :inner-radius="0.8" series-field="name" :colors="['#FF5100','#0057FF','#FF8F00']" />
             <v-legend :options="legendOptions" />
             <v-guide type="html" :options="htmlOptions" />
-          </v-chart>
+          </v-chart> -->
         </div>
         <div class="team_situation_right_line"></div>
       </div>
@@ -109,12 +114,12 @@ import func from '@/common/func'
 import { VChart, VLine, VArea, VTooltip, VLegend, VBar, VPie, VGuide, VScale } from 'vux'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
-const data = [
-  { name: '直属', percent: 83.59, a: '1' },
-  { name: '运营商', percent: 2.17, a: '1' },
-  { name: '团队人数', percent: 3000, a: '1' }
+import ProgressCircle from '@/components/Page/Statistics/ProgressCircle'
+var data = [
+  { name: '直属', percent: localStorage.getItem('underCount'), a: '1' },
+  { name: '运营商', percent: localStorage.getItem('referCount'), a: '1' },
+  { name: '团队人数', percent: localStorage.getItem('agentCount'), a: '1' }
 ]
-
 const map = {}
 data.map(obj => {
   map[obj.name] = obj.percent + '%'
@@ -132,7 +137,8 @@ export default {
     VGuide,
     VScale,
     foot,
-    VHead
+    VHead,
+    ProgressCircle
   },
   data () {
     return {
@@ -147,12 +153,18 @@ export default {
       lastMonthTkMoney: '', // 上月预估
       totalIncome: '', // 累计收益
       beforeTime: '', // 今日与昨日
+      underCount: '', // 直属
+      referCount: '', // 推荐
+      agentCount: '', // 代理商
+      underCountPercent: '', // 直属占比
+      referCountPercent: '', // 推荐占比
+      agentCountPercent: '', // 代理商占比
       map,
       htmlOptions: {
         position: [ '50%', '50%' ],
         html: `
           <div style="width: 250px;height: 40px;text-align: center;">
-            <div style="font-size: 24px">20%</div>
+            <div style="font-size: 24px" ref='sum_percent'>111</div>
             <div style="font-size: 16px;margin-top:10px;color:#999">直属</div>
           </div>`
       },
@@ -170,10 +182,11 @@ export default {
       data
     }
   },
-  mounted () {
-    this.GetTeamSituation()
+  created () {
     this.IsSelectButton1()
     this.GetrevenueStatistics()
+    this.GetTeamSituation()
+    console.log(localStorage.getItem('underCount'))
   },
   methods: {
     // GetTeamSituation () {
@@ -187,6 +200,7 @@ export default {
     //     console.log(response)
     //   })
     // }
+
     // 收益统计
     GetrevenueStatistics () {
       let uid = localStorage.getItem('uid')
@@ -236,7 +250,13 @@ export default {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocInfo?uid=' + uid,
         response => {
-          // console.log(response.data.data)
+          this.underCount = response.data.data.underCount
+          this.referCount = response.data.data.referCount
+          this.agentCount = response.data.data.agentCount
+          let sum = this.underCount + this.referCount + this.agentCount
+          this.data[0]['percent'] = this.underCount / sum
+          this.data[1]['percent'] = this.referCount / sum
+          this.data[2]['percent'] = this.agentCount / sum
         })
     }
   }
@@ -246,10 +266,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 #canvas{
-  width: 644px!important;
-  height: 426px;
-  position: relative;
-  left: -26px;
+  position:absolute;
+  top: 30px;
+  left: -24px;
 }
 .statistics_contain{
   width: 100%;
@@ -259,6 +278,24 @@ export default {
   padding: 0px;
   background-color: #F5F5F5;
   padding-bottom: 85px;
+  .left{
+  width: 20px;
+  height: 480px;
+  position: fixed;
+  background: #F5F5F5;
+  left: 0px;
+  top: 64px;
+  z-index: 1000;
+  }
+  .right{
+  width: 20px;
+  height: 480px;
+  position: fixed;
+  background: #F5F5F5;
+  right: 0px;
+  top: 64px;
+  z-index: 1000;
+  }
   .team_situation{
     height: 428px;
     width: 599px;
@@ -267,6 +304,34 @@ export default {
     top: 84px;
     z-index: 100;
     background-color: #fff;
+    .team_situation_data_number{
+      width: 250px;
+      height: 340px;
+      background: #fff;
+      ul{
+        width: 250px;
+        height: 340px;
+        position: relative;
+        li{
+          width:186px;
+          height:23px;
+          font-size:24px;
+          font-family:PingFang-SC-Regular;
+          font-weight:PingFang-SC-Regular;
+          margin-bottom: 33px;
+          position: relative;
+          top: 112px;
+          left: 58px;
+          .circle{
+            display: inline-block;
+            width: 17px;
+            height: 17px;
+            position: relative;
+            left: -20px;
+          }
+        }
+      }
+    }
       .team_situation_head{
       height: 67px;
       width: 599px;

@@ -5,53 +5,30 @@
             <div class="me">
                 <img class="statistics_detail_back" src="../../../assets/statistics_icon_back@2x.png" @click="BackFunction()">
                 <p>团队会员收益</p>
-                <span>累计收益</span>
-                <img class="statistics_detail_select" src="../../../assets/user_icon_screen2@2x.png" alt="">
+                <span @click="IncomeAsc()">累计收益</span>
+                <img class="statistics_detail_select" src="../../../assets/user_icon_screen1@2x.png" v-show="sortid_img">
+                <img class="statistics_detail_select" src="../../../assets/user_icon_screen2@2x.png" v-show="!sortid_img">
             </div>
             <div class="statistics_detail_search">
                 <span class="search_icon">
-                <img src="../../../assets/user_icon_search@2x.png" alt="">
-                <input type="text" placeholder="请输入手机号码查找会员">
-                <button>搜索</button>
+                <img src="../../../assets/user_icon_search@2x.png" @click.stop="GetStatisticsPhoneDetail()">
+                <input type="text" placeholder="请输入手机号码查找会员" v-model="user_phone">
+                <button @click.stop="GetStatisticsPhoneDetail()">搜索</button>
                 </span>
             </div>
             <div class="statistics_detail_number">
             <ul>
-            <li>
+            <li v-show="show_user_list" v-for="(item, index) in getStatisticsDetailList " :key="index">
+                <span class="statistics_detail_phone">{{item.mobile}}</span>
+                <span class="statistics_detail_income">累计收益：￥{{item.totalIncome}}</span>
+                <p class="statistics_detail_name">{{item.nickName}}</p>
+                <p class="statistics_detail_time">结算日期:{{item.lastIncomeDate}}</p>
+            </li>
+            <li v-show="show_user_phone">
                 <span class="statistics_detail_phone">{{mobile}}</span>
-                <span class="statistics_detail_income">累计收益：￥630.24</span>
-                <p class="statistics_detail_name">小花</p>
-                <p class="statistics_detail_time">结算日期:2018-12-20</p>
-            </li>
-            <li>
-                <span class="statistics_detail_phone">13150435245</span>
-                <span class="statistics_detail_income">累计收益：￥630.24</span>
-                <p class="statistics_detail_name">小花</p>
-                <p class="statistics_detail_time">结算日期:2018-12-20</p>
-            </li>
-            <li>
-                <span class="statistics_detail_phone">13150435245</span>
-                <span class="statistics_detail_income">累计收益：￥630.24</span>
-                <p class="statistics_detail_name">小花</p>
-                <p class="statistics_detail_time">结算日期:2018-12-20</p>
-            </li>
-            <li>
-                <span class="statistics_detail_phone">13150435245</span>
-                <span class="statistics_detail_income">累计收益：￥630.24</span>
-                <p class="statistics_detail_name">小花</p>
-                <p class="statistics_detail_time">结算日期:2018-12-20</p>
-            </li>
-            <li>
-                <span class="statistics_detail_phone">13150435245</span>
-                <span class="statistics_detail_income">累计收益：￥630.24</span>
-                <p class="statistics_detail_name">小花</p>
-                <p class="statistics_detail_time">结算日期:2018-12-20</p>
-            </li>
-            <li>
-                <span class="statistics_detail_phone">13150435245</span>
-                <span class="statistics_detail_income">累计收益：￥630.24</span>
-                <p class="statistics_detail_name">小花</p>
-                <p class="statistics_detail_time">结算日期:2018-12-20</p>
+                <span class="statistics_detail_income">累计收益：￥{{totalIncome}}</span>
+                <p class="statistics_detail_name">{{nickName}}</p>
+                <p class="statistics_detail_time">结算日期:{{lastIncomeDate}}</p>
             </li>
         </ul>
             </div>
@@ -67,7 +44,17 @@ export default {
   name: 'StatisticsDetail',
   data () {
     return {
-      getStatisticsDetailList: '' // 循环数组
+      getStatisticsDetailList: '', // 循环数组
+      mobile: '', // 手机号
+      lastIncomeDate: '', // 循环数组
+      nickName: '', // 名字
+      userId: '', // 用户id
+      totalIncome: '', // 累计收益
+      user_phone: '', // 查找手机号
+      show_user_list: true, // 默认显示循环数组
+      show_user_phone: false, // 显示手机号查找的内容
+      sortid: 'totalIncomeAsc', // 收益分类
+      sortid_img: true // 收益分类
     }
   },
   mounted () {
@@ -76,9 +63,39 @@ export default {
   methods: {
     GetStatisticsDetail () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8830/auth/itoc/teamIncomes?uid=' + uid,
+      func.ajaxGet('http://47.107.48.61:8870/auth/itoc/teamIncomes?userId=' + uid,
       response => {
-        this.getStatisticsDetailList = response
+        this.getStatisticsDetailList = response.data.data.records
+        this.show_user_phone = false
+        this.show_user_list = true
+      })
+    },
+    GetStatisticsPhoneDetail () {
+      let phone = this.user_phone
+      func.ajaxGet('http://47.107.48.61:8870/auth/itoc/teamIncomes?mobile=' + phone,
+      response => {
+        this.show_user_phone = true
+        this.show_user_list = false
+        this.mobile = response.data.data.mobile
+        this.nickName = response.data.data.nickName
+        this.lastIncomeDate = response.data.data.lastIncomeDate
+        this.totalIncome = response.data.data.totalIncome
+      })
+    },
+    IncomeAsc () {
+      if (this.sortid === 'totalIncomeAsc') {
+        this.sortid = 'totalIncomeDesc'
+      } else {
+        this.sortid = 'totalIncomeAsc'
+      }
+      let uid = localStorage.getItem('uid')
+      let sortid = this.sortid
+      func.ajaxGet('http://47.107.48.61:8870/auth/itoc/teamIncomes?userId=' + uid + '&sort=' + sortid,
+      response => {
+        this.getStatisticsDetailList = response.data.data.records
+        this.show_user_phone = false
+        this.show_user_list = true
+        this.sortid_img = !this.sortid_img
       })
     }
   },
@@ -92,7 +109,7 @@ export default {
 .statistics_detail{
   width: 100%;
   height: 100%;
-  position: absolute;
+  position: relative;
   background-color: #F5F5F5;
   margin-bottom: 144px;
   .me{

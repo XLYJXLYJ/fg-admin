@@ -11,7 +11,7 @@
         </span>
       </div>
       <div class="tab_class">
-        <ul>
+        <ul v-show = '$store.state.have_order'>
           <li><router-link to="/Order/PaymentOrder" class="tab_class_order">已支付订单</router-link></li>
           <li><router-link to="/Order/ComfirmOrder" class="tab_class_order">确认结算订单</router-link></li>
           <li><router-link to="/Order/LostOrder" class="tab_class_order">已失效订单</router-link></li>
@@ -79,7 +79,7 @@ export default {
     top: 150px;
     left: 0px;
     width: 100%;
-    height: 55px;
+    height: 75px;
     background: #fff;
     .search_icon{
       width: 439px;

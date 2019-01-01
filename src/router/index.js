@@ -17,7 +17,12 @@ export default new Router({
       component: resolve => require(['@/components/Page/Statistics/StatisticsDetail'], resolve)
     },
     {
+      path: '/ProgressCircle',
+      component: resolve => require(['@/components/Page/Statistics/ProgressCircle'], resolve)
+    },
+    {
       path: '/User',
+      name: 'User',
       component: resolve => require(['@/components/Page/User'], resolve),
       children: [
         {
@@ -59,6 +64,7 @@ export default new Router({
     },
     {
       path: '/Me',
+      name: 'Me',
       component: resolve => require(['@/components/Page/Me'], resolve)
     },
     {

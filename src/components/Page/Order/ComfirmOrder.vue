@@ -2,8 +2,8 @@
 <div>
     <div class="order_detail">
       <div class="no_order" v-show="noOrder">
-        <img src="../../../assets/user_icon_emptystate@2x.png">
-        <p>您还没有会员，继续加油哦~</p>
+        <img src="../../../assets/order_icon_emptystate@2x.png">
+        <p>很抱歉，没找到相关订单</p>
       </div>
       <ul v-show="!noOrder">
         <li v-for="(item, index) in getComfirmOrderList" :key="index">
@@ -56,6 +56,7 @@ export default {
             this.getGetUserDetailList = response.data.data.records
           } else {
             this.noOrder = true
+            this.$store.state.have_order = false
           }
         })
     },
@@ -68,6 +69,7 @@ export default {
             this.getGetUserDetailList = response.data.data.records
           } else {
             this.noOrder = true
+            this.$store.state.have_order = false
           }
         })
       }
@@ -90,6 +92,7 @@ export default {
           this.getGetUserDetailList = response.data.data.records
         } else {
           this.noOrder = true
+          this.$store.state.have_order = false
         }
       })
     },
@@ -101,6 +104,7 @@ export default {
           this.getGetUserDetailList = response.data.data.records
         } else {
           this.noOrder = true
+          this.$store.state.have_order = false
         }
       })
     },
@@ -112,6 +116,7 @@ export default {
           this.getGetUserDetailList = response.data.data.records
         } else {
           this.noOrder = true
+          this.$store.state.have_order = false
         }
       })
     }
@@ -137,7 +142,7 @@ export default {
     p{
       position: absolute;
       top: 350px;
-      left: 170px;
+      left: 190px;
       width:320px;
       height:172px;
       font-size: 22px;

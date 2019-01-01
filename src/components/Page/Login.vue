@@ -18,6 +18,7 @@
 </div>
 </template>
 <script>
+import func from '@/common/func'
 import VHead from '@/components/header'
 import Qs from 'qs'
 export default {
@@ -79,7 +80,7 @@ export default {
         this.icon_eye = false
       }
     },
-    Loginbtn () {
+    async Loginbtn () {
       // 登陆
       let data = {
         mobile: this.username,
@@ -115,6 +116,18 @@ export default {
               localStorage.setItem('headImg', headImg)
               localStorage.setItem('mobile', mobile)
               localStorage.setItem('nickname', nickname)
+              func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocInfo?uid=' + uid,
+              response => {
+                let underCount = response.data.data.underCount
+                let referCount = response.data.data.referCount
+                let agentCount = response.data.data.agentCount
+                let sum = underCount + referCount + agentCount
+                localStorage.setItem('underCount', underCount / sum)
+                localStorage.setItem('referCount', referCount / sum)
+                localStorage.setItem('agentCount', agentCount / sum)
+                console.log(underCount / sum)
+                console.log(localStorage.getItem('underCount'))
+              })
             })
             this.$router.push({name: 'Statistics'})
           } else {

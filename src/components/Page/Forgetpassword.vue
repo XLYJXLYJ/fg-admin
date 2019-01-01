@@ -99,6 +99,9 @@ export default {
   },
   created () {
     this.GetImgCode()
+    if (localStorage.getItem('mobile')) {
+      this.phone = localStorage.getItem('mobile')
+    }
   },
   methods: {
     // 第一个表单函数

@@ -5,7 +5,8 @@ Vue.use(Vuex)
 
 const state = {
   dpr: '', // 设备像素比
-  userType: '' // 用户类型
+  userType: '', // 用户类型
+  have_order: true // 是否有订单
 }
 
 const actions = {
