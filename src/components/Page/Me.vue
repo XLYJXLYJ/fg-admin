@@ -14,13 +14,13 @@
         <button><router-link to="/Forgetpassword">修改</router-link></button>
         <div class="me_center_line"></div>
       </div>
-      <router-link to="/Contract">
+      <!-- <router-link to="/Contract">
         <div class="me_center_contract">
           <p>运营中心协议合同</p>
           <span>已生效</span>
           <img class="me_center_contract_img" src="../../assets/statistics_icon_enter@2x.png">
         </div>
-      </router-link>
+      </router-link> -->
       <div class="logout">
         <button @click.stop="DoShowToast()">退出登录</button>
       </div>
@@ -46,7 +46,7 @@ export default {
       this.show = false
     },
     onConfirm () {
-      func.ajaxGet('http://47.107.48.61:8830/logout',
+      func.ajaxGet('http://47.107.48.61:8820/user/logout?osType=0',
       response => {
         localStorage.setItem('uid', '')
         this.$router.push({name: 'Login'})
@@ -167,7 +167,7 @@ export default {
   }
   .logout{
     position: absolute;
-    top: 425px;
+    top: 250px;
     width: 100%;
     height: 94px;
     button{

@@ -1,12 +1,92 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+// import Statistics from '@/components/Page/Statistics'
+// import StatisticsDetail from '@/components/Page/Statistics/StatisticsDetail'
+// import User from '@/components/Page/User'
+// import UserTime from '@/components/Page/User/UserDetail'
+// import UserNumber from '@/components/Page/User/UserDetail'
+// import UserDirectly from '@/components/Page/User/UserDetail'
+// import UserDetailOne from '@/components/Page/User/UserDetailOne'
+// import Order from '@/components/Page/Order'
+// import PaymentOrder from '@/components/Page/Order/ComfirmOrder'
+// import ComfirmOrder from '@/components/Page/Order/ComfirmOrder'
+// import LostOrder from '@/components/Page/Order/ComfirmOrder'
+// import Me from '@/components/Page/Me'
+// import Contract from '@/components/Page/Contract'
+// import Editpassage from '@/components/Page/Editpassage'
+// import Login from '@/components/Page/Login'
+// import Forgetpassword from '@/components/Page/Forgetpassword'
 
 Vue.use(Router)
-
+// export default new Router({
+//   mode: 'history',
+//   routes: [
+//     {path: '/', redirect: '/Login'},
+//     {
+//       path: '/Statistics',
+//       name: 'Statistics',
+//       component: Statistics
+//     },
+//     {
+//       path: '/StatisticsDetail',
+//       name: 'StatisticsDetail',
+//       component: StatisticsDetail
+//     },
+//     {
+//       path: '/User',
+//       name: 'User',
+//       component: User,
+//       children: [
+//         {path: '/User/UserTime', name: 'UserTime', component: UserTime},
+//         {path: '/User/UserNumber', component: UserNumber},
+//         {path: '/User/UserDirectly', component: UserDirectly}
+//       ]
+//     },
+//     {
+//       path: '/UserDetailOne',
+//       name: 'UserDetailOne',
+//       component: UserDetailOne
+//     },
+//     {
+//       path: '/Order',
+//       name: 'Order',
+//       component: Order,
+//       children: [
+//         {path: '/Order/PaymentOrder', name: 'PaymentOrder', component: PaymentOrder},
+//         {path: '/Order/ComfirmOrder', name: 'ComfirmOrder', component: ComfirmOrder},
+//         {path: '/Order/LostOrder', name: 'LostOrder', component: LostOrder}
+//       ]
+//     },
+//     {
+//       path: '/Me',
+//       name: 'Me',
+//       component: Me
+//     },
+//     {
+//       path: '/Contract',
+//       name: 'Contract',
+//       component: Contract
+//     },
+//     {
+//       path: '/Editpassage',
+//       name: 'Editpassage',
+//       component: Editpassage
+//     },
+//     {
+//       path: '/Login',
+//       name: 'Login',
+//       component: Login
+//     },
+//     {
+//       path: '/Forgetpassword',
+//       name: 'Forgetpassword',
+//       component: Forgetpassword
+//     }
+//   ]
+// })
 export default new Router({
   routes: [
     {path: '/', redirect: '/Login'},
-    {path: '/Order', redirect: '/Order/PaymentOrder'},
     {
       path: '/Statistics',
       name: 'Statistics',
@@ -50,6 +130,7 @@ export default new Router({
       children: [
         {
           path: '/Order/PaymentOrder',
+          name: 'PaymentOrder',
           component: resolve => require(['@/components/Page/Order/ComfirmOrder'], resolve)
         },
         {

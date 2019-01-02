@@ -177,7 +177,7 @@ export default {
     // 图片验证码
     GetImgCode () {
       this.codeTime = Date.parse(new Date())
-      this.axios.get('/media/imgCode?codeTime=' + this.codeTime)
+      this.axios.get('http://47.107.48.61:8820/media/imgCode?osType=0&codeTime=' + this.codeTime)
       .then(response => {
         if (response.data.data) {
           this.get_picture_identifying_code = response.data.data
@@ -205,10 +205,11 @@ export default {
         let data = {
           mobile: this.phone.toString(),
           codeTime: concertcodeTime,
-          imgCode: this.picture_code
+          imgCode: this.picture_code,
+          osType: 0
         }
         data = Qs.stringify(data)
-        this.axios.post('/media/ssm/send/imgCode?' + data)
+        this.axios.post('http://47.107.48.61:8820/media/ssm/send/imgCode?' + data)
         .then(response => {
           if (response.data.code === 200) {
             this.GetImgCode()
@@ -252,7 +253,8 @@ export default {
       let data = {
         mobile: this.phone.toString(),
         password: this.$md5(this.confirm_password),
-        verifiCode: this.phone_code
+        verifiCode: this.phone_code,
+        osType: 0
       }
       if (!this.phone) {
         this.error_type = '手机号不能为空'
@@ -271,7 +273,7 @@ export default {
         this.alert_show = true
       } else {
         data = Qs.stringify(data)
-        this.axios.get('/media/info/modifyPassword?' + data)
+        this.axios.get('http://47.107.48.61:8820/media/info/modifyPassword?' + data)
         .then(response => {
           if (response.data.data) {
             this.get_picture_identifying_code = response.data.data
@@ -328,8 +330,8 @@ export default {
     background-color: #fff;
     border-bottom: 1px solid #E8E8EA;
     input{
-        width: 336px;
-        height: 29px;
+        width: 366px;
+        height: 36px;
         position: absolute;
         top: 33px;
         left: 26px;
@@ -353,7 +355,7 @@ export default {
     border-bottom: 1px solid #E8E8EA;
     input{
         width: 336px;
-        height: 29px;
+        height: 36px;
         position: absolute;
         top: 33px;
         left: 26px;
@@ -382,7 +384,7 @@ export default {
     border-bottom: 1px solid #E8E8EA;
     input{
         width: 336px;
-        height: 29px;
+        height: 36px;
         position: absolute;
         top: 33px;
         left: 26px;
@@ -426,7 +428,7 @@ export default {
     border-bottom: 1px solid #E8E8EA;
     input{
         width: 496px;
-        height: 29px;
+        height: 36px;
         position: absolute;
         top: 33px;
         left: 26px;
@@ -452,7 +454,7 @@ export default {
     border-bottom: 1px solid #E8E8EA;
     input{
         width: 496px;
-        height: 29px;
+        height: 36px;
         position: absolute;
         top: 33px;
         left: 26px;

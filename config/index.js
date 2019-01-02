@@ -31,16 +31,16 @@ module.exports = {
     /**
      * Source Maps
      */
-    proxyTable: {
-      '/':{
-        target:"https://api.fgoushop.com",//设置你调用的接口域名和端口号 别忘了加http
-        changeOrigin:true,
-        pathRewrite:{
-          '^/':''//这里理解成用‘/api'代替target里面的地址，后面组件中我们掉接口时直接用api代替 
-               //比如我要调用'http://40.00.100.133:3002/user/login'，直接写‘/api/user/login'即可
-        }
-      }
-    },
+    // proxyTable: {
+    //   '/':{
+    //     target:"http://47.107.48.61:8820",//设置你调用的接口域名和端口号 别忘了加http
+    //     changeOrigin:true,
+    //     pathRewrite:{
+    //       '^/':''//这里理解成用‘/api'代替target里面的地址，后面组件中我们掉接口时直接用api代替 
+    //            //比如我要调用'http://40.00.100.133:3002/user/login'，直接写‘/api/user/login'即可
+    //     }
+    //   }
+    // },
     // https://webpack.js.org/configuration/devtool/#development
     devtool: 'eval-source-map',
 
@@ -64,7 +64,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

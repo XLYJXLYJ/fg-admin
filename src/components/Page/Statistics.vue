@@ -22,9 +22,10 @@
             </li>
           </ul>
         </div>
+        <div class="zhishunum">{{underCountPercent}}%</div>
+        <div class="zhishu">直属</div>
         <div class="team_situation_right">
-          <!-- <v-chart id="canvas"
-            :prevent-render='GetTeamSituation()'
+          <v-chart id="canvas"
             :data="data"
             :padding="[30, 'auto']">
             <v-tooltip disabled />
@@ -32,7 +33,7 @@
             <v-pie :radius="0.6" :inner-radius="0.8" series-field="name" :colors="['#FF5100','#0057FF','#FF8F00']" />
             <v-legend :options="legendOptions" />
             <v-guide type="html" :options="htmlOptions" />
-          </v-chart> -->
+          </v-chart>
         </div>
         <div class="team_situation_right_line"></div>
       </div>
@@ -111,6 +112,7 @@
 
 <script>
 import func from '@/common/func'
+// import asyncfunc from '@/common/asyncfunc'
 import { VChart, VLine, VArea, VTooltip, VLegend, VBar, VPie, VGuide, VScale } from 'vux'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
@@ -162,11 +164,11 @@ export default {
       map,
       htmlOptions: {
         position: [ '50%', '50%' ],
-        html: `
-          <div style="width: 250px;height: 40px;text-align: center;">
-            <div style="font-size: 24px" ref='sum_percent'>111</div>
-            <div style="font-size: 16px;margin-top:10px;color:#999">直属</div>
-          </div>`
+        html:
+        `<div style="width: 250px;height: 40px;text-align: center;">
+          <div style="font-size: 24px" ref='sum_percent'></div>
+          <div style="font-size: 16px;margin-top:10px;color:#999"></div>
+        </div>`
       },
       legendOptions: {
         position: 'left',
@@ -183,11 +185,22 @@ export default {
     }
   },
   created () {
+    this.GetTeamSituation()
     this.IsSelectButton1()
     this.GetrevenueStatistics()
-    this.GetTeamSituation()
-    console.log(localStorage.getItem('underCount'))
   },
+  // watch: {
+  //   '$route': {
+  //     handler (route) {
+  //       const that = this
+  //       if (route.name === 'Statistics') {
+  //         that.GetTeamSituation()
+  //         that.IsSelectButton1()
+  //         that.GetrevenueStatistics()
+  //       }
+  //     }
+  //   }
+  // },
   methods: {
     // GetTeamSituation () {
     //   console.log(2222)
@@ -204,7 +217,7 @@ export default {
     // 收益统计
     GetrevenueStatistics () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8870/auth/findCommission?userId=' + uid,
+      func.ajaxGet('http://47.107.48.61:8820/account/auth/findCommission?osType=0&userId=' + uid,
       response => {
         this.lastMonthCommission = response.data.data.lastMonthCommission
         this.currentMonthTkMoney = response.data.data.currentMonthTkMoney
@@ -216,7 +229,7 @@ export default {
     IsSelectButton1 () {
       this.is_select_buttn = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8870/auth/findCommission?userId=' + uid,
+      func.ajaxGet('http://47.107.48.61:8820/account/auth/findCommission?osType=0&userId=' + uid,
       response => {
         this.payCount = response.data.data.payCount
         this.commission = response.data.data.commission
@@ -227,7 +240,7 @@ export default {
     IsSelectButton2 () {
       this.is_select_buttn = false
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8870/auth/findCommission?userId=' + uid,
+      func.ajaxGet('http://47.107.48.61:8820/account/auth/findCommission?osType=0&userId=' + uid,
       response => {
         this.payCount = response.data.data.yesterdayPayCount
         this.commission = response.data.data.yesterdayCommission
@@ -241,23 +254,34 @@ export default {
       } else {
         this.beforeTime = 0
       }
-      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocTeamSum?uid=' + uid + '&beforeTime=' + this.beforeTime,
+      func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocTeamSum?osType=0&uid=' + uid + '&beforeTime=' + this.beforeTime,
         response => {
           this.newTeam = response.data.data
         })
     },
     GetTeamSituation () {
       let uid = localStorage.getItem('uid')
+      // asyncfunc.myGet('http://47.107.48.61:8820/user/relation/auth/itocInfo?osType=0&uid=' + uid).then((response) => {
+      //   this.underCount = response.data.underCount
+      //   this.referCount = response.data.referCount
+      //   this.agentCount = response.data.agentCount
+      //   let sum = this.underCount + this.referCount + this.agentCount
+      //   this.data[0]['percent'] = this.underCount / sum
+      //   this.data[1]['percent'] = this.referCount / sum
+      //   this.data[2]['percent'] = this.agentCount / sum
+      //   this.underCountPercent = this.underCount / sum * 100
+      // })
       func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocInfo?uid=' + uid,
-        response => {
-          this.underCount = response.data.data.underCount
-          this.referCount = response.data.data.referCount
-          this.agentCount = response.data.data.agentCount
-          let sum = this.underCount + this.referCount + this.agentCount
-          this.data[0]['percent'] = this.underCount / sum
-          this.data[1]['percent'] = this.referCount / sum
-          this.data[2]['percent'] = this.agentCount / sum
-        })
+      response => {
+        this.underCount = response.data.data.underCount
+        this.referCount = response.data.data.referCount
+        this.agentCount = response.data.data.agentCount
+        let sum = this.underCount + this.referCount + this.agentCount
+        this.data[0]['percent'] = this.underCount / sum
+        this.data[1]['percent'] = this.referCount / sum
+        this.data[2]['percent'] = this.agentCount / sum
+        this.underCountPercent = this.underCount / sum * 100
+      })
     }
   }
 }
@@ -296,6 +320,7 @@ export default {
   top: 64px;
   z-index: 1000;
   }
+
   .team_situation{
     height: 428px;
     width: 599px;
@@ -304,6 +329,25 @@ export default {
     top: 84px;
     z-index: 100;
     background-color: #fff;
+    .zhishunum{
+      position:absolute;
+      top: 230px;
+      left: 344px;
+      width: 60px;
+      height: 60px;
+      z-index: 1000;
+      font-size: 29px;
+    }
+    .zhishu{
+      position:absolute;
+      top: 270px;
+      left: 344px;
+      width: 60px;
+      height: 60px;
+      z-index: 1000;
+      font-size: 29px;
+      color: #999;
+    }
     .team_situation_data_number{
       width: 250px;
       height: 340px;

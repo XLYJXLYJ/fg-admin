@@ -11,7 +11,8 @@
         </span>
       </div>
       <div class="tab_class">
-        <ul v-show = '$store.state.have_order'>
+        <!-- <ul v-show = '$store.state.have_order'> -->
+        <ul>
           <li><router-link to="/Order/PaymentOrder" class="tab_class_order">已支付订单</router-link></li>
           <li><router-link to="/Order/ComfirmOrder" class="tab_class_order">确认结算订单</router-link></li>
           <li><router-link to="/Order/LostOrder" class="tab_class_order">已失效订单</router-link></li>
@@ -33,13 +34,16 @@ export default {
       orderText: ''
     }
   },
+  mounted () {
+    this.$router.push({name: 'PaymentOrder'})
+  },
   methods: {
     onItemClick (index) {
       console.log('on item click:', index)
     },
     SearchUser () {
       if (this.orderText) {
-        this.$router.push(`/Order/ComfirmOrder/?orderText=` + this.orderText)
+        this.$router.push(`/Order/ComfirmOrder/?osType=0&orderText=` + this.orderText)
       } else {
         this.error_type = '请输入手机号'
         this.alert_show = true
@@ -62,7 +66,7 @@ export default {
   background: #F5F5F5;
   width: 100%;
   p{
-    position: absolute;
+    position: fixed;
     top: 64px;
     padding-left: 292px;
     width:100%;
@@ -73,14 +77,16 @@ export default {
     color:#333333;
     padding-top: 24px;
     background: #fff;
+    z-index: 1000;
   }
   .order_search{
-    position: absolute;
+    position: fixed;
     top: 150px;
     left: 0px;
     width: 100%;
     height: 75px;
     background: #fff;
+    z-index: 1000;
     .search_icon{
       width: 439px;
       height: 55px;

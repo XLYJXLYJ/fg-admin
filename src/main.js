@@ -10,11 +10,19 @@ import md5 from 'js-md5'
 import { Alert } from 'vux'
 import axios from 'axios'
 
+import VConsole from 'vconsole'
+
+const vConsole = new VConsole()
+
+console.log(vConsole.version)
+
 Vue.prototype.axios = axios
 
 Vue.component('alert', Alert)
 
 Vue.prototype.$md5 = md5
+
+axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded'
 
 Vue.prototype.BackFunction = function () {
   this.$router.go(-1)

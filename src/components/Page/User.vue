@@ -84,7 +84,7 @@ export default {
     // 查找用户
     SearchUser () {
       if (this.userText) {
-        this.$router.push(`/User/UserTime/?userText=` + this.userText)
+        this.$router.push(`/User/UserTime/?osType=0&userText=` + this.userText)
       } else {
         this.error_type = '请输入手机号'
         this.alert_show = true
@@ -94,13 +94,13 @@ export default {
     SwitchUserIcon1 () {
       this.user_icon_screen1 = false
       this.user_icon_screen2 = true
-      this.$router.push(`/User/UserTime/?sort=registAsc`)
+      this.$router.push(`/User/UserTime/?osType=0&sort=registAsc`)
     },
     // 时间倒叙
     SwitchUserIcon2 () {
       this.user_icon_screen1 = true
       this.user_icon_screen2 = false
-      this.$router.push(`/User/UserTime/?sort=registDesc`)
+      this.$router.push(`/User/UserTime/?osType=0&sort=registDesc`)
     },
     // 关闭时间小图标选中状态
     CloseSwitchUserIcon () {
@@ -159,17 +159,20 @@ export default {
   background: #F5F5F5;
   width: 100%;
   .user_search{
-    position: absolute;
-    top: 98px;
+    position: fixed;
+    top: 58px;
     left: 0px;
     width: 100%;
-    height: 55px;
+    height: 95px;
+    z-index: 1000;
+    background: #F5F5F5;
+    z-index: 1000;
     .search_icon{
       width: 439px;
       height: 55px;
       position: absolute;
       left: 20px;
-      top: 0px;
+      top: 34px;
       img{
         width:24px;
         height: 25px;
@@ -222,7 +225,7 @@ export default {
     position: absolute;
     top: 151px;
     left: 555px;
-    z-index: 1000;
+    z-index: 100;
   }
   .tab_class{
     margin-top: 167px;

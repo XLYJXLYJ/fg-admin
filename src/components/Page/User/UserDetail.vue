@@ -9,7 +9,7 @@
           <li v-for="item in getGetUserDetailList" :key='item.id'>
               <router-link :to="{path:'/UserDetailOne?uid='+item.userId}">
                   <div class="user_contain">
-                      <img class="user_contain_headimg" src="../../../assets/girl.jpg" alt="">
+                      <img class="user_contain_headimg" :src="item.headImg">
                       <p class="user_title">{{item.mobile}}</p>
                       <div v-if="item.userType == 1">
                           <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
@@ -60,7 +60,7 @@ export default {
     },
     listenUserType: function () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=' + this.$store.state.userType,
+      func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=' + this.$store.state.userType,
         response => {
           this.getGetUserDetailList = response.data.data.records
         })
@@ -70,12 +70,12 @@ export default {
       this.sort = this.$route.params.sort
       let uid = localStorage.getItem('uid')
       if (this.userText) {
-        func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&mobile=' + this.userText,
+        func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocList?osType=0&uid=' + uid + '&mobile=' + this.userText,
         response => {
           this.getGetUserDetailList = response.data.data.records
         })
       } else {
-        func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&sort=' + this.userText,
+        func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocList?osType=0&uid=' + uid + '&sort=' + this.userText,
         response => {
           this.getGetUserDetailList = response.data.data.records
         })
@@ -89,7 +89,7 @@ export default {
   methods: {
     GetUserDetail () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=0',
+      func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0',
         response => {
           if (response.data.data.records.length) {
             this.getGetUserDetailList = response.data.data.records
@@ -100,7 +100,7 @@ export default {
     },
     GetUserDetailNumber () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=0&sort=teamDesc',
+      func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0&sort=teamDesc',
         response => {
           if (response.data.data.records.length) {
             this.getGetUserDetailList = response.data.data.records
@@ -111,7 +111,7 @@ export default {
     },
     GetUserDetailDirectly () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocList?uid=' + uid + '&userType=0&sort=underDesc',
+      func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0&sort=underDesc',
         response => {
           if (response.data.data.records.length) {
             this.getGetUserDetailList = response.data.data.records
