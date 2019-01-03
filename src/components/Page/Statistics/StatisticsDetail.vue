@@ -65,21 +65,31 @@ export default {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/teamIncomes?osType=0&userId=' + uid,
       response => {
-        this.getStatisticsDetailList = response.data.data.records
-        this.show_user_phone = false
-        this.show_user_list = true
+        if (response.data.code === 200) {
+          this.getStatisticsDetailList = response.data.data.records
+          this.show_user_phone = false
+          this.show_user_list = true
+        } else {
+          this.error_type = response.data.message
+          this.alert_show = true
+        }
       })
     },
     GetStatisticsPhoneDetail () {
       let phone = this.user_phone
       func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/teamIncomes?osType=0&mobile=' + phone,
       response => {
-        this.show_user_phone = true
-        this.show_user_list = false
-        this.mobile = response.data.data.mobile
-        this.nickName = response.data.data.nickName
-        this.lastIncomeDate = response.data.data.lastIncomeDate
-        this.totalIncome = response.data.data.totalIncome
+        if (response.data.code === 200) {
+          this.show_user_phone = true
+          this.show_user_list = false
+          this.mobile = response.data.data.mobile
+          this.nickName = response.data.data.nickName
+          this.lastIncomeDate = response.data.data.lastIncomeDate
+          this.totalIncome = response.data.data.totalIncome
+        } else {
+          this.error_type = response.data.message
+          this.alert_show = true
+        }
       })
     },
     IncomeAsc () {
@@ -92,10 +102,15 @@ export default {
       let sortid = this.sortid
       func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/teamIncomes?osType=0&userId=' + uid + '&sort=' + sortid,
       response => {
-        this.getStatisticsDetailList = response.data.data.records
-        this.show_user_phone = false
-        this.show_user_list = true
-        this.sortid_img = !this.sortid_img
+        if (response.data.code === 200) {
+          this.getStatisticsDetailList = response.data.data.records
+          this.show_user_phone = false
+          this.show_user_list = true
+          this.sortid_img = !this.sortid_img
+        } else {
+          this.error_type = response.data.message
+          this.alert_show = true
+        }
       })
     }
   },

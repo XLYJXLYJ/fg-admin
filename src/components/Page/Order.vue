@@ -6,7 +6,7 @@
       <div class="order_search">
         <span class="search_icon">
           <img src="../../assets/user_icon_search@2x.png">
-          <input type="text" placeholder="请输入订单号搜索" v-model="orderText">
+          <input type="text" placeholder="请输入订单号搜索" v-model="orderText" @focus="SearchInput()">
           <button @click="SearchOrder()">搜索</button>
         </span>
       </div>
@@ -19,6 +19,25 @@
         </ul> 
         <router-view></router-view>
       </div>
+      <!-- <div class="search_order">
+        <ul v-show="searchOrder">
+          <li>
+              <p class="order_number">订单号：{{tradeId}}</p>
+              <div class="order_contain">
+                  <img :src="itemPic" alt="">
+                  <p class="order_title">{{itemTitle}}</p>
+                  <span class="order_time">创建日：{{createTime}}</span>
+                  <span class="operation_enter">运营中心收益:￥{{agentUserCommission}}</span>
+                  <span class="carrieroperator">运营商收益:￥{{superUserCommission}}</span>
+                  <span class="one_income">一级收益:￥{{userCommission}}</span>
+                  <span class="up_income">上级收益:￥{{upUserCommission}}</span>
+                  <span class="one_belong">一级归属:{{userMobile}}</span>
+                  <span class="two_belong">上级归属:{{upUserMobile}}</span>
+                  <span class="three_belong">运营商:{{agentUserMobile}}</span>
+              </div>
+          </li>
+        </ul>
+      </div> -->
     </div>
     <foot></foot>
   </div>
@@ -27,11 +46,13 @@
 <script>
 import foot from '@/components/foot'
 import VHead from '@/components/header'
+import func from '@/common/func'
 export default {
   name: 'Statistics',
   data () {
     return {
-      orderText: ''
+      orderText: '',
+      searchOrder: true
     }
   },
   mounted () {
@@ -41,11 +62,29 @@ export default {
     onItemClick (index) {
       console.log('on item click:', index)
     },
-    SearchUser () {
-      if (this.orderText) {
-        this.$router.push(`/Order/ComfirmOrder/?osType=0&orderText=` + this.orderText)
+    SearchInput () {
+      this.$router.push({name: 'Order'})
+    },
+    SearchOrder () {
+      if (String.trim(this.orderText)) {
+        func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/listOrderInfo?osType=0&tradeId=' + String.trim(this.orderText),
+        response => {
+          let tkStatus = response.data.data.records[0].tkStatus
+          let data = response.data.data.records
+          if (tkStatus === 13) {
+            this.$router.push({name: 'LostOrder', params: {data: data}})
+          } else if (tkStatus === 12) {
+            this.$router.push({name: 'PaymentOrder', params: data})
+          } else if (tkStatus === 3) {
+            this.$router.push({name: 'ComfirmOrder', params: data})
+          } else {
+            this.error_type = '该订单号不存在'
+            this.alert_show = true
+          }
+        })
+        // this.$router.push(`/Order/ComfirmOrder/?osType=0&orderText=` + this.orderText)
       } else {
-        this.error_type = '请输入手机号'
+        this.error_type = '请输入订单号'
         this.alert_show = true
       }
     }
@@ -168,6 +207,12 @@ export default {
         }
       }
     }
+  }
+  .search_order{
+    border: 1px solid red;
+    height: 100px;
+    width:100%;
+    z-index: 1000;
   }
 }
 </style>

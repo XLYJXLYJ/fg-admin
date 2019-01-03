@@ -1,6 +1,7 @@
 <template>
   <div>
     <VHead></VHead>
+      <alert v-model="alert_show">{{error_type}}</alert>
       <confirm v-model="show"
       title="温馨提示"
       @on-cancel="onCancel"
@@ -38,7 +39,9 @@ export default {
   name: 'Statistics',
   data () {
     return {
-      show: false // 是否弹出确定框
+      show: false, // 是否弹出确定框
+      alert_show: false, // 是否显示弹出框
+      error_type: '' // 弹出框的弹出说明
     }
   },
   methods: {
@@ -48,8 +51,13 @@ export default {
     onConfirm () {
       func.ajaxGet('http://47.107.48.61:8820/user/logout?osType=0',
       response => {
-        localStorage.setItem('uid', '')
-        this.$router.push({name: 'Login'})
+        if (response.data.code === 200) {
+          localStorage.setItem('uid', '')
+          this.$router.push({name: 'Login'})
+        } else {
+          this.error_type = response.data.message
+          this.alert_show = true
+        }
       })
     },
     DoShowToast () {

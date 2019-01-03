@@ -160,6 +160,7 @@ export default {
     min-height:400px;
     position: relative;
     margin-bottom: 30px;
+    margin-top: 75px;
     li{
         width: 599px;
         height: 170px;

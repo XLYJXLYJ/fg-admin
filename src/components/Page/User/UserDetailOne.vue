@@ -93,20 +93,30 @@ export default {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocInfo?osType=0&uid=' + uid,
         response => {
-          this.headImg = response.data.data.headImg
-          this.nickName = response.data.data.nickName
-          this.mobile = response.data.data.mobile
-          this.userType = response.data.data.userType
-          this.createTime = response.data.data.createTime
-          this.upMobile = response.data.data.upMobile
-          this.teamCount = response.data.data.teamCount
+          if (response.data.code === 200) {
+            this.headImg = response.data.data.headImg
+            this.nickName = response.data.data.nickName
+            this.mobile = response.data.data.mobile
+            this.userType = response.data.data.userType
+            this.createTime = response.data.data.createTime
+            this.upMobile = response.data.data.upMobile
+            this.teamCount = response.data.data.teamCount
+          } else {
+            this.error_type = response.data.message
+            this.alert_show = true
+          }
         })
     },
     GetUserDetailList () {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/query?osType=0&uid=' + uid + '&page=1&size=10',
         response => {
-          this.getGetUserDetailList = response.data.data.records
+          if (response.data.code === 200) {
+            this.getGetUserDetailList = response.data.data.records
+          } else {
+            this.error_type = response.data.message
+            this.alert_show = true
+          }
         })
     },
     selectTimer (index) {
@@ -223,7 +233,7 @@ export default {
         left: 164px;
     } 
     .user_up{
-        width:300px;
+        width:230px;
         height:22px;
         font-size:20px;
         font-family:PingFang-SC-Regular;
@@ -337,28 +347,6 @@ export default {
                 top: 74px;
                 left: 311px;
             } 
-            .user_up{
-                width:300px;
-                height:22px;
-                font-size:20px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#999;
-                position: absolute;
-                top: 99px;
-                left: 111px;
-            }
-            .user_recommend{
-                width:100px;
-                height:22px;
-                font-size:20px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#999;
-                position: absolute;
-                top: 124px;
-                left: 111px;
-            }
         }
     }
   }

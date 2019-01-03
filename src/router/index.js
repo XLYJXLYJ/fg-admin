@@ -126,6 +126,7 @@ export default new Router({
     },
     {
       path: '/Order',
+      name: 'Order',
       component: resolve => require(['@/components/Page/Order'], resolve),
       children: [
         {
@@ -135,10 +136,12 @@ export default new Router({
         },
         {
           path: '/Order/ComfirmOrder',
+          name: 'ComfirmOrder',
           component: resolve => require(['@/components/Page/Order/ComfirmOrder'], resolve)
         },
         {
           path: '/Order/LostOrder',
+          name: 'LostOrder',
           component: resolve => require(['@/components/Page/Order/LostOrder'], resolve)
         }
       ]
@@ -158,7 +161,7 @@ export default new Router({
     },
     {
       path: '/Login',
-      name: '/Login',
+      name: 'Login',
       component: resolve => require(['@/components/Page/Login'], resolve)
     },
     {

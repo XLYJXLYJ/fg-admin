@@ -179,10 +179,10 @@ export default {
       this.codeTime = Date.parse(new Date())
       this.axios.get('http://47.107.48.61:8820/media/imgCode?osType=0&codeTime=' + this.codeTime)
       .then(response => {
-        if (response.data.data) {
+        if (response.data.code === 200) {
           this.get_picture_identifying_code = response.data.data
         } else {
-          this.error_type = '服务端错误，请稍后登录'
+          this.error_type = response.data.message
           this.alert_show = true
         }
       })
@@ -275,10 +275,10 @@ export default {
         data = Qs.stringify(data)
         this.axios.get('http://47.107.48.61:8820/media/info/modifyPassword?' + data)
         .then(response => {
-          if (response.data.data) {
+          if (response.data.code === 200) {
             this.get_picture_identifying_code = response.data.data
           } else {
-            this.error_type = '服务端错误，请稍后登录'
+            this.error_type = response.data.message
             this.alert_show = true
           }
         })

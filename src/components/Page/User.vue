@@ -207,15 +207,16 @@ export default {
       }
       p{
         width:116px;
-        height: 55px;
+        height: 56px;
         position: absolute;
         left: 488px;
-        top: 18px;
+        top: 16px;
         font-size: 24px;
         color: #333;
         font-family:PingFang-SC-Regular;
         font-weight:Regular;
         letter-spacing:2px;
+        padding-top: 4px;
       }
     }
   }

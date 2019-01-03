@@ -9,14 +9,6 @@ import 'lib-flexible/flexible.js'
 import md5 from 'js-md5'
 import { Alert } from 'vux'
 import axios from 'axios'
-import VueVirtualScroller from 'vue-virtual-scroller'
-import VConsole from 'vconsole'
-
-Vue.use(VueVirtualScroller)
-
-const vConsole = new VConsole()
-
-console.log(vConsole.version)
 
 Vue.prototype.axios = axios
 

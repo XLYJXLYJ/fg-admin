@@ -5,80 +5,107 @@
         <img src="../../../assets/order_icon_emptystate@2x.png">
         <p>很抱歉，没找到相关订单</p>
       </div>
-      <ul v-show="!noOrder">
-        <li v-for="(item, index) in getGetUserDetailList" :key="index.id">
-            <p class="order_number">订单号：{{item.tradeId}}</p>
-            <div class="order_contain">
-                <img :src="item.itemPic" alt="">
-                <p class="order_title">{{item.itemTitle}}</p>
-                <span class="order_time">创建日：{{item.createTime}}</span>
-                <span class="operation_enter">运营中心收益:￥{{item.agentUserCommission}}</span>
-                <span class="carrieroperator">运营商收益:￥{{item.superUserCommission}}</span>
-                <span class="one_income">一级收益:￥{{item.userCommission}}</span>
-                <span class="up_income">上级收益:￥{{item.upUserCommission}}</span>
-                <span class="one_belong">一级归属:{{item.userMobile}}</span>
-                <span class="two_belong">上级归属:{{item.upUserMobile}}</span>
-                <span class="three_belong">运营商:{{item.agentUserMobile}}</span>
-            </div>
-        </li>
-      </ul>
-      <infinite-loading @infinite="infiniteHandler"  :distance="200" ref="infiniteLoading">
-        <span slot="no-more">
-            我们是有底线的
-        </span>
-      </infinite-loading>
+        <ul v-show="!noOrder">
+          <li v-for="(item, index) in getGetUserDetailList" :key="index.id">
+              <p class="order_number">订单号：{{item.tradeId}}</p>
+              <div class="order_contain">
+                  <img :src="item.itemPic" alt="">
+                  <p class="order_title">{{item.itemTitle}}</p>
+                  <span class="order_time">创建日：{{item.createTime}}</span>
+                  <span class="operation_enter">运营中心收益:￥{{item.agentUserCommission}}</span>
+                  <span class="carrieroperator">运营商收益:￥{{item.superUserCommission}}</span>
+                  <span class="one_income">一级收益:￥{{item.userCommission}}</span>
+                  <span class="up_income">上级收益:￥{{item.upUserCommission}}</span>
+                  <span class="one_belong">一级归属:{{item.userMobile}}</span>
+                  <span class="two_belong">上级归属:{{item.upUserMobile}}</span>
+                  <span class="three_belong">运营商:{{item.agentUserMobile}}</span>
+              </div>
+          </li>
+        </ul>
     </div>
 </div>
 </template>
 <script>
 import func from '@/common/func'
-import InfiniteLoading from 'vue-infinite-loading'
-
 export default {
   data () {
     return {
       tkStatus: '',
-      getComfirmOrderList: '',
+      GetPaymentOrderList: '',
       upUserCommission: '', // 上级收益
       adzoneName: '', // 订单名称
       createTime: '', // 创建时间
       noOrder: false,
-      getGetUserDetailList: '',
-      offset: 1
+      getGetUserDetailList: [],
+      page: 0
+    }
+  },
+  created () {
+    var _this = this
+    window.onscroll = function () {
+      // 变量scrollTop是滚动条滚动时，距离顶部的距离
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      // 变量windowHeight是可视区的高度
+      var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      // 变量scrollHeight是滚动条的总高度
+      var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      // 滚动条到底部的条件
+      if (scrollTop + windowHeight === scrollHeight) {
+      // 写后台加载数据的函数
+        _this.GetPaymentOrder()
+      }
+    }
+  },
+  watch: {
+    $route (to, from) {
+      // let oldValue = from.params.value
+      // let newValue = to.params.value
+      console.log(to)
+      console.log(from)
+      // if(oldValue !== newValue) {
+      // }else{
+      // }
     }
   },
   mounted () {
-    this.GetPayOrder()
+    if (this.$route.params.data) {
+      this.getGetUserDetailList = this.$route.params.data
+    } else {
+      this.GetPaymentOrder()
+    }
   },
   methods: {
-    GetPayOrder () {
+    GetPaymentOrder () {
+      this.page = this.page + 1
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=3' + '&page=' + this.offset,
+      func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=12' + '&page=' + this.page,
       response => {
         if (response.data.data.records.length) {
           this.noOrder = false
-          this.getGetUserDetailList = response.data.data.records
-          if (this.offset === 1) {
+          if (this.page === 1) {
             this.getGetUserDetailList = response.data.data.records
-            //  this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
           } else {
-            this.getGetUserDetailList = this.getGetUserDetailList.concat(this.getGetUserDetailList) // 否则就把数据拼接
-            //  this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+            this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
           }
         } else {
-          this.noOrder = true
+          if (this.page === 1) {
+            this.noOrder = true
+          }
         }
       })
     },
-    // 下拉
-    infiniteHandler () {
-      console.log('加载了哦')
-      this.offset = 1
-      this.GetPayOrder()
+    infinite () {
+      console.log('infinite')
+      this.timeout = setTimeout(() => {
+        if (this.myData.length >= 20) {
+          this.$refs.my_scroller.finishInfinite(true)
+        } else {
+          this.$refs.my_scroller.finishInfinite(false)
+        }
+      // this.$refs.my_scroller.resize();// 已弃用，
+        this.myData.push(this.myData[1])
+      }, 1500)
     }
-  },
-  components: {
-    InfiniteLoading
   }
 }
 </script>
@@ -87,7 +114,6 @@ export default {
   width: 640px;
   height: auto;
   position: relative;
-  border: 1px solid red;
   .no_order{
     width: 100%;
     min-height:400px;
@@ -103,8 +129,9 @@ export default {
       position: absolute;
       top: 350px;
       left: 190px;
+      padding-top:3px;
       width:320px;
-      height:172px;
+      height:32px;
       font-size: 22px;
       color: #666;
       font-family:PingFang-SC-Regular;
@@ -115,6 +142,7 @@ export default {
     width: 100%;
     min-height:400px;
     position: relative;
+    margin-top: 90px;
     li{
         width: 100%;
         height: 231px;

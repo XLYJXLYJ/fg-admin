@@ -16,14 +16,14 @@
             <img class="password_close" src="../../assets/delete@2x.png" v-show="password_show" @click="ClosePasswordShow()">
             <img src="../../assets/password_icon_eye1@2x.png" v-show="icon_eye" class="show_password" @click="SwitchPassword()">
             <img src="../../assets/password_icon_eye@2x.png" v-show="!icon_eye" class="show_password" @click="SwitchPassword()">
-            <router-link to="/Forgetpassword"><span class="forget_password_button">忘记密码 ？</span></router-link>
+            <router-link to="/Forgetpassword"><span class="forget_password_button">忘记密码？</span></router-link>
             <button :class="{login_button:is_login_button,ok_login_button:!is_login_button}" @click.stop.prevent="Loginbtn()">登录</button>    
         </form> 
     </div>
 </div>
 </template>
 <script>
-// import func from '@/common/func'
+import func from '@/common/func'
 // import VHead from '@/components/header'
 // import Qs from 'qs'
 export default {
@@ -94,7 +94,6 @@ export default {
     },
     Loginbtn () {
       // 登陆
-      console.log('点击登录按钮')
       // var data = {
       //   mobile: this.username,
       //   password: this.$md5(this.password),
@@ -109,22 +108,71 @@ export default {
         this.error_type = '密码不能为空'
         this.alert_show = true
       } else {
-        console.log('开始登录请求')
         this.axios.post('http://47.107.48.61:8820/user/login/password?osType=0&mobile=' + this.username + '&password=' + this.$md5(this.password))
         .then(response => {
-          if (response.data.data.loginToken) {
-            console.log('登录成功')
-            console.log(response.data.data.loginToken)
+          if (response.data.code === 200) {
             this.getToken = response.data.data.loginToken
-            localStorage.setItem('loginToken', this.getToken)
-            this.$router.push({name: 'Statistics'})
-            console.log('跳转成功')
+            let token = response.data.data.loginToken
+            localStorage.setItem('loginToken', token)
+            // window.location.href = '/#/Statistics'
+            this.Initialization()
           } else {
-            this.error_type = '服务端错误，请稍后登录'
+            this.error_type = response.data.message
             this.alert_show = true
           }
         })
       }
+    },
+    Initialization () {
+      this.getToken = localStorage.getItem('loginToken')
+      this.axios.get('http://47.107.48.61:8820/user/auth/query?osType=0', {
+        headers: {'token': this.getToken}
+      })
+      .then(response => {
+        if (response.data.code === 200) {
+          var uid = response.data.data.userId
+          var headImg = response.data.data.headImg
+          var mobile = response.data.data.mobile
+          var nickname = response.data.data.nickname
+          localStorage.setItem('uid', uid)
+          localStorage.setItem('headImg', headImg)
+          localStorage.setItem('mobile', mobile)
+          localStorage.setItem('nickname', nickname)
+          this.$router.push({name: 'Statistics'})
+        } else {
+          this.error_type = response.data.message
+          this.alert_show = true
+        }
+      })
+    },
+    GetTeamSituation () {
+      let uid = localStorage.getItem('uid')
+      // asyncfunc.myGet('http://47.107.48.61:8820/user/relation/auth/itocInfo?osType=0&uid=' + uid).then((response) => {
+      //   this.underCount = response.data.underCount
+      //   this.referCount = response.data.referCount
+      //   this.agentCount = response.data.agentCount
+      //   let sum = this.underCount + this.referCount + this.agentCount
+      //   this.data[0]['percent'] = this.underCount / sum
+      //   this.data[1]['percent'] = this.referCount / sum
+      //   this.data[2]['percent'] = this.agentCount / sum
+      //   this.underCountPercent = this.underCount / sum * 100
+      // })
+      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocInfo?uid=' + uid,
+      response => {
+        if (response.data.code === 200) {
+          this.underCount = response.data.data.underCount
+          this.referCount = response.data.data.referCount
+          this.agentCount = response.data.data.agentCount
+          let sum = this.underCount + this.referCount + this.agentCount
+          localStorage.getItem('underCount', this.underCount / sum * 100)
+          localStorage.getItem('referCount', this.referCount / sum * 100)
+          localStorage.getItem('agentCount', this.agentCount / sum * 100)
+          // this.underCountPercent = this.underCount / sum * 100
+        } else {
+          this.error_type = response.data.message
+          this.alert_show = true
+        }
+      })
     }
   },
   components: {

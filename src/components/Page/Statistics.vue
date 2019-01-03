@@ -1,6 +1,7 @@
 <template>
   <div class="statistics_contain">
       <VHead></VHead>
+      <alert v-model="alert_show">{{error_type}}</alert>
       <div class="left"></div>
       <div class="right"></div>
       <div class="team_situation">
@@ -161,6 +162,8 @@ export default {
       referCountPercent: '', // 推荐占比
       agentCountPercent: '', // 代理商占比
       getToken: '', // token
+      alert_show: false, // 是否显示弹出框
+      error_type: '', // 弹出框的弹出说明
       map,
       htmlOptions: {
         position: [ '50%', '50%' ],
@@ -185,7 +188,8 @@ export default {
     }
   },
   created () {
-    this.Initialization()
+    this.GetAsyncDate()
+    // this.Initialization()
     this.GetTeamSituation()
     this.IsSelectButton1()
     this.GetrevenueStatistics()
@@ -203,6 +207,9 @@ export default {
   //   }
   // },
   methods: {
+    renderVChart ({ chart }) {
+      this.GetTeamSituation()
+    },
     // GetTeamSituation () {
     //   console.log(2222)
     //   let uid = localStorage.getItem('uid')
@@ -214,6 +221,33 @@ export default {
     //     console.log(response)
     //   })
     // }
+    GetAsyncDate () {
+      this.getToken = localStorage.getItem('loginToken')
+      return new Promise((resolve, reject) => {
+        this.axios.get('http://47.107.48.61:8820/user/auth/query?osType=0', {
+          headers: {'token': this.getToken}
+        })
+        .then((response) => {
+          if (response.data.code === 200) {
+            var uid = response.data.data.userId
+            var headImg = response.data.data.headImg
+            var mobile = response.data.data.mobile
+            var nickname = response.data.data.nickname
+            localStorage.setItem('uid', uid)
+            localStorage.setItem('headImg', headImg)
+            localStorage.setItem('mobile', mobile)
+            localStorage.setItem('nickname', nickname)
+          } else {
+            this.error_type = response.data.message
+            this.alert_show = true
+          }
+        })
+        .catch(function (error) {
+          reject(error)
+        })
+      })
+    },
+
     // 初始化
     Initialization () {
       this.getToken = localStorage.getItem('loginToken')
@@ -221,26 +255,42 @@ export default {
         headers: {'token': this.getToken}
       })
       .then(response => {
-        console.log('请求个人数据成功')
-        var uid = response.data.data.userId
-        var headImg = response.data.data.headImg
-        var mobile = response.data.data.mobile
-        var nickname = response.data.data.nickname
-        localStorage.setItem('uid', uid)
-        localStorage.setItem('headImg', headImg)
-        localStorage.setItem('mobile', mobile)
-        localStorage.setItem('nickname', nickname)
+        if (response.data.code === 200) {
+          var uid = response.data.data.userId
+          var headImg = response.data.data.headImg
+          var mobile = response.data.data.mobile
+          var nickname = response.data.data.nickname
+          localStorage.setItem('uid', uid)
+          localStorage.setItem('headImg', headImg)
+          localStorage.setItem('mobile', mobile)
+          localStorage.setItem('nickname', nickname)
+        } else {
+          this.error_type = response.data.message
+          this.alert_show = true
+        }
       })
     },
     // 收益统计
     GetrevenueStatistics () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8820/account/auth/findCommission?osType=0&userId=' + uid,
-      response => {
-        this.lastMonthCommission = response.data.data.lastMonthCommission
-        this.currentMonthTkMoney = response.data.data.currentMonthTkMoney
-        this.lastMonthTkMoney = response.data.data.lastMonthTkMoney
-        this.totalIncome = response.data.data.totalIncome
+      return new Promise((resolve, reject) => {
+        this.axios.get('http://47.107.48.61:8820/account/auth/findCommission?osType=0&userId=' + uid, {
+          headers: {'token': this.getToken}
+        })
+        .then((response) => {
+          if (response.data.code === 200) {
+            this.lastMonthCommission = response.data.data.lastMonthCommission
+            this.currentMonthTkMoney = response.data.data.currentMonthTkMoney
+            this.lastMonthTkMoney = response.data.data.lastMonthTkMoney
+            this.totalIncome = response.data.data.totalIncome
+          } else {
+            this.error_type = response.data.message
+            this.alert_show = true
+          }
+        })
+        .catch(function (error) {
+          reject(error)
+        })
       })
     },
     // 今日数据统计
@@ -249,9 +299,14 @@ export default {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8820/account/auth/findCommission?osType=0&userId=' + uid,
       response => {
-        this.payCount = response.data.data.payCount
-        this.commission = response.data.data.commission
-        this.GetDataStatistics()
+        if (response.data.code === 200) {
+          this.payCount = response.data.data.payCount
+          this.commission = response.data.data.commission
+          this.GetDataStatistics()
+        } else {
+          this.error_type = response.data.message
+          this.alert_show = true
+        }
       })
     },
     // 昨日数据统计
@@ -260,9 +315,14 @@ export default {
       let uid = localStorage.getItem('uid')
       func.ajaxGet('http://47.107.48.61:8820/account/auth/findCommission?osType=0&userId=' + uid,
       response => {
-        this.payCount = response.data.data.yesterdayPayCount
-        this.commission = response.data.data.yesterdayCommission
-        this.GetDataStatistics()
+        if (response.data.code === 200) {
+          this.payCount = response.data.data.yesterdayPayCount
+          this.commission = response.data.data.yesterdayCommission
+          this.GetDataStatistics()
+        } else {
+          this.error_type = response.data.message
+          this.alert_show = true
+        }
       })
     },
     GetDataStatistics () {
@@ -274,7 +334,12 @@ export default {
       }
       func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocTeamSum?osType=0&uid=' + uid + '&beforeTime=' + this.beforeTime,
         response => {
-          this.newTeam = response.data.data
+          if (response.data.code === 200) {
+            this.newTeam = response.data.data
+          } else {
+            this.error_type = response.data.message
+            this.alert_show = true
+          }
         })
     },
     GetTeamSituation () {
@@ -291,14 +356,19 @@ export default {
       // })
       func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocInfo?uid=' + uid,
       response => {
-        this.underCount = response.data.data.underCount
-        this.referCount = response.data.data.referCount
-        this.agentCount = response.data.data.agentCount
-        let sum = this.underCount + this.referCount + this.agentCount
-        this.data[0]['percent'] = this.underCount / sum
-        this.data[1]['percent'] = this.referCount / sum
-        this.data[2]['percent'] = this.agentCount / sum
-        this.underCountPercent = this.underCount / sum * 100
+        if (response.data.code === 200) {
+          this.underCount = response.data.data.underCount
+          this.referCount = response.data.data.referCount
+          this.agentCount = response.data.data.agentCount
+          let sum = this.underCount + this.referCount + this.agentCount
+          this.data[0]['percent'] = this.underCount / sum
+          this.data[1]['percent'] = this.referCount / sum
+          this.data[2]['percent'] = this.agentCount / sum
+          this.underCountPercent = this.underCount / sum * 100
+        } else {
+          this.error_type = response.data.message
+          this.alert_show = true
+        }
       })
     }
   }
@@ -350,7 +420,7 @@ export default {
     .zhishunum{
       position:absolute;
       top: 230px;
-      left: 344px;
+      left: 368px;
       width: 60px;
       height: 60px;
       z-index: 1000;
@@ -359,7 +429,7 @@ export default {
     .zhishu{
       position:absolute;
       top: 270px;
-      left: 344px;
+      left: 368px;
       width: 60px;
       height: 60px;
       z-index: 1000;
