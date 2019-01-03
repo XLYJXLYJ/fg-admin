@@ -108,7 +108,7 @@ export default {
         this.error_type = '密码不能为空'
         this.alert_show = true
       } else {
-        this.axios.post('http://47.107.48.61:8820/user/login/password?osType=0&mobile=' + this.username + '&password=' + this.$md5(this.password))
+        this.axios.post('/user/login/password?osType=0&mobile=' + this.username + '&password=' + this.$md5(this.password))
         .then(response => {
           if (response.data.code === 200) {
             this.getToken = response.data.data.loginToken
@@ -125,7 +125,7 @@ export default {
     },
     Initialization () {
       this.getToken = localStorage.getItem('loginToken')
-      this.axios.get('http://47.107.48.61:8820/user/auth/query?osType=0', {
+      this.axios.get('/user/auth/query?osType=0', {
         headers: {'token': this.getToken}
       })
       .then(response => {
@@ -147,7 +147,7 @@ export default {
     },
     GetTeamSituation () {
       let uid = localStorage.getItem('uid')
-      // asyncfunc.myGet('http://47.107.48.61:8820/user/relation/auth/itocInfo?osType=0&uid=' + uid).then((response) => {
+      // asyncfunc.myGet('/user/relation/auth/itocInfo?osType=0&uid=' + uid).then((response) => {
       //   this.underCount = response.data.underCount
       //   this.referCount = response.data.referCount
       //   this.agentCount = response.data.agentCount
@@ -164,9 +164,9 @@ export default {
           this.referCount = response.data.data.referCount
           this.agentCount = response.data.data.agentCount
           let sum = this.underCount + this.referCount + this.agentCount
-          localStorage.getItem('underCount', this.underCount / sum * 100)
-          localStorage.getItem('referCount', this.referCount / sum * 100)
-          localStorage.getItem('agentCount', this.agentCount / sum * 100)
+          localStorage.setItem('underCount', this.underCount / sum * 100)
+          localStorage.setItem('referCount', this.referCount / sum * 100)
+          localStorage.setItem('agentCount', this.agentCount / sum * 100)
           // this.underCountPercent = this.underCount / sum * 100
         } else {
           this.error_type = response.data.message

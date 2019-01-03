@@ -1,6 +1,8 @@
 <template>
 <div>
     <div class="order_detail">
+      <loading :show="show_loading" :text="text_loading" :position="absolute" style="z-index:1000"></loading>
+      <alert v-model="alert_show">{{error_type}}</alert>
       <div class="no_order" v-show="noOrder">
         <img src="../../../assets/order_icon_emptystate@2x.png">
         <p>很抱歉，没找到相关订单</p>
@@ -37,7 +39,11 @@ export default {
       createTime: '', // 创建时间
       noOrder: false,
       getGetUserDetailList: [],
-      page: 0
+      page: 0,
+      alert_show: false, // 是否显示弹出框
+      error_type: '', // 弹出框的弹出说明
+      show_loading: false, // 是否显示加载框
+      text_loading: '正在加载...' // 加载框显示文字
     }
   },
   created () {
@@ -76,20 +82,28 @@ export default {
   },
   methods: {
     GetPaymentOrder () {
+      this.show_loading = true
       this.page = this.page + 1
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=12' + '&page=' + this.page,
+      func.ajaxGet('/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=12' + '&page=' + this.page,
       response => {
         if (response.data.data.records.length) {
           this.noOrder = false
           if (this.page === 1) {
             this.getGetUserDetailList = response.data.data.records
+            this.show_loading = false
           } else {
             this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+            this.show_loading = false
           }
         } else {
           if (this.page === 1) {
             this.noOrder = true
+            this.show_loading = false
+          } else {
+            this.error_type = '已显示全部订单'
+            this.alert_show = true
+            this.show_loading = false
           }
         }
       })

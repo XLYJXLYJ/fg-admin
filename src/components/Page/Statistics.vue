@@ -26,7 +26,7 @@
         <div class="zhishunum">{{underCountPercent}}%</div>
         <div class="zhishu">直属</div>
         <div class="team_situation_right">
-          <v-chart id="canvas"
+          <v-chart id="canvas" ref='chart'
             :data="data"
             :padding="[30, 'auto']">
             <v-tooltip disabled />
@@ -224,7 +224,7 @@ export default {
     GetAsyncDate () {
       this.getToken = localStorage.getItem('loginToken')
       return new Promise((resolve, reject) => {
-        this.axios.get('http://47.107.48.61:8820/user/auth/query?osType=0', {
+        this.axios.get('/user/auth/query?osType=0', {
           headers: {'token': this.getToken}
         })
         .then((response) => {
@@ -251,7 +251,7 @@ export default {
     // 初始化
     Initialization () {
       this.getToken = localStorage.getItem('loginToken')
-      this.axios.get('http://47.107.48.61:8820/user/auth/query?osType=0', {
+      this.axios.get('/user/auth/query?osType=0', {
         headers: {'token': this.getToken}
       })
       .then(response => {
@@ -274,7 +274,7 @@ export default {
     GetrevenueStatistics () {
       let uid = localStorage.getItem('uid')
       return new Promise((resolve, reject) => {
-        this.axios.get('http://47.107.48.61:8820/account/auth/findCommission?osType=0&userId=' + uid, {
+        this.axios.get('/account/auth/findCommission?osType=0&userId=' + uid, {
           headers: {'token': this.getToken}
         })
         .then((response) => {
@@ -297,7 +297,7 @@ export default {
     IsSelectButton1 () {
       this.is_select_buttn = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8820/account/auth/findCommission?osType=0&userId=' + uid,
+      func.ajaxGet('/account/auth/findCommission?osType=0&userId=' + uid,
       response => {
         if (response.data.code === 200) {
           this.payCount = response.data.data.payCount
@@ -313,7 +313,7 @@ export default {
     IsSelectButton2 () {
       this.is_select_buttn = false
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8820/account/auth/findCommission?osType=0&userId=' + uid,
+      func.ajaxGet('/account/auth/findCommission?osType=0&userId=' + uid,
       response => {
         if (response.data.code === 200) {
           this.payCount = response.data.data.yesterdayPayCount
@@ -332,7 +332,7 @@ export default {
       } else {
         this.beforeTime = 0
       }
-      func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocTeamSum?osType=0&uid=' + uid + '&beforeTime=' + this.beforeTime,
+      func.ajaxGet('/user/relation/auth/itocTeamSum?osType=0&uid=' + uid + '&beforeTime=' + this.beforeTime,
         response => {
           if (response.data.code === 200) {
             this.newTeam = response.data.data
@@ -344,7 +344,7 @@ export default {
     },
     GetTeamSituation () {
       let uid = localStorage.getItem('uid')
-      // asyncfunc.myGet('http://47.107.48.61:8820/user/relation/auth/itocInfo?osType=0&uid=' + uid).then((response) => {
+      // asyncfunc.myGet('/user/relation/auth/itocInfo?osType=0&uid=' + uid).then((response) => {
       //   this.underCount = response.data.underCount
       //   this.referCount = response.data.referCount
       //   this.agentCount = response.data.agentCount
@@ -354,7 +354,7 @@ export default {
       //   this.data[2]['percent'] = this.agentCount / sum
       //   this.underCountPercent = this.underCount / sum * 100
       // })
-      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocInfo?uid=' + uid,
+      func.ajaxGet('/user/relation/auth/itocInfo?osType=0&uid=' + uid,
       response => {
         if (response.data.code === 200) {
           this.underCount = response.data.data.underCount
@@ -365,6 +365,7 @@ export default {
           this.data[1]['percent'] = this.referCount / sum
           this.data[2]['percent'] = this.agentCount / sum
           this.underCountPercent = this.underCount / sum * 100
+          this.$refs.chart.rerender()
         } else {
           this.error_type = response.data.message
           this.alert_show = true

@@ -37,7 +37,7 @@ export default {
       width: 60px;
       height: 27px;
       position: absolute;
-      top: 17px;
+      top: 18px;
       left: 72px;
       font-size: 29px;
       color: #333333;
@@ -48,7 +48,7 @@ export default {
       width: 236px;
       height: 27px;
       position: absolute;
-      top: 17px;
+      top: 18px;
       left: 202px;
       color: #333333;
       font-size: 29px;
@@ -59,7 +59,7 @@ export default {
       width: 30px;
       height: 30px;
       position: absolute;
-      top: 20px;
+      top: 17px;
       right: 20px;
     }
 }

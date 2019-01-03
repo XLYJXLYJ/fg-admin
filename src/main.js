@@ -7,12 +7,14 @@ import App from '@/App'
 import store from '@/vuex/store'
 import 'lib-flexible/flexible.js'
 import md5 from 'js-md5'
-import { Alert } from 'vux'
+import {Alert, Loading} from 'vux'
 import axios from 'axios'
 
 Vue.prototype.axios = axios
 
 Vue.component('alert', Alert)
+
+Vue.component('loading', Loading)
 
 Vue.prototype.$md5 = md5
 

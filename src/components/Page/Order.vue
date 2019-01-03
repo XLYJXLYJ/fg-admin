@@ -67,7 +67,7 @@ export default {
     },
     SearchOrder () {
       if (String.trim(this.orderText)) {
-        func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/listOrderInfo?osType=0&tradeId=' + String.trim(this.orderText),
+        func.ajaxGet('/account/auth/itoc/listOrderInfo?osType=0&tradeId=' + String.trim(this.orderText),
         response => {
           let tkStatus = response.data.data.records[0].tkStatus
           let data = response.data.data.records
@@ -204,6 +204,7 @@ export default {
           padding-bottom: 20px;
           border-bottom: 5px solid #FF5100;
           margin: 0 auto;
+          z-index: 1000;
         }
       }
     }

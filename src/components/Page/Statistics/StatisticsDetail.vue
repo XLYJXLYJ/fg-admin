@@ -63,7 +63,7 @@ export default {
   methods: {
     GetStatisticsDetail () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/teamIncomes?osType=0&userId=' + uid,
+      func.ajaxGet('/account/auth/itoc/teamIncomes?osType=0&userId=' + uid,
       response => {
         if (response.data.code === 200) {
           this.getStatisticsDetailList = response.data.data.records
@@ -77,7 +77,7 @@ export default {
     },
     GetStatisticsPhoneDetail () {
       let phone = this.user_phone
-      func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/teamIncomes?osType=0&mobile=' + phone,
+      func.ajaxGet('/account/auth/itoc/teamIncomes?osType=0&mobile=' + phone,
       response => {
         if (response.data.code === 200) {
           this.show_user_phone = true
@@ -100,7 +100,7 @@ export default {
       }
       let uid = localStorage.getItem('uid')
       let sortid = this.sortid
-      func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/teamIncomes?osType=0&userId=' + uid + '&sort=' + sortid,
+      func.ajaxGet('/account/auth/itoc/teamIncomes?osType=0&userId=' + uid + '&sort=' + sortid,
       response => {
         if (response.data.code === 200) {
           this.getStatisticsDetailList = response.data.data.records

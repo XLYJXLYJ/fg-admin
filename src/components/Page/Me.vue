@@ -49,7 +49,7 @@ export default {
       this.show = false
     },
     onConfirm () {
-      func.ajaxGet('http://47.107.48.61:8820/user/logout?osType=0',
+      func.ajaxGet('/user/logout?osType=0',
       response => {
         if (response.data.code === 200) {
           localStorage.setItem('uid', '')

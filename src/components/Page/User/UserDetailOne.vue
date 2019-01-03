@@ -91,7 +91,7 @@ export default {
   methods: {
     GetUserDetailOne () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocInfo?osType=0&uid=' + uid,
+      func.ajaxGet('/user/relation/auth/itocInfo?osType=0&uid=' + uid,
         response => {
           if (response.data.code === 200) {
             this.headImg = response.data.data.headImg
@@ -109,7 +109,7 @@ export default {
     },
     GetUserDetailList () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/query?osType=0&uid=' + uid + '&page=1&size=10',
+      func.ajaxGet('/user/relation/auth/query?osType=0&uid=' + uid + '&page=1&size=10',
         response => {
           if (response.data.code === 200) {
             this.getGetUserDetailList = response.data.data.records
