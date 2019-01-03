@@ -81,7 +81,7 @@ export default {
   }
   .order_search{
     position: fixed;
-    top: 150px;
+    top: 148px;
     left: 0px;
     width: 100%;
     height: 75px;
@@ -140,6 +140,8 @@ export default {
       vertical-align: middle;
       text-align: center;
       background: #fff; 
+      position: fixed;
+      z-index: 1000;
       li{
         float: left;
         width:200px;

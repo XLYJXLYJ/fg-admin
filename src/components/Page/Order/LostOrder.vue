@@ -1,23 +1,31 @@
 <template>
 <div>
-    <div class="lost_order_detail">
-        <ul>
-            <li v-for="(item, index) in getComfirmOrderList" :key="index">
-                <p class="order_number">订单号：305769570069360624</p>
-                <div class="order_contain">
-                    <img src="../../../assets/user_icon_search@2x.png" alt="">
-                    <p class="order_title">加绒加厚毛圈婴幼儿童袜3-5双秋冬穿毛圈婴幼儿童袜</p>
-                    <span class="order_time">创建日：2018-12-24 12:34:06</span>
-                    <span class="operation_enter">运营中心收益:￥0.00</span>
-                    <span class="carrieroperator">运营商收益:￥0.00</span>
-                    <span class="one_income">一级收益:￥0.00</span>
-                    <span class="up_income">上级收益:￥0.00</span>
-                    <span class="one_belong">一级归属:13189630598</span>
-                    <span class="two_belong">二级归属:13189630598</span>
-                    <span class="three_belong">三级归属:13189630598</span>
-                </div>
-            </li>
+    <div class="order_detail">
+      <div class="no_order" v-show="noOrder">
+        <img src="../../../assets/order_icon_emptystate@2x.png">
+        <p>很抱歉，没找到相关订单</p>
+      </div>
+      <scroller 
+        :on-refresh="refresh"
+        :on-infinite="infinite">
+        <ul v-show="!noOrder">
+          <li v-for="(item, index) in getGetUserDetailList" :key="index.id">
+              <p class="order_number">订单号：{{item.tradeId}}</p>
+              <div class="order_contain">
+                  <img :src="item.itemPic" alt="">
+                  <p class="order_title">{{item.itemTitle}}</p>
+                  <span class="order_time">创建日：{{item.createTime}}</span>
+                  <span class="operation_enter">运营中心收益:￥{{item.agentUserCommission}}</span>
+                  <span class="carrieroperator">运营商收益:￥{{item.superUserCommission}}</span>
+                  <span class="one_income">一级收益:￥{{item.userCommission}}</span>
+                  <span class="up_income">上级收益:￥{{item.upUserCommission}}</span>
+                  <span class="one_belong">一级归属:{{item.userMobile}}</span>
+                  <span class="two_belong">上级归属:{{item.upUserMobile}}</span>
+                  <span class="three_belong">运营商:{{item.agentUserMobile}}</span>
+              </div>
+          </li>
         </ul>
+      </scroller>
     </div>
 </div>
 </template>
@@ -25,35 +33,81 @@
 import func from '@/common/func'
 export default {
   data () {
-    return  {
+    return {
       tkStatus: '',
-      getComfirmOrderList:''
-    }
-  },
-  computed: {
-    listenUserType () {
-      return this.$store.state.userType
+      getComfirmOrderList: '',
+      upUserCommission: '', // 上级收益
+      adzoneName: '', // 订单名称
+      createTime: '', // 创建时间
+      noOrder: false,
+      getGetUserDetailList: ''
     }
   },
   mounted () {
-    this.GetComfirmOrder()
+    this.GetPayOrder()
   },
   methods: {
-    GetComfirmOrder () {
+    GetPayOrder () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('http://47.107.48.61:8870/auth/itoc/listOrderInfo?userId=' + uid + '&tkStatus=13',
+      func.ajaxGet('http://47.107.48.61:8820/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=3',
       response => {
-        this.getComfirmOrderList = response.data.data.records
+        if (response.data.data.records.length) {
+          this.getGetUserDetailList = response.data.data.records
+          console.log(this.getGetUserDetailList)
+        } else {
+          this.noOrder = true
+        }
       })
+    },
+    infinite () {
+      console.log('infinite')
+      this.timeout = setTimeout(() => {
+        if (this.myData.length >= 20) {
+          this.$refs.my_scroller.finishInfinite(true)
+        } else {
+          this.$refs.my_scroller.finishInfinite(false)
+        }
+      // this.$refs.my_scroller.resize();// 已弃用，
+        this.myData.push(this.myData[1])
+      }, 1500)
+    },
+    refresh () {
+      console.log('refresh')
+      this.timeout = setTimeout(() => {
+        this.$refs.my_scroller.finishPullToRefresh()
+      }, 1500)
     }
   }
 }
 </script>
 <style lang="less" scoped>
-.lost_order_detail{
+.order_detail{
   width: 640px;
   height: auto;
   position: relative;
+  .no_order{
+    width: 100%;
+    min-height:400px;
+    position: relative;
+    img{
+      position: absolute;
+      top: 142px;
+      left: 214px;
+      width:212px;
+      height:172px;
+    }
+    p{
+      position: absolute;
+      top: 350px;
+      left: 190px;
+      width:320px;
+      height:172px;
+      font-size: 22px;
+      color: #666;
+      font-family:PingFang-SC-Regular;
+      font-weight:Regular;
+    }
+  }
   ul{
     width: 100%;
     min-height:400px;
@@ -76,7 +130,7 @@ export default {
             top: 20px;
             left: 20px;
         }
-        .lost_order_detail_line{
+        .order_detail_line{
             width:599px;
             height:1px;
             position: absolute;

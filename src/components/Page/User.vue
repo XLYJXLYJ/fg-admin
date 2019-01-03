@@ -228,23 +228,28 @@ export default {
     z-index: 100;
   }
   .tab_class{
-    margin-top: 167px;
+    margin-top: 147px;
     margin-bottom: 67px;
     flex: 1;
     width: 640px;
     ul{
-      width:600px;
-      height: 57px;
+      width:640px;
+      height: 77px;
       margin: 0 auto;
       display: table-cell;
       vertical-align: middle;
       text-align: center; 
+      position: fixed;
+      z-index: 1000;
+      padding-top: 20px;
+      background: #F5F5F5;
       img{
         width:12px;
         height: 15px;
         position: absolute;
         left: 159px;
-        top: 191px;
+        top: 40px;
+        z-index: 1000;
       }
       li{
         float: left;

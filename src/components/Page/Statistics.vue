@@ -116,7 +116,7 @@ import func from '@/common/func'
 import { VChart, VLine, VArea, VTooltip, VLegend, VBar, VPie, VGuide, VScale } from 'vux'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
-import ProgressCircle from '@/components/Page/Statistics/ProgressCircle'
+
 var data = [
   { name: '直属', percent: localStorage.getItem('underCount'), a: '1' },
   { name: '运营商', percent: localStorage.getItem('referCount'), a: '1' },
@@ -139,8 +139,7 @@ export default {
     VGuide,
     VScale,
     foot,
-    VHead,
-    ProgressCircle
+    VHead
   },
   data () {
     return {
@@ -161,6 +160,7 @@ export default {
       underCountPercent: '', // 直属占比
       referCountPercent: '', // 推荐占比
       agentCountPercent: '', // 代理商占比
+      getToken: '', // token
       map,
       htmlOptions: {
         position: [ '50%', '50%' ],
@@ -185,6 +185,7 @@ export default {
     }
   },
   created () {
+    this.Initialization()
     this.GetTeamSituation()
     this.IsSelectButton1()
     this.GetrevenueStatistics()
@@ -213,7 +214,24 @@ export default {
     //     console.log(response)
     //   })
     // }
-
+    // 初始化
+    Initialization () {
+      this.getToken = localStorage.getItem('loginToken')
+      this.axios.get('http://47.107.48.61:8820/user/auth/query?osType=0', {
+        headers: {'token': this.getToken}
+      })
+      .then(response => {
+        console.log('请求个人数据成功')
+        var uid = response.data.data.userId
+        var headImg = response.data.data.headImg
+        var mobile = response.data.data.mobile
+        var nickname = response.data.data.nickname
+        localStorage.setItem('uid', uid)
+        localStorage.setItem('headImg', headImg)
+        localStorage.setItem('mobile', mobile)
+        localStorage.setItem('nickname', nickname)
+      })
+    },
     // 收益统计
     GetrevenueStatistics () {
       let uid = localStorage.getItem('uid')

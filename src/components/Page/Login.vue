@@ -114,49 +114,11 @@ export default {
         .then(response => {
           if (response.data.data.loginToken) {
             console.log('登录成功')
+            console.log(response.data.data.loginToken)
             this.getToken = response.data.data.loginToken
             localStorage.setItem('loginToken', this.getToken)
-            this.axios.get('http://47.107.48.61:8820/user/auth/query?osType=0', {
-              headers: {'token': this.getToken}
-            })
-            .then(response => {
-              console.log('请求个人数据成功')
-              var uid = response.data.data.userId
-              var headImg = response.data.data.headImg
-              var mobile = response.data.data.mobile
-              var nickname = response.data.data.nickname
-              localStorage.setItem('uid', uid)
-              localStorage.setItem('headImg', headImg)
-              localStorage.setItem('mobile', mobile)
-              localStorage.setItem('nickname', nickname)
-              // func.ajaxGet('http://47.107.48.61:8820/user/relation/auth/itocInfo?osType=0&uid=' + uid,
-              // response => {
-              //   let underCount = response.data.data.underCount
-              //   let referCount = response.data.data.referCount
-              //   let agentCount = response.data.data.agentCount
-              //   let sum = underCount + referCount + agentCount
-              //   localStorage.setItem('underCount', underCount / sum)
-              //   localStorage.setItem('referCount', referCount / sum)
-              //   localStorage.setItem('agentCount', agentCount / sum)
-              //   console.log(underCount / sum)
-              //   console.log(localStorage.getItem('underCount'))
-              //   this.$router.push({name: 'Statistics'})
-              // })
-              this.axios.get('http://47.107.48.61:8820/user/relation/auth/itocInfo?osType=0&uid=' + uid, {
-                headers: {'token': this.getToken}
-              })
-              .then(response => {
-                console.log('请求第一页是数据')
-                var underCount = response.data.data.underCount
-                var referCount = response.data.data.referCount
-                var agentCount = response.data.data.agentCount
-                var sum = underCount + referCount + agentCount
-                localStorage.setItem('underCount', underCount / sum)
-                localStorage.setItem('referCount', referCount / sum)
-                localStorage.setItem('agentCount', agentCount / sum)
-                this.$router.push({name: 'Statistics'})
-              })
-            })
+            this.$router.push({name: 'Statistics'})
+            console.log('跳转成功')
           } else {
             this.error_type = '服务端错误，请稍后登录'
             this.alert_show = true
