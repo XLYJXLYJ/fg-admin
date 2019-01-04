@@ -22,7 +22,7 @@ export default {
 <style lang="less" scoped>
 .head{
     height: 64px;
-    width: 100%;
+    width: 640px;
     position: fixed;
     top: 0px;
     z-index: 1000;

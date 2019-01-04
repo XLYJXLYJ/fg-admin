@@ -11,12 +11,10 @@
           <p @click="AlertUserSelect">{{whichPerson}}</p>
         </span>
       </div>
-      <img src="../../assets/user_icon_tri.png" v-show="canvas_user_show">
+      <img src="../../assets/user_icon_tri.png" v-show="canvas_user_show" class="img_tri">
       <div class="tab_class">
         <ul>
           <li><router-link to="/User/UserTime" class="tab_class_user">注册时间</router-link></li>
-          <img src="../../assets/user_icon_screen1@2x.png" v-show="user_icon_screen1" @click="SwitchUserIcon1()">
-          <img src="../../assets/user_icon_screen2@2x.png" v-show="user_icon_screen2" @click="SwitchUserIcon2()">
           <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserNumber" class="tab_class_user mg40">团队总数</router-link></li>
           <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserDirectly" class="tab_class_user mg80">直属</router-link></li>
         </ul> 
@@ -47,8 +45,6 @@ export default {
       canvas_user_show: false, // 默认关闭选择框
       whichPerson: '全部会员', // 全部会员
       userText: '', // 搜索的内容
-      user_icon_screen1: true, // 图片1
-      user_icon_screen2: false, // 图片2
       ismask: false // 遮罩层
     }
   },
@@ -97,20 +93,6 @@ export default {
         this.alert_show = true
       }
     },
-    // 时间顺序
-    SwitchUserIcon1 () {
-      this.user_icon_screen1 = false
-      this.user_icon_screen2 = true
-      var sort = 'registAsc'
-      this.$router.push({name: 'UserTime', params: {sort: sort}})
-    },
-    // 时间倒叙
-    SwitchUserIcon2 () {
-      this.user_icon_screen1 = true
-      this.user_icon_screen2 = false
-      var sort = 'registDesc'
-      this.$router.push({name: 'UserTime', params: {sort: sort}})
-    },
     // 关闭时间小图标选中状态
     CloseSwitchUserIcon () {
       this.user_icon_screen1 = true
@@ -142,7 +124,7 @@ export default {
   width: 319px;
   height: 247px;
   background: #fff;
-  position: absolute;
+  position: fixed;
   top: 168px;
   left: 282px;
   z-index: 1000;
@@ -167,6 +149,14 @@ export default {
   min-height: 100vh;
   background: #F5F5F5;
   width: 100%;
+  .img_tri{
+    width: 36px;
+    height: 17px;
+    position: fixed;
+    top: 151px;
+    left: 525px;
+    z-index: 2000;
+  }
   .user_search{
     position: fixed;
     top: 58px;
@@ -229,14 +219,6 @@ export default {
       }
     }
   }
-  img{
-    width: 36px;
-    height: 17px;
-    position: absolute;
-    top: 151px;
-    left: 555px;
-    z-index: 100;
-  }
   .tab_class{
     margin-top: 147px;
     margin-bottom: 67px;
@@ -253,14 +235,6 @@ export default {
       z-index: 1000;
       padding-top: 20px;
       background: #F5F5F5;
-      img{
-        width:12px;
-        height: 15px;
-        position: absolute;
-        left: 159px;
-        top: 40px;
-        z-index: 1000;
-      }
       li{
         float: left;
         width:200px;

@@ -104,7 +104,7 @@ export default {
   flex-direction: column;
   min-height: 100vh;
   background: #F5F5F5;
-  width: 100%;
+  width: 640px;
   p{
     position: fixed;
     top: 64px;

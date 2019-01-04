@@ -104,6 +104,22 @@ export default {
       this.phone = localStorage.getItem('mobile')
     }
   },
+  mounted () {
+    this.clientHeight = document.documentElement.clientHeight
+    const that = this
+    // 安卓手机键盘吊起挡住输入框
+    window.onresize = function () {
+      if (document.documentElement.clientHeight < that.clientHeight) {
+      // scrollVal为负值
+        let scrollVal = document.documentElement.clientHeight - that.clientHeight
+        var div03 = document.getElementByClassName('change_password')
+        div03.setAttribute('marginTop', scrollVal)
+      } else {
+        var div04 = document.getElementByClassName('change_password')
+        div04.setAttribute('marginTop', 0)
+      }
+    }
+  },
   methods: {
     // 第一个表单函数
     ForgetPasswordPhoneBlur () {
@@ -295,7 +311,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 .change_password{
-  width: 100%;
+  width: 640px;
   height: 100%;
   position: absolute;
   background-color: #fff;

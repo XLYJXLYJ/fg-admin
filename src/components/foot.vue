@@ -39,7 +39,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .foot{
-  width: 100%;
+  width: 640px;
   height: 84px;
   position: fixed;
   bottom: 0px;

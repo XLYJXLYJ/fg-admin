@@ -47,7 +47,7 @@ export default {
   name: 'StatisticsDetail',
   data () {
     return {
-      getStatisticsDetailList: '', // 循环数组
+      getStatisticsDetailList: [], // 循环数组
       mobile: '', // 手机号
       lastIncomeDate: '', // 循环数组
       nickName: '', // 名字
@@ -94,6 +94,7 @@ export default {
         if (response.data.data.records.length) {
           this.noOrder = false
           if (this.page === 1) {
+            console.log(1)
             this.getStatisticsDetailList = response.data.data.records
             this.show_loading = false
           } else {
@@ -149,7 +150,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .statistics_detail{
-  width: 100%;
+  width: 640px;
   height: 100%;
   position: relative;
   background-color: #F5F5F5;

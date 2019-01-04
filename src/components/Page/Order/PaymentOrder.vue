@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="order_detail">
-      <loading :show="show_loading" :text="text_loading" :position="absolute" style="z-index:1000"></loading>
+      <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
       <alert v-model="alert_show">{{error_type}}</alert>
       <div class="no_order" v-show="noOrder">
         <img src="../../../assets/order_icon_emptystate@2x.png">

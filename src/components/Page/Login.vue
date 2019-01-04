@@ -51,6 +51,22 @@ export default {
       this.IsShowLoginButtonColor()
     }
   },
+  mounted () {
+    this.clientHeight = document.documentElement.clientHeight
+    const that = this
+    // 安卓手机键盘吊起挡住输入框
+    window.onresize = function () {
+      if (document.documentElement.clientHeight < that.clientHeight) {
+      // scrollVal为负值
+        let scrollVal = document.documentElement.clientHeight - that.clientHeight
+        var div01 = document.getElementByClassName('login')
+        div01.setAttribute('marginTop', scrollVal)
+      } else {
+        var div02 = document.getElementByClassName('login')
+        div02.setAttribute('marginTop', 0)
+      }
+    }
+  },
   methods: {
     Reload () {
       this.$router.go(0)
@@ -185,7 +201,7 @@ export default {
 <style lang="less" scoped>
 .head{
   height: 64px;
-  width: 100%;
+  width: 640px;
   position: fixed;
   top: 0px;
   z-index: 1000;
@@ -231,7 +247,7 @@ export default {
   }
 }
 .login{
-  width: 100%;
+  width: 640px;
   height: 100%;
   position: absolute;
   background-color: #fff;

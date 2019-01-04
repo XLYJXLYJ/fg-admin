@@ -75,7 +75,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 .me_center{
-  width: 100%;
+  width: 640px;
   height: 100%;
   position: absolute;
   background-color: #F5F5F5;

@@ -3,6 +3,8 @@
     <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
     <alert v-model="alert_show">{{error_type}}</alert>
     <div class="user_detail">
+      <img src="../../../assets/user_icon_screen1@2x.png" class="img_time" v-show="user_icon_screen1" @click="SwitchUserIcon1()">
+      <img src="../../../assets/user_icon_screen2@2x.png" class="img_time" v-show="user_icon_screen2" @click="SwitchUserIcon2()">
       <div class="no_user" v-show="noUser">
         <img src="../../../assets/user_icon_emptystate@2x.png">
         <p>您还没有会员，继续加油哦~</p>
@@ -40,7 +42,7 @@ import VHead from '@/components/header'
 export default {
   data () {
     return {
-      getGetUserDetailList: '', // 循环数组
+      getGetUserDetailList: [], // 循环数组
       userText: '', // 搜索的内容
       sort: '', // 时间排序
       noUser: '',
@@ -48,6 +50,8 @@ export default {
       pageDetailNumber: 1, // 团队总数页数
       pageDetailDirectly: 1, // 直属总数页数
       pageuserType: 1, // 会员类型页数
+      user_icon_screen1: true, // 图片1
+      user_icon_screen2: false, // 图片2
       alert_show: false, // 是否显示弹出框
       error_type: '', // 弹出框的弹出说明
       show_loading: false, // 是否显示加载框
@@ -60,6 +64,7 @@ export default {
     }
   },
   watch: {
+    // 检测跳转了哪一个路由，就初始加载哪一个函数
     $route (to, from) {
       if (to.path === '/User/UserTime') {
         this.GetUserDetail()
@@ -69,46 +74,23 @@ export default {
         this.GetUserDetailDirectly()
       }
     },
+    // 检测选择选择的会员类型，对list进行重新加载
     listenUserType: function () {
-      let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=' + this.$store.state.userType + '&page=' + this.pageuserType,
-        response => {
-          if (response.data.code === 200) {
-            this.noOrder = false
-            if (this.pageuserType === 1) {
-              this.getGetUserDetailList = response.data.data.records
-              this.show_loading = false
-            } else {
-              this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
-              this.show_loading = false
-            }
-          } else {
-            if (this.pageuserType === 1) {
-              this.noOrder = true
-              this.show_loading = false
-            } else {
-              this.error_type = '已显示全部会员'
-              this.alert_show = true
-              this.show_loading = false
-            }
-          }
-        })
-    },
-    '$route.path': function () {
-      this.userText = this.$route.params.data
-      this.sort = this.$route.params.sort
-      let uid = localStorage.getItem('uid')
-      if (this.userText) {
-        func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&mobile=' + this.userText,
-        response => {
-          this.getGetUserDetailList = response.data.data.records
-        })
-      } else {
-        func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&sort=' + this.userText,
-        response => {
-          this.getGetUserDetailList = response.data.data.records
-        })
+      if (this.$route.path === '/User/UserTime') {
+        this.pageDetail = 1
+        this.GetUserDetail()
+      } else if (this.$route.path === '/User/UserNumber') {
+        this.pageDetailNumber = 1
+        this.GetUserDetailNumber()
+      } else if (this.$route.path === '/User/UserDirectly') {
+        this.pageDetailDirectly = 1
+        this.GetUserDetailDirectly()
       }
+    },
+    // 排序类型
+    '$route.path': function () {
+      this.sort = this.$route.params.sort
+      this.GetUserDetail()
     }
   },
   created () {
@@ -123,16 +105,16 @@ export default {
       // 滚动条到底部的条件
       if (scrollTop + windowHeight === scrollHeight) {
       // 写后台加载数据的函数
-        console.log(_this.$route.path)
         if (_this.$route.path === '/User/UserTime') {
-          this.pageDetail = this.pageDetail + 1
-          this.GetUserDetail()
+          _this.pageDetail = _this.pageDetail + 1
+          _this.GetUserDetail()
         } else if (_this.$route.path === '/User/UserNumber') {
-          this.pageDetailNumber = this.pageDetailNumber + 1
-          this.GetUserDetailNumber()
+          _this.pageDetailNumber = _this.pageDetailNumber + 1
+          _this.GetUserDetailNumber()
         } else if (_this.$route.path === '/User/UserDirectly') {
-          this.pageDetailDirectly = this.pageDetailDirectly + 1
-          this.GetUserDetailDirectly()
+          _this.pageDetailDirectly = _this.pageDetailDirectly + 1
+          console.log(this.pageDetailDirectly)
+          _this.GetUserDetailDirectly()
         }
       }
     }
@@ -150,9 +132,9 @@ export default {
     GetUserDetail () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0' + '&page=' + this.pageDetail,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&sort=' + this.sort + '&userType=0' + '&page=' + this.pageDetail + '&userType=' + this.$store.state.userType,
         response => {
-          if (response.data.code === 200) {
+          if (response.data.code === 200 & response.data.data.records.length !== 0) {
             this.noOrder = false
             if (this.pageDetail === 1) {
               this.getGetUserDetailList = response.data.data.records
@@ -165,6 +147,7 @@ export default {
             if (this.pageDetail === 1) {
               this.noOrder = true
               this.show_loading = false
+              this.getGetUserDetailList = ''
             } else {
               this.error_type = '已显示全部会员'
               this.alert_show = true
@@ -177,9 +160,9 @@ export default {
     GetUserDetailNumber () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0&sort=teamDesc' + '&page=' + this.pageDetailNumber,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0' + '&page=' + this.pageDetailNumber + '&userType=' + this.$store.state.userType,
         response => {
-          if (response.data.code === 200) {
+          if (response.data.code === 200 & response.data.data.records.length !== 0) {
             this.noOrder = false
             if (this.pageDetailNumber === 1) {
               this.getGetUserDetailList = response.data.data.records
@@ -192,6 +175,7 @@ export default {
             if (this.pageDetailNumber === 1) {
               this.noOrder = true
               this.show_loading = false
+              this.getGetUserDetailList = ''
             } else {
               this.error_type = '已显示全部会员'
               this.alert_show = true
@@ -204,9 +188,9 @@ export default {
     GetUserDetailDirectly () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0&sort=underDesc' + '&page=' + this.pageDetailDirectly,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0' + '&page=' + this.pageDetailDirectly + '&userType=' + this.$store.state.userType,
         response => {
-          if (response.data.code === 200) {
+          if (response.data.code === 200 & response.data.data.records.length !== 0) {
             this.noOrder = false
             if (this.pageDetailDirectly === 1) {
               this.getGetUserDetailList = response.data.data.records
@@ -219,6 +203,7 @@ export default {
             if (this.pageDetailDirectly === 1) {
               this.noOrder = true
               this.show_loading = false
+              this.getGetUserDetailList = ''
             } else {
               this.error_type = '已显示全部会员'
               this.alert_show = true
@@ -232,7 +217,7 @@ export default {
       this.show_loading = true
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&mobile=' + this.userText,
         response => {
-          console.log(response.data.code === 200)
+          console.log(response.data.code === 200 && response.data.data.records.length !== 0)
           if (response.data.data.records.length) {
             this.getGetUserDetailList = response.data.data.records
             this.show_loading = false
@@ -243,6 +228,20 @@ export default {
             this.alert_show = true
           }
         })
+    },
+    // 时间顺序
+    SwitchUserIcon1 () {
+      this.user_icon_screen1 = false
+      this.user_icon_screen2 = true
+      this.sort = 'registAsc'
+      this.GetUserDetail()
+    },
+    // 时间倒叙
+    SwitchUserIcon2 () {
+      this.user_icon_screen1 = true
+      this.user_icon_screen2 = false
+      this.sort = 'registDesc'
+      this.GetUserDetail()
     }
   },
   components: {
@@ -256,6 +255,14 @@ export default {
   width: 640px;
   height: auto;
   position: relative;
+  .img_time{
+    width:12px;
+    height: 15px;
+    position: fixed;
+    left: 159px;
+    top: 188px;
+    z-index: 1000;
+  }
   .no_user{
     width: 100%;
     min-height:400px;
