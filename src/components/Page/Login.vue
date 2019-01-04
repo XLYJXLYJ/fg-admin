@@ -1,11 +1,12 @@
 <template>
 <div>
-    <div class="head">
+    <!-- <div class="head">
       <a href="fangou://close"><img src="../../assets/statistics_icon_back@2x.png" class="close_icon" @click="Back"></a>
       <span class="close"><a href="fangou://close">关闭</a></span>
       <span class='fg-center'>凡购运营中心后台</span>
       <img class="reload" src="../../assets/statistics_icon_refresh@2x.png" @click="Reload">
-    </div>
+    </div> -->
+    <VHead></VHead>
     <div class="login">
         <img class="fg-logo" src="../../assets/login_picture@2x.png">
         <alert v-model="alert_show">{{error_type}}</alert>
@@ -23,8 +24,9 @@
 </div>
 </template>
 <script>
+// import store from '@/vuex/store'
 import func from '@/common/func'
-// import VHead from '@/components/header'
+import VHead from '@/components/header'
 // import Qs from 'qs'
 export default {
   data () {
@@ -108,7 +110,7 @@ export default {
         this.error_type = '密码不能为空'
         this.alert_show = true
       } else {
-        this.axios.post('/user/login/password?osType=0&mobile=' + this.username + '&password=' + this.$md5(this.password))
+        this.axios.post(this.$store.state.baseUrl + '/user/login/password?osType=0&mobile=' + this.username + '&password=' + this.$md5(this.password))
         .then(response => {
           if (response.data.code === 200) {
             this.getToken = response.data.data.loginToken
@@ -125,7 +127,7 @@ export default {
     },
     Initialization () {
       this.getToken = localStorage.getItem('loginToken')
-      this.axios.get('/user/auth/query?osType=0', {
+      this.axios.get(this.$store.state.baseUrl + '/user/auth/query?osType=0', {
         headers: {'token': this.getToken}
       })
       .then(response => {
@@ -157,7 +159,7 @@ export default {
       //   this.data[2]['percent'] = this.agentCount / sum
       //   this.underCountPercent = this.underCount / sum * 100
       // })
-      func.ajaxGet('http://47.107.48.61:8830/relation/auth/itocInfo?uid=' + uid,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocInfo?uid=' + uid,
       response => {
         if (response.data.code === 200) {
           this.underCount = response.data.data.underCount
@@ -176,7 +178,7 @@ export default {
     }
   },
   components: {
-    // VHead
+    VHead
   }
 }
 </script>

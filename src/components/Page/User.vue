@@ -5,9 +5,9 @@
     <div class="user" :class="{mask:ismask}">
       <div class="user_search">
         <span class="search_icon">
-          <img src="../../assets/user_icon_search@2x.png" @click="SearchUser()">
-          <input type="text" placeholder="请输入手机号查找会员" v-model="userText">
-          <button @click="SearchUser()">搜索</button>
+          <img src="../../assets/user_icon_search@2x.png" @click.stop.prevent="SearchUser()">
+          <input type="text" placeholder="请输入手机号查找会员" v-model="userText" @focus="SearchUserInput()">
+          <button @click.stop.prevent="SearchUser()">搜索</button>
           <p @click="AlertUserSelect">{{whichPerson}}</p>
         </span>
       </div>
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+// import store from '@/vuex/store'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
 export default {
@@ -60,6 +61,9 @@ export default {
       this.canvas_user_show = !this.canvas_user_show
       this.ismask = !this.ismask
     },
+    SearchUserInput () {
+      this.$router.push({name: 'User'})
+    },
     // 查找全部用户
     GetAllPerson () {
       this.$store.state.userType = 0
@@ -83,8 +87,11 @@ export default {
     },
     // 查找用户
     SearchUser () {
+      console.log('搜索')
       if (this.userText) {
-        this.$router.push(`/User/UserTime/?osType=0&userText=` + this.userText)
+        var data = this.userText
+        console.log('搜索1')
+        this.$router.push({name: 'UserTime', params: {data: data}})
       } else {
         this.error_type = '请输入手机号'
         this.alert_show = true
@@ -94,13 +101,15 @@ export default {
     SwitchUserIcon1 () {
       this.user_icon_screen1 = false
       this.user_icon_screen2 = true
-      this.$router.push(`/User/UserTime/?osType=0&sort=registAsc`)
+      var sort = 'registAsc'
+      this.$router.push({name: 'UserTime', params: {sort: sort}})
     },
     // 时间倒叙
     SwitchUserIcon2 () {
       this.user_icon_screen1 = true
       this.user_icon_screen2 = false
-      this.$router.push(`/User/UserTime/?osType=0&sort=registDesc`)
+      var sort = 'registDesc'
+      this.$router.push({name: 'UserTime', params: {sort: sort}})
     },
     // 关闭时间小图标选中状态
     CloseSwitchUserIcon () {

@@ -1,6 +1,8 @@
 <template>
     <div>
         <VHead></VHead>
+        <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
+        <alert v-model="alert_show">{{error_type}}</alert>
         <div class="statistics_detail">
             <div class="me">
                 <img class="statistics_detail_back" src="../../../assets/statistics_icon_back@2x.png" @click="BackFunction()">
@@ -18,18 +20,18 @@
             </div>
             <div class="statistics_detail_number">
             <ul>
-            <li v-show="show_user_list" v-for="(item, index) in getStatisticsDetailList " :key="index">
+            <li v-for="(item, index) in getStatisticsDetailList " :key="index">
                 <span class="statistics_detail_phone">{{item.mobile}}</span>
                 <span class="statistics_detail_income">累计收益：￥{{item.totalIncome}}</span>
                 <p class="statistics_detail_name">{{item.nickName}}</p>
                 <p class="statistics_detail_time">结算日期:{{item.lastIncomeDate}}</p>
             </li>
-            <li v-show="show_user_phone">
+            <!-- <li v-show="show_user_phone">
                 <span class="statistics_detail_phone">{{mobile}}</span>
                 <span class="statistics_detail_income">累计收益：￥{{totalIncome}}</span>
                 <p class="statistics_detail_name">{{nickName}}</p>
                 <p class="statistics_detail_time">结算日期:{{lastIncomeDate}}</p>
-            </li>
+            </li> -->
         </ul>
             </div>
         </div>
@@ -40,6 +42,7 @@
 import func from '@/common/func'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
+// import store from '@/vuex/store'
 export default {
   name: 'StatisticsDetail',
   data () {
@@ -51,42 +54,76 @@ export default {
       userId: '', // 用户id
       totalIncome: '', // 累计收益
       user_phone: '', // 查找手机号
-      show_user_list: true, // 默认显示循环数组
-      show_user_phone: false, // 显示手机号查找的内容
+      // show_user_list: true, // 默认显示循环数组
+      // show_user_phone: false, // 显示手机号查找的内容
       sortid: 'totalIncomeAsc', // 收益分类
-      sortid_img: true // 收益分类
+      sortid_img: true, // 收益分类
+      page: 1,
+      alert_show: false, // 是否显示弹出框
+      error_type: '', // 弹出框的弹出说明
+      show_loading: false, // 是否显示加载框
+      text_loading: '正在加载...' // 加载框显示文字
     }
   },
   mounted () {
     this.GetStatisticsDetail()
   },
+  created () {
+    var _this = this
+    window.onscroll = function () {
+      // 变量scrollTop是滚动条滚动时，距离顶部的距离
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      // 变量windowHeight是可视区的高度
+      var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      // 变量scrollHeight是滚动条的总高度
+      var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      // 滚动条到底部的条件
+      if (scrollTop + windowHeight === scrollHeight) {
+      // 写后台加载数据的函数
+        _this.page = _this.page + 1
+        _this.GetStatisticsDetail()
+      }
+    }
+  },
   methods: {
     GetStatisticsDetail () {
+      this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('/account/auth/itoc/teamIncomes?osType=0&userId=' + uid,
+      func.ajaxGet(this.$store.state.baseUrl + '/account/auth/itoc/teamIncomes?osType=0&userId=' + uid + '&page=' + this.page + '&sort=' + this.sortid,
       response => {
-        if (response.data.code === 200) {
-          this.getStatisticsDetailList = response.data.data.records
-          this.show_user_phone = false
-          this.show_user_list = true
+        if (response.data.data.records.length) {
+          this.noOrder = false
+          if (this.page === 1) {
+            this.getStatisticsDetailList = response.data.data.records
+            this.show_loading = false
+          } else {
+            this.getStatisticsDetailList = this.getStatisticsDetailList.concat(response.data.data.records)
+            this.show_loading = false
+          }
         } else {
-          this.error_type = response.data.message
-          this.alert_show = true
+          if (this.page === 1) {
+            this.noOrder = true
+            this.show_loading = false
+          } else {
+            this.error_type = '已显示全部会员'
+            this.alert_show = true
+            this.show_loading = false
+          }
         }
       })
     },
     GetStatisticsPhoneDetail () {
+      this.show_loading = true
       let phone = this.user_phone
-      func.ajaxGet('/account/auth/itoc/teamIncomes?osType=0&mobile=' + phone,
+      func.ajaxGet(this.$store.state.baseUrl + '/account/auth/itoc/teamIncomes?osType=0&mobile=' + phone,
       response => {
         if (response.data.code === 200) {
-          this.show_user_phone = true
-          this.show_user_list = false
-          this.mobile = response.data.data.mobile
-          this.nickName = response.data.data.nickName
-          this.lastIncomeDate = response.data.data.lastIncomeDate
-          this.totalIncome = response.data.data.totalIncome
+          // this.show_user_phone = true
+          // this.show_user_list = false
+          this.getStatisticsDetailList = response.data.data.records
+          this.show_loading = false
         } else {
+          this.show_loading = false
           this.error_type = response.data.message
           this.alert_show = true
         }
@@ -95,23 +132,13 @@ export default {
     IncomeAsc () {
       if (this.sortid === 'totalIncomeAsc') {
         this.sortid = 'totalIncomeDesc'
+        this.sortid_img = false
       } else {
         this.sortid = 'totalIncomeAsc'
+        this.sortid_img = true
       }
-      let uid = localStorage.getItem('uid')
-      let sortid = this.sortid
-      func.ajaxGet('/account/auth/itoc/teamIncomes?osType=0&userId=' + uid + '&sort=' + sortid,
-      response => {
-        if (response.data.code === 200) {
-          this.getStatisticsDetailList = response.data.data.records
-          this.show_user_phone = false
-          this.show_user_list = true
-          this.sortid_img = !this.sortid_img
-        } else {
-          this.error_type = response.data.message
-          this.alert_show = true
-        }
-      })
+      this.page = 1
+      this.GetStatisticsDetail()
     }
   },
   components: {

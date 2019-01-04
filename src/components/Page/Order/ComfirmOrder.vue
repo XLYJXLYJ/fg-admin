@@ -2,7 +2,7 @@
 <div>
   
     <div class="order_detail">
-      <loading :show="show_loading" :text="text_loading" :position="absolute" style="z-index:1000"></loading>
+      <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
       <alert v-model="alert_show">{{error_type}}</alert>
       <div class="no_order" v-show="noOrder">
         <img src="../../../assets/order_icon_emptystate@2x.png">
@@ -30,6 +30,7 @@
 </template>
 <script>
 import func from '@/common/func'
+// import store from '@/vuex/store'
 export default {
   data () {
     return {
@@ -86,7 +87,7 @@ export default {
       this.show_loading = true
       this.page = this.page + 1
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=3' + '&page=' + this.page,
+      func.ajaxGet(this.$store.state.baseUrl + '/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=3' + '&page=' + this.page,
       response => {
         if (response.data.data.records.length) {
           this.noOrder = false

@@ -64,6 +64,7 @@
 import { Confirm } from 'vux'
 import func from '@/common/func'
 import VHead from '@/components/header'
+// import store from '@/vuex/store'
 // import Qs from 'qs'
 export default {
   name: 'UserDetailOne',
@@ -91,7 +92,7 @@ export default {
   methods: {
     GetUserDetailOne () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('/user/relation/auth/itocInfo?osType=0&uid=' + uid,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocInfo?osType=0&uid=' + uid,
         response => {
           if (response.data.code === 200) {
             this.headImg = response.data.data.headImg
@@ -109,7 +110,7 @@ export default {
     },
     GetUserDetailList () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('/user/relation/auth/query?osType=0&uid=' + uid + '&page=1&size=10',
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/query?osType=0&uid=' + uid + '&page=1&size=10',
         response => {
           if (response.data.code === 200) {
             this.getGetUserDetailList = response.data.data.records

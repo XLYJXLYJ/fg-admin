@@ -97,10 +97,6 @@ export default new Router({
       component: resolve => require(['@/components/Page/Statistics/StatisticsDetail'], resolve)
     },
     {
-      path: '/ProgressCircle',
-      component: resolve => require(['@/components/Page/Statistics/ProgressCircle'], resolve)
-    },
-    {
       path: '/User',
       name: 'User',
       component: resolve => require(['@/components/Page/User'], resolve),
@@ -112,10 +108,12 @@ export default new Router({
         },
         {
           path: '/User/UserNumber',
+          name: 'UserNumber',
           component: resolve => require(['@/components/Page/User/UserDetail'], resolve)
         },
         {
           path: '/User/UserDirectly',
+          name: 'UserDirectly',
           component: resolve => require(['@/components/Page/User/UserDetail'], resolve)
         }
       ]

@@ -44,6 +44,7 @@
 </template>
 
 <script>
+// import store from '@/vuex/store'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
 import func from '@/common/func'
@@ -67,16 +68,16 @@ export default {
     },
     SearchOrder () {
       if (String.trim(this.orderText)) {
-        func.ajaxGet('/account/auth/itoc/listOrderInfo?osType=0&tradeId=' + String.trim(this.orderText),
+        func.ajaxGet(this.$store.state.baseUrl + '/account/auth/itoc/listOrderInfo?osType=0&tradeId=' + String.trim(this.orderText),
         response => {
           let tkStatus = response.data.data.records[0].tkStatus
           let data = response.data.data.records
           if (tkStatus === 13) {
             this.$router.push({name: 'LostOrder', params: {data: data}})
           } else if (tkStatus === 12) {
-            this.$router.push({name: 'PaymentOrder', params: data})
+            this.$router.push({name: 'PaymentOrder', params: {data: data}})
           } else if (tkStatus === 3) {
-            this.$router.push({name: 'ComfirmOrder', params: data})
+            this.$router.push({name: 'ComfirmOrder', params: {data: data}})
           } else {
             this.error_type = '该订单号不存在'
             this.alert_show = true

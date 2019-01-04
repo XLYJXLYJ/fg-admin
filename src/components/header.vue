@@ -1,9 +1,10 @@
 <template>
     <div class="head">
-        <img src="../assets/statistics_icon_back@2x.png" class="close_icon" @click="Back">
-        <span class="close" @click="Back">关闭</span>
+        <!-- <img src="../assets/statistics_icon_back@2x.png" class="close_icon" @click="Back"> -->
+        <span class="close"><a href="fangou://close">关闭</a></span>
         <span class='fg-center'>凡购运营中心后台</span>
-        <img class="reload" src="../assets/statistics_icon_refresh@2x.png" @click="Reload">
+        <span class="reload" @click="Reload">刷新</span>
+        <!-- <img class="reload" src="../assets/statistics_icon_refresh@2x.png" @click="Reload"> -->
     </div>
 </template>
 <script>
@@ -38,16 +39,19 @@ export default {
       height: 27px;
       position: absolute;
       top: 18px;
-      left: 72px;
+      left: 40px;
       font-size: 29px;
       color: #333333;
       font-weight: Regular;
       font-family: PingFang-SC-Regular;
+      a{
+        color: #333333;
+      }
     }
     .fg-center{
       width: 236px;
       height: 27px;
-      position: absolute;
+      position: relative;
       top: 18px;
       left: 202px;
       color: #333333;
@@ -56,11 +60,15 @@ export default {
       font-family: PingFang-SC-Regular;
     }
     .reload{
-      width: 30px;
-      height: 30px;
+      width: 60px;
+      height: 27px;
       position: absolute;
-      top: 17px;
-      right: 20px;
+      top: 18px;
+      right: 40px;
+      font-size: 29px;
+      color: #333333;
+      font-weight: Regular;
+      font-family: PingFang-SC-Regular;
     }
 }
 </style>

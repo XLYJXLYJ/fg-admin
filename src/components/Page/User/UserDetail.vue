@@ -1,5 +1,7 @@
 <template>
 <div>
+    <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
+    <alert v-model="alert_show">{{error_type}}</alert>
     <div class="user_detail">
       <div class="no_user" v-show="noUser">
         <img src="../../../assets/user_icon_emptystate@2x.png">
@@ -34,13 +36,22 @@
 import func from '@/common/func'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
+// import store from '@/vuex/store'
 export default {
   data () {
     return {
       getGetUserDetailList: '', // 循环数组
       userText: '', // 搜索的内容
       sort: '', // 时间排序
-      noUser: ''
+      noUser: '',
+      pageDetail: 1, // 注册时间页数
+      pageDetailNumber: 1, // 团队总数页数
+      pageDetailDirectly: 1, // 直属总数页数
+      pageuserType: 1, // 会员类型页数
+      alert_show: false, // 是否显示弹出框
+      error_type: '', // 弹出框的弹出说明
+      show_loading: false, // 是否显示加载框
+      text_loading: '正在加载...' // 加载框显示文字
     }
   },
   computed: {
@@ -60,63 +71,176 @@ export default {
     },
     listenUserType: function () {
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=' + this.$store.state.userType,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=' + this.$store.state.userType + '&page=' + this.pageuserType,
         response => {
-          this.getGetUserDetailList = response.data.data.records
+          if (response.data.code === 200) {
+            this.noOrder = false
+            if (this.pageuserType === 1) {
+              this.getGetUserDetailList = response.data.data.records
+              this.show_loading = false
+            } else {
+              this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+              this.show_loading = false
+            }
+          } else {
+            if (this.pageuserType === 1) {
+              this.noOrder = true
+              this.show_loading = false
+            } else {
+              this.error_type = '已显示全部会员'
+              this.alert_show = true
+              this.show_loading = false
+            }
+          }
         })
     },
     '$route.path': function () {
-      this.userText = this.$route.params.userText
+      this.userText = this.$route.params.data
       this.sort = this.$route.params.sort
       let uid = localStorage.getItem('uid')
       if (this.userText) {
-        func.ajaxGet('/user/relation/auth/itocList?osType=0&uid=' + uid + '&mobile=' + this.userText,
+        func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&mobile=' + this.userText,
         response => {
           this.getGetUserDetailList = response.data.data.records
         })
       } else {
-        func.ajaxGet('/user/relation/auth/itocList?osType=0&uid=' + uid + '&sort=' + this.userText,
+        func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&sort=' + this.userText,
         response => {
           this.getGetUserDetailList = response.data.data.records
         })
       }
     }
   },
+  created () {
+    var _this = this
+    window.onscroll = function () {
+      // 变量scrollTop是滚动条滚动时，距离顶部的距离
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      // 变量windowHeight是可视区的高度
+      var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      // 变量scrollHeight是滚动条的总高度
+      var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      // 滚动条到底部的条件
+      if (scrollTop + windowHeight === scrollHeight) {
+      // 写后台加载数据的函数
+        console.log(_this.$route.path)
+        if (_this.$route.path === '/User/UserTime') {
+          this.pageDetail = this.pageDetail + 1
+          this.GetUserDetail()
+        } else if (_this.$route.path === '/User/UserNumber') {
+          this.pageDetailNumber = this.pageDetailNumber + 1
+          this.GetUserDetailNumber()
+        } else if (_this.$route.path === '/User/UserDirectly') {
+          this.pageDetailDirectly = this.pageDetailDirectly + 1
+          this.GetUserDetailDirectly()
+        }
+      }
+    }
+  },
   mounted () {
-    this.GetUserDetail()
-    this.userText = this.$route.params
+    this.userText = this.$route.params.data
+    if (this.userText) {
+      this.GetUsertext()
+    } else {
+      this.GetUserDetail()
+    }
   },
   methods: {
+    // 注册时间
     GetUserDetail () {
+      this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0',
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0' + '&page=' + this.pageDetail,
         response => {
-          if (response.data.data.records.length) {
-            this.getGetUserDetailList = response.data.data.records
+          if (response.data.code === 200) {
+            this.noOrder = false
+            if (this.pageDetail === 1) {
+              this.getGetUserDetailList = response.data.data.records
+              this.show_loading = false
+            } else {
+              this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+              this.show_loading = false
+            }
           } else {
-            this.noUser = true
+            if (this.pageDetail === 1) {
+              this.noOrder = true
+              this.show_loading = false
+            } else {
+              this.error_type = '已显示全部会员'
+              this.alert_show = true
+              this.show_loading = false
+            }
           }
         })
     },
+    // 团队总数
     GetUserDetailNumber () {
+      this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0&sort=teamDesc',
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0&sort=teamDesc' + '&page=' + this.pageDetailNumber,
         response => {
-          if (response.data.data.records.length) {
-            this.getGetUserDetailList = response.data.data.records
+          if (response.data.code === 200) {
+            this.noOrder = false
+            if (this.pageDetailNumber === 1) {
+              this.getGetUserDetailList = response.data.data.records
+              this.show_loading = false
+            } else {
+              this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+              this.show_loading = false
+            }
           } else {
-            this.noUser = true
+            if (this.pageDetailNumber === 1) {
+              this.noOrder = true
+              this.show_loading = false
+            } else {
+              this.error_type = '已显示全部会员'
+              this.alert_show = true
+              this.show_loading = false
+            }
           }
         })
     },
+    // 直属
     GetUserDetailDirectly () {
+      this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0&sort=underDesc',
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0&sort=underDesc' + '&page=' + this.pageDetailDirectly,
         response => {
+          if (response.data.code === 200) {
+            this.noOrder = false
+            if (this.pageDetailDirectly === 1) {
+              this.getGetUserDetailList = response.data.data.records
+              this.show_loading = false
+            } else {
+              this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+              this.show_loading = false
+            }
+          } else {
+            if (this.pageDetailDirectly === 1) {
+              this.noOrder = true
+              this.show_loading = false
+            } else {
+              this.error_type = '已显示全部会员'
+              this.alert_show = true
+              this.show_loading = false
+            }
+          }
+        })
+    },
+    // 手机号查询
+    GetUsertext () {
+      this.show_loading = true
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&mobile=' + this.userText,
+        response => {
+          console.log(response.data.code === 200)
           if (response.data.data.records.length) {
             this.getGetUserDetailList = response.data.data.records
+            this.show_loading = false
           } else {
-            this.noUser = true
+            // this.noUser = true
+            this.show_loading = false
+            this.error_type = '找不到该会员信息'
+            this.alert_show = true
           }
         })
     }

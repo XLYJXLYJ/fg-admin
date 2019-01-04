@@ -112,6 +112,7 @@
 </template>
 
 <script>
+// import store from '@/vuex/store'
 import func from '@/common/func'
 // import asyncfunc from '@/common/asyncfunc'
 import { VChart, VLine, VArea, VTooltip, VLegend, VBar, VPie, VGuide, VScale } from 'vux'
@@ -224,7 +225,7 @@ export default {
     GetAsyncDate () {
       this.getToken = localStorage.getItem('loginToken')
       return new Promise((resolve, reject) => {
-        this.axios.get('/user/auth/query?osType=0', {
+        this.axios.get(this.$store.state.baseUrl + '/user/auth/query?osType=0', {
           headers: {'token': this.getToken}
         })
         .then((response) => {
@@ -251,7 +252,7 @@ export default {
     // 初始化
     Initialization () {
       this.getToken = localStorage.getItem('loginToken')
-      this.axios.get('/user/auth/query?osType=0', {
+      this.axios.get(this.$store.state.baseUrl + '/user/auth/query?osType=0', {
         headers: {'token': this.getToken}
       })
       .then(response => {
@@ -274,7 +275,7 @@ export default {
     GetrevenueStatistics () {
       let uid = localStorage.getItem('uid')
       return new Promise((resolve, reject) => {
-        this.axios.get('/account/auth/findCommission?osType=0&userId=' + uid, {
+        this.axios.get(this.$store.state.baseUrl + '/account/auth/findCommission?osType=0&userId=' + uid, {
           headers: {'token': this.getToken}
         })
         .then((response) => {
@@ -297,7 +298,7 @@ export default {
     IsSelectButton1 () {
       this.is_select_buttn = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('/account/auth/findCommission?osType=0&userId=' + uid,
+      func.ajaxGet(this.$store.state.baseUrl + '/account/auth/findCommission?osType=0&userId=' + uid,
       response => {
         if (response.data.code === 200) {
           this.payCount = response.data.data.payCount
@@ -313,7 +314,7 @@ export default {
     IsSelectButton2 () {
       this.is_select_buttn = false
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('/account/auth/findCommission?osType=0&userId=' + uid,
+      func.ajaxGet(this.$store.state.baseUrl + '/account/auth/findCommission?osType=0&userId=' + uid,
       response => {
         if (response.data.code === 200) {
           this.payCount = response.data.data.yesterdayPayCount
@@ -332,7 +333,7 @@ export default {
       } else {
         this.beforeTime = 0
       }
-      func.ajaxGet('/user/relation/auth/itocTeamSum?osType=0&uid=' + uid + '&beforeTime=' + this.beforeTime,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocTeamSum?osType=0&uid=' + uid + '&beforeTime=' + this.beforeTime,
         response => {
           if (response.data.code === 200) {
             this.newTeam = response.data.data
@@ -354,7 +355,7 @@ export default {
       //   this.data[2]['percent'] = this.agentCount / sum
       //   this.underCountPercent = this.underCount / sum * 100
       // })
-      func.ajaxGet('/user/relation/auth/itocInfo?osType=0&uid=' + uid,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocInfo?osType=0&uid=' + uid,
       response => {
         if (response.data.code === 200) {
           this.underCount = response.data.data.underCount
@@ -365,6 +366,7 @@ export default {
           this.data[1]['percent'] = this.referCount / sum
           this.data[2]['percent'] = this.agentCount / sum
           this.underCountPercent = this.underCount / sum * 100
+          this.underCountPercent = this.underCountPercent.toFixed(2)
           this.$refs.chart.rerender()
         } else {
           this.error_type = response.data.message
@@ -421,7 +423,7 @@ export default {
     .zhishunum{
       position:absolute;
       top: 230px;
-      left: 368px;
+      left: 338px;
       width: 60px;
       height: 60px;
       z-index: 1000;
@@ -430,7 +432,7 @@ export default {
     .zhishu{
       position:absolute;
       top: 270px;
-      left: 368px;
+      left: 356px;
       width: 60px;
       height: 60px;
       z-index: 1000;

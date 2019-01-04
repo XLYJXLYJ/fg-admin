@@ -48,6 +48,7 @@
 </template>
 
 <script>
+// import store from '@/vuex/store'
 import VHead from '@/components/header'
 import Qs from 'qs'
 export default {
@@ -177,7 +178,7 @@ export default {
     // 图片验证码
     GetImgCode () {
       this.codeTime = Date.parse(new Date())
-      this.axios.get('/media/imgCode?osType=0&codeTime=' + this.codeTime)
+      this.axios.get(this.$store.state.baseUrl + '/media/imgCode?osType=0&codeTime=' + this.codeTime)
       .then(response => {
         if (response.data.code === 200) {
           this.get_picture_identifying_code = response.data.data
@@ -209,7 +210,7 @@ export default {
           osType: 0
         }
         data = Qs.stringify(data)
-        this.axios.post('/media/ssm/send/imgCode?' + data)
+        this.axios.post(this.$store.state.baseUrl + '/media/ssm/send/imgCode?' + data)
         .then(response => {
           if (response.data.code === 200) {
             this.GetImgCode()
@@ -273,7 +274,7 @@ export default {
         this.alert_show = true
       } else {
         data = Qs.stringify(data)
-        this.axios.get('/media/info/modifyPassword?' + data)
+        this.axios.get(this.$store.state.baseUrl + '/media/info/modifyPassword?' + data)
         .then(response => {
           if (response.data.code === 200) {
             this.get_picture_identifying_code = response.data.data

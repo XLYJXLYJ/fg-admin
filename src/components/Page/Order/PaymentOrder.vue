@@ -29,6 +29,7 @@
 </template>
 <script>
 import func from '@/common/func'
+// import store from '@/vuex/store'
 export default {
   data () {
     return {
@@ -85,7 +86,7 @@ export default {
       this.show_loading = true
       this.page = this.page + 1
       let uid = localStorage.getItem('uid')
-      func.ajaxGet('/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=12' + '&page=' + this.page,
+      func.ajaxGet(this.$store.state.baseUrl + '/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=12' + '&page=' + this.page,
       response => {
         if (response.data.data.records.length) {
           this.noOrder = false
