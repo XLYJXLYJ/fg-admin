@@ -159,7 +159,7 @@ export default {
   .me{
     position: absolute;
     top: 65px;
-    width: 100%;
+    width: 640px;
     height: 75px;
     background-color: #fff;
     text-align: center;
@@ -267,18 +267,18 @@ export default {
     font-family:PingFang-SC-Bold;
     font-weight:Bold;
     color:#333;
-    position: absolute;
+    position: fixed;
     padding-left: 17px;
     top: 356px;
-    left: 20px;
+    margin-left: 20px;
   }
   .user_team_list_border{
     width:9px;
     height:27px;
     background: #FF5100;
-    position: absolute;
+    position: fixed;
     top: 356px;
-    left: 20px;
+    margin-left: 20px;
     border-radius: 9px;
   }
     ul{
@@ -354,7 +354,7 @@ export default {
   button{
       position: fixed;
       bottom: 0px;
-      width: 100%;
+      width: 640px;
       height: 84px;
       color: #fff;
       background: #FF5100;

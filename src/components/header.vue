@@ -69,6 +69,7 @@ export default {
       color: #333333;
       font-weight: Regular;
       font-family: PingFang-SC-Regular;
+      cursor: pointer;
     }
 }
 </style>

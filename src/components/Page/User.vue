@@ -48,6 +48,12 @@ export default {
       ismask: false // 遮罩层
     }
   },
+  created () {
+    let uid = localStorage.getItem('uid')
+    if (uid) {
+      this.$router.push('Login')
+    }
+  },
   mounted () {
     this.$router.push({name: 'UserTime'})
   },
@@ -126,10 +132,10 @@ export default {
   background: #fff;
   position: fixed;
   top: 168px;
-  left: 282px;
   z-index: 1000;
+  margin-left: 282px;
   ul{
-    width: 100%;
+    width: 319px;
     height: 100%;
     text-align: center;
     li{
@@ -154,18 +160,21 @@ export default {
     height: 17px;
     position: fixed;
     top: 151px;
-    left: 525px;
+    margin-left: 525px;
     z-index: 2000;
   }
   .user_search{
     position: fixed;
     top: 58px;
-    left: 0px;
-    width: 100%;
+    width:640px;
     height: 95px;
+    margin: 0 auto;
+    display: table-cell;
+    vertical-align: middle;
     z-index: 1000;
+    padding-top: 20px;
     background: #F5F5F5;
-    z-index: 1000;
+    margin-bottom: 6px;
     .search_icon{
       width: 439px;
       height: 55px;
@@ -220,7 +229,7 @@ export default {
     }
   }
   .tab_class{
-    margin-top: 147px;
+    margin-top: 148px;
     margin-bottom: 67px;
     flex: 1;
     width: 640px;

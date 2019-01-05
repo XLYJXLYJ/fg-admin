@@ -154,10 +154,6 @@ export default new Router({
       component: resolve => require(['@/components/Page/Contract'], resolve)
     },
     {
-      path: '/Editpassage',
-      component: resolve => require(['@/components/Page/Editpassage'], resolve)
-    },
-    {
       path: '/Login',
       name: 'Login',
       component: resolve => require(['@/components/Page/Login'], resolve)

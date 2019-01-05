@@ -67,4 +67,16 @@ color: transparent;
 input:focus:-ms-input-placeholder {
 color: transparent;
 }
+#app{
+  width: 640px;
+  margin: 0 auto;
+}
+// .noselect{
+//   width: 640px!important;
+//   height: 505px!important;
+//   position: absolute;
+//   left: 0px;
+//   top: 0px;
+//   border:1px solid red;
+// }
 </style>

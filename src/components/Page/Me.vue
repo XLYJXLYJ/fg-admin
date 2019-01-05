@@ -44,12 +44,18 @@ export default {
       error_type: '' // 弹出框的弹出说明
     }
   },
+  created () {
+    let uid = localStorage.getItem('uid')
+    if (!uid) {
+      this.$router.push('Login')
+    }
+  },
   methods: {
     onCancel () {
       this.show = false
     },
     onConfirm () {
-      func.ajaxGet('/user/logout?osType=0',
+      func.ajaxGet(this.$store.state.baseUrl + '/user/logout?osType=0',
       response => {
         if (response.data.code === 200) {
           localStorage.setItem('uid', '')

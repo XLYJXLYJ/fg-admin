@@ -189,11 +189,16 @@ export default {
     }
   },
   created () {
-    this.GetAsyncDate()
-    // this.Initialization()
-    this.GetTeamSituation()
-    this.IsSelectButton1()
-    this.GetrevenueStatistics()
+    let uid = localStorage.getItem('uid')
+    if (!uid) {
+      this.$router.push('Login')
+    } else {
+      this.GetAsyncDate()
+      // this.Initialization()
+      this.GetTeamSituation()
+      this.IsSelectButton1()
+      this.GetrevenueStatistics()
+    }
   },
   // watch: {
   //   '$route': {

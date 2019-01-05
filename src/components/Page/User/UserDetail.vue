@@ -3,8 +3,8 @@
     <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
     <alert v-model="alert_show">{{error_type}}</alert>
     <div class="user_detail">
-      <img src="../../../assets/user_icon_screen1@2x.png" class="img_time" v-show="user_icon_screen1" @click="SwitchUserIcon1()">
-      <img src="../../../assets/user_icon_screen2@2x.png" class="img_time" v-show="user_icon_screen2" @click="SwitchUserIcon2()">
+      <div class="img_time" v-show="user_icon_screen1" @click="SwitchUserIcon1()"><p style="opacity: 0;z-index:1000">注册时间</p><img src="../../../assets/user_icon_screen1@2x.png"></div>
+      <div class="img_time" v-show="user_icon_screen2" @click="SwitchUserIcon2()"><p style="opacity: 0;z-index:1000">注册时间</p><img src="../../../assets/user_icon_screen2@2x.png"></div>
       <div class="no_user" v-show="noUser">
         <img src="../../../assets/user_icon_emptystate@2x.png">
         <p>您还没有会员，继续加油哦~</p>
@@ -86,35 +86,34 @@ export default {
         this.pageDetailDirectly = 1
         this.GetUserDetailDirectly()
       }
-    },
-    // 排序类型
-    '$route.path': function () {
-      this.sort = this.$route.params.sort
-      this.GetUserDetail()
     }
   },
   created () {
-    var _this = this
-    window.onscroll = function () {
-      // 变量scrollTop是滚动条滚动时，距离顶部的距离
-      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-      // 变量windowHeight是可视区的高度
-      var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
-      // 变量scrollHeight是滚动条的总高度
-      var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-      // 滚动条到底部的条件
-      if (scrollTop + windowHeight === scrollHeight) {
-      // 写后台加载数据的函数
-        if (_this.$route.path === '/User/UserTime') {
-          _this.pageDetail = _this.pageDetail + 1
-          _this.GetUserDetail()
-        } else if (_this.$route.path === '/User/UserNumber') {
-          _this.pageDetailNumber = _this.pageDetailNumber + 1
-          _this.GetUserDetailNumber()
-        } else if (_this.$route.path === '/User/UserDirectly') {
-          _this.pageDetailDirectly = _this.pageDetailDirectly + 1
-          console.log(this.pageDetailDirectly)
-          _this.GetUserDetailDirectly()
+    let uid = localStorage.getItem('uid')
+    if (!uid) {
+      this.$router.push('Login')
+    } else {
+      var _this = this
+      window.onscroll = function () {
+        // 变量scrollTop是滚动条滚动时，距离顶部的距离
+        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+        // 变量windowHeight是可视区的高度
+        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+        // 变量scrollHeight是滚动条的总高度
+        var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+        // 滚动条到底部的条件
+        if (scrollTop + windowHeight === scrollHeight) {
+        // 写后台加载数据的函数
+          if (_this.$route.path === '/User/UserTime') {
+            _this.pageDetail = _this.pageDetail + 1
+            _this.GetUserDetail()
+          } else if (_this.$route.path === '/User/UserNumber') {
+            _this.pageDetailNumber = _this.pageDetailNumber + 1
+            _this.GetUserDetailNumber()
+          } else if (_this.$route.path === '/User/UserDirectly') {
+            _this.pageDetailDirectly = _this.pageDetailDirectly + 1
+            _this.GetUserDetailDirectly()
+          }
         }
       }
     }
@@ -132,7 +131,7 @@ export default {
     GetUserDetail () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&sort=' + this.sort + '&userType=0' + '&page=' + this.pageDetail + '&userType=' + this.$store.state.userType,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&sort=' + this.sort + '&page=' + this.pageDetail + '&userType=' + this.$store.state.userType,
         response => {
           if (response.data.code === 200 & response.data.data.records.length !== 0) {
             this.noOrder = false
@@ -160,7 +159,7 @@ export default {
     GetUserDetailNumber () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0' + '&page=' + this.pageDetailNumber + '&userType=' + this.$store.state.userType,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&sort=teamDesc&uid=' + uid + '&page=' + this.pageDetailNumber + '&userType=' + this.$store.state.userType,
         response => {
           if (response.data.code === 200 & response.data.data.records.length !== 0) {
             this.noOrder = false
@@ -188,7 +187,7 @@ export default {
     GetUserDetailDirectly () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&userType=0' + '&page=' + this.pageDetailDirectly + '&userType=' + this.$store.state.userType,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&sort=underDesc&uid=' + uid + '&page=' + this.pageDetailDirectly + '&userType=' + this.$store.state.userType,
         response => {
           if (response.data.code === 200 & response.data.data.records.length !== 0) {
             this.noOrder = false
@@ -217,7 +216,6 @@ export default {
       this.show_loading = true
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&mobile=' + this.userText,
         response => {
-          console.log(response.data.code === 200 && response.data.data.records.length !== 0)
           if (response.data.data.records.length) {
             this.getGetUserDetailList = response.data.data.records
             this.show_loading = false
@@ -234,6 +232,7 @@ export default {
       this.user_icon_screen1 = false
       this.user_icon_screen2 = true
       this.sort = 'registAsc'
+      this.$router.push({name: 'UserTime'})
       this.GetUserDetail()
     },
     // 时间倒叙
@@ -241,6 +240,7 @@ export default {
       this.user_icon_screen1 = true
       this.user_icon_screen2 = false
       this.sort = 'registDesc'
+      this.$router.push({name: 'UserTime'})
       this.GetUserDetail()
     }
   },
@@ -256,12 +256,23 @@ export default {
   height: auto;
   position: relative;
   .img_time{
-    width:12px;
+    width:120px;
     height: 15px;
     position: fixed;
-    left: 159px;
-    top: 188px;
+    top: 184px;
     z-index: 1000;
+    font-size:24px;
+    font-family:PingFang-SC-Regular;
+    font-weight:bold;
+    margin-left: 55px;
+    img{
+      position: absolute;
+      top: 4px;
+      left: 104px;
+      width:12px;
+      height:15px;
+      z-index: 1000;
+    }
   }
   .no_user{
     width: 100%;

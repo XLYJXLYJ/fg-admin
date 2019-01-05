@@ -312,6 +312,7 @@ export default {
     position: absolute;
     top: 686px;
     left: 490px;
+    cursor: pointer;
   }
   .login_button{
     width:572px;
@@ -323,6 +324,7 @@ export default {
     font-weight:Regular;
     text-align: center;
     margin-top: 84px;
+    cursor: pointer;
   }
   .ok_login_button{
     width:572px;
@@ -336,6 +338,7 @@ export default {
     margin-top: 84px;
     color: #fff;
     z-index: 1000;
+    cursor: pointer;
   }
 }
 </style>

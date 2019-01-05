@@ -56,6 +56,12 @@ export default {
       searchOrder: true
     }
   },
+  created () {
+    let uid = localStorage.getItem('uid')
+    if (!uid) {
+      this.$router.push('Login')
+    }
+  },
   mounted () {
     this.$router.push({name: 'PaymentOrder'})
   },
@@ -122,7 +128,6 @@ export default {
   .order_search{
     position: fixed;
     top: 148px;
-    left: 0px;
     width: 100%;
     height: 75px;
     background: #fff;

@@ -99,9 +99,12 @@ export default {
     }
   },
   created () {
-    this.GetImgCode()
-    if (localStorage.getItem('mobile')) {
-      this.phone = localStorage.getItem('mobile')
+    let uid = localStorage.getItem('uid')
+    if (!uid) {
+      this.GetImgCode()
+      if (localStorage.getItem('mobile')) {
+        this.phone = localStorage.getItem('mobile')
+      }
     }
   },
   mounted () {
@@ -518,14 +521,17 @@ export default {
       margin: 0 auto;
       margin-top:33px;
       border-radius: 9px;
+      cursor: pointer;
     }
     .forget_password_button{
       background: #E8E8EA;
       color: #333;
+      cursor: pointer;
     }
     .ok_forget_password_button{
       background: #FF5100;
       color: #fff;
+      cursor: pointer;
     }
   }
   .one_close{

@@ -14,6 +14,12 @@
 <script>
 import VHead from '@/components/header'
 export default {
+  created () {
+    let uid = localStorage.getItem('uid')
+    if (!uid) {
+      this.$router.push('Login')
+    }
+  },
   components: {
     VHead
   }
