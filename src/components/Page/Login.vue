@@ -165,16 +165,6 @@ export default {
     },
     GetTeamSituation () {
       let uid = localStorage.getItem('uid')
-      // asyncfunc.myGet('/user/relation/auth/itocInfo?osType=0&uid=' + uid).then((response) => {
-      //   this.underCount = response.data.underCount
-      //   this.referCount = response.data.referCount
-      //   this.agentCount = response.data.agentCount
-      //   let sum = this.underCount + this.referCount + this.agentCount
-      //   this.data[0]['percent'] = this.underCount / sum
-      //   this.data[1]['percent'] = this.referCount / sum
-      //   this.data[2]['percent'] = this.agentCount / sum
-      //   this.underCountPercent = this.underCount / sum * 100
-      // })
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocInfo?uid=' + uid,
       response => {
         if (response.data.code === 200) {

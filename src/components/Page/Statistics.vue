@@ -12,22 +12,24 @@
         <div class="team_situation_line"></div>
         <div class="team_situation_data_number">
           <ul>
-            <li>
+            <li @click="SelectUnder()">
               <div class="circle" style="background:#FF5100"> </div><span>直属：</span><span class="number">{{underCount}}</span>
             </li>
-            <li>
+            <li @click="SelectRefer()">
               <div class="circle" style="background:#0057FF"> </div><span>推荐：</span><span class="number">{{referCount}}</span>
             </li>
-            <li>
+            <li @click="SelectAgent()">
               <div class="circle" style="background:#FF8F00"> </div><span>运营商：</span><span class="number">{{agentCount}}</span>
             </li>
           </ul>
         </div>
-        <div class="zhishunum">{{underCountPercent}}%</div>
-        <div class="zhishu">直属</div>
+        <div class="zhishunum">{{derCountPercent}}%</div>
+        <div class="zhishu">{{countPercentName}}</div>
         <div class="team_situation_right">
           <v-chart id="canvas" ref='chart'
             :data="data"
+            :height='height'
+            :width='width'
             :padding="[30, 'auto']">
             <v-tooltip disabled />
             <v-scale y :options="yOptions" />
@@ -159,25 +161,29 @@ export default {
       underCount: '', // 直属
       referCount: '', // 推荐
       agentCount: '', // 代理商
+      derCountPercent: '', // 显示占比
       underCountPercent: '', // 直属占比
       referCountPercent: '', // 推荐占比
       agentCountPercent: '', // 代理商占比
       getToken: '', // token
       alert_show: false, // 是否显示弹出框
       error_type: '', // 弹出框的弹出说明
+      countPercentName: '直属', // 百分比显示
       map,
       htmlOptions: {
         position: [ '50%', '50%' ],
         html:
-        `<div style="width: 250px;height: 40px;text-align: center;">
+        `<div style="width: 50px;height: 40px;text-align: center;">
           <div style="font-size: 24px" ref='sum_percent'></div>
           <div style="font-size: 16px;margin-top:10px;color:#999"></div>
         </div>`
       },
+      height: 310,
+      width: 380,
       legendOptions: {
         position: 'left',
         itemFormatter (val) {
-          return val + '  ' + map[val]
+          return 40 + '  ' + map[40]
         }
       },
       yOptions: {
@@ -189,6 +195,12 @@ export default {
     }
   },
   created () {
+    if (document.body.clientWidth > 640) {
+      this.width = 380 * (600 / 412)
+      this.height = 400
+    } else {
+      this.width = 380 * (document.body.clientWidth / 400)
+    }
     let uid = localStorage.getItem('uid')
     if (!uid) {
       this.$router.push('Login')
@@ -200,33 +212,22 @@ export default {
       this.GetrevenueStatistics()
     }
   },
-  // watch: {
-  //   '$route': {
-  //     handler (route) {
-  //       const that = this
-  //       if (route.name === 'Statistics') {
-  //         that.GetTeamSituation()
-  //         that.IsSelectButton1()
-  //         that.GetrevenueStatistics()
-  //       }
-  //     }
-  //   }
-  // },
   methods: {
+    SelectUnder () {
+      this.derCountPercent = this.underCountPercent
+      this.countPercentName = '直属'
+    },
+    SelectRefer () {
+      this.derCountPercent = this.referCountPercent
+      this.countPercentName = '推荐'
+    },
+    SelectAgent () {
+      this.derCountPercent = this.agentCountPercent
+      this.countPercentName = '代理商'
+    },
     renderVChart ({ chart }) {
       this.GetTeamSituation()
     },
-    // GetTeamSituation () {
-    //   console.log(2222)
-    //   let uid = localStorage.getItem('uid')
-    //   let loginToken = localStorage.getItem('loginToken')
-    //   this.axios.get('/user/relation/auth/itocInfo?uid=' + uid, {
-    //     headers: {'token': loginToken}
-    //   })
-    //   .then(response => {
-    //     console.log(response)
-    //   })
-    // }
     GetAsyncDate () {
       this.getToken = localStorage.getItem('loginToken')
       return new Promise((resolve, reject) => {
@@ -350,16 +351,6 @@ export default {
     },
     GetTeamSituation () {
       let uid = localStorage.getItem('uid')
-      // asyncfunc.myGet('/user/relation/auth/itocInfo?osType=0&uid=' + uid).then((response) => {
-      //   this.underCount = response.data.underCount
-      //   this.referCount = response.data.referCount
-      //   this.agentCount = response.data.agentCount
-      //   let sum = this.underCount + this.referCount + this.agentCount
-      //   this.data[0]['percent'] = this.underCount / sum
-      //   this.data[1]['percent'] = this.referCount / sum
-      //   this.data[2]['percent'] = this.agentCount / sum
-      //   this.underCountPercent = this.underCount / sum * 100
-      // })
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocInfo?osType=0&uid=' + uid,
       response => {
         if (response.data.code === 200) {
@@ -372,6 +363,11 @@ export default {
           this.data[2]['percent'] = this.agentCount / sum
           this.underCountPercent = this.underCount / sum * 100
           this.underCountPercent = this.underCountPercent.toFixed(2)
+          this.derCountPercent = this.underCountPercent
+          this.referCountPercent = this.referCount / sum * 100
+          this.referCountPercent = this.referCountPercent.toFixed(2)
+          this.agentCountPercent = this.agentCount / sum * 100
+          this.agentCountPercent = this.agentCountPercent.toFixed(2)
           this.$refs.chart.rerender()
         } else {
           this.error_type = response.data.message
@@ -385,11 +381,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-#canvas{
-  position:absolute;
-  top: 30px;
-  left: -24px;
-}
 .statistics_contain{
   width: 100%;
   min-height: 1390px;
@@ -416,7 +407,6 @@ export default {
   top: 64px;
   z-index: 1000;
   }
-
   .team_situation{
     height: 428px;
     width: 599px;
@@ -428,7 +418,7 @@ export default {
     .zhishunum{
       position:absolute;
       top: 230px;
-      left: 338px;
+      left: 342px;
       width: 60px;
       height: 60px;
       z-index: 1000;
@@ -437,11 +427,12 @@ export default {
     .zhishu{
       position:absolute;
       top: 270px;
-      left: 356px;
-      width: 60px;
+      left: 340px;
+      width: 100px;
       height: 60px;
       z-index: 1000;
       font-size: 29px;
+      text-align: center;
       color: #999;
     }
     .team_situation_data_number{

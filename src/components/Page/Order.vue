@@ -19,25 +19,6 @@
         </ul> 
         <router-view></router-view>
       </div>
-      <!-- <div class="search_order">
-        <ul v-show="searchOrder">
-          <li>
-              <p class="order_number">订单号：{{tradeId}}</p>
-              <div class="order_contain">
-                  <img :src="itemPic" alt="">
-                  <p class="order_title">{{itemTitle}}</p>
-                  <span class="order_time">创建日：{{createTime}}</span>
-                  <span class="operation_enter">运营中心收益:￥{{agentUserCommission}}</span>
-                  <span class="carrieroperator">运营商收益:￥{{superUserCommission}}</span>
-                  <span class="one_income">一级收益:￥{{userCommission}}</span>
-                  <span class="up_income">上级收益:￥{{upUserCommission}}</span>
-                  <span class="one_belong">一级归属:{{userMobile}}</span>
-                  <span class="two_belong">上级归属:{{upUserMobile}}</span>
-                  <span class="three_belong">运营商:{{agentUserMobile}}</span>
-              </div>
-          </li>
-        </ul>
-      </div> -->
     </div>
     <foot></foot>
   </div>
