@@ -5,7 +5,7 @@
         <alert v-model="alert_show">{{error_type}}</alert>
         <div class="statistics_detail">
             <div class="me">
-                <img class="statistics_detail_back" src="../../../assets/statistics_icon_back@2x.png" @click="BackFunction()">
+                <div @click="BackFunction()" class="statistics_detail_back"><img src="../../../assets/statistics_icon_back2@2x.png"></div>
                 <p>团队会员收益</p>
                 <span @click="IncomeAsc()">累计收益</span>
                 <img class="statistics_detail_select" src="../../../assets/user_icon_screen1@2x.png" v-show="sortid_img">
@@ -69,24 +69,19 @@ export default {
     this.GetStatisticsDetail()
   },
   created () {
-    let uid = localStorage.getItem('uid')
-    if (!uid) {
-      this.$router.push('Login')
-    } else {
-      var _this = this
-      window.onscroll = function () {
-        // 变量scrollTop是滚动条滚动时，距离顶部的距离
-        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        // 变量windowHeight是可视区的高度
-        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
-        // 变量scrollHeight是滚动条的总高度
-        var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-        // 滚动条到底部的条件
-        if (scrollTop + windowHeight === scrollHeight) {
-        // 写后台加载数据的函数
-          _this.page = _this.page + 1
-          _this.GetStatisticsDetail()
-        }
+    var _this = this
+    window.onscroll = function () {
+      // 变量scrollTop是滚动条滚动时，距离顶部的距离
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      // 变量windowHeight是可视区的高度
+      var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      // 变量scrollHeight是滚动条的总高度
+      var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      // 滚动条到底部的条件
+      if (scrollTop + windowHeight === scrollHeight) {
+      // 写后台加载数据的函数
+        _this.page = _this.page + 1
+        _this.GetStatisticsDetail()
       }
     }
   },
@@ -169,11 +164,18 @@ export default {
     text-align: center;
     border-top:1px solid #E8E8EA;
     .statistics_detail_back{
+      width: 37px;
+      height: 24px;
+      position: absolute;
+      left: 26px;
+      top: 26px;
+      img{
         width: 17px;
         height: 24px;
         position: absolute;
-        left: 26px;
-        top: 26px;
+        left: 0px;
+        top: 0px;
+      }
     }
     span{
         width: 100px;
@@ -203,7 +205,7 @@ export default {
   }
   .statistics_detail_search{
     position: absolute;
-    top: 140px;
+    top: 142px;
     left: 0px;
     width: 100%;
     height: 95px;
@@ -232,6 +234,7 @@ export default {
         border-radius: 27px 0px 0px 27px;
         border: 1px solid red;
         padding-left: 57px;
+        -webkit-appearance: none;
       }
       button{
         width:116px;

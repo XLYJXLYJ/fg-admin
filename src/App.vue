@@ -14,7 +14,6 @@ export default {
 
 <style lang="less">
 @import '~vux/src/styles/reset.less';
-html{background-color:#fff;color:#000;}
 body,ul,ol,dl,dd,h1,h2,h3,h4,h5,h6,figure,form,fieldset,legend,input,textarea,button,p,blockquote,th,td,pre,xmp{margin:0;padding:0;overflow-y:hidden;}
 body,input,textarea,button,select,pre,xmp,tt,code,kbd,samp{line-height:1.5;font-family:tahoma,arial,"Hiragino Sans GB",simsun,sans-serif}
 h1,h2,h3,h4,h5,h6,small,big,input,textarea,button,select{font-size:100%}
@@ -71,6 +70,52 @@ color: transparent;
   width: 640px;
   margin: 0 auto;
 }
+.weui-dialog{
+  max-width:461px!important;
+  border-radius: 30px!important;
+}
+.weui-dialog__title{
+  font-size: 29px!important;
+  width:114px;
+  height:27px;
+  font-size:29px;
+  color: #000;
+  font-family:PingFang-SC-Medium;
+  font-weight:Medium;
+}
+.weui-dialog__bd{
+  font-size: 22px!important;
+  height:27px;
+  color: #000!important;;
+  font-family:PingFang-SC-Regular;
+  font-weight:Regular;
+}
+.weui-dialog__btn_default{
+  font-size: 29px!important;
+  width:114px;
+  height:27px;
+  font-size:29px;
+  color: #007AFF!important;
+  font-family:PingFang-SC-Medium;
+  font-weight:Medium;
+  padding-top: 15px;
+  padding-bottom: 30px;
+}
+.weui-dialog__btn_primary{
+  font-size: 29px!important;
+  width:114px;
+  height:27px;
+  font-size:29px;
+  color: #007AFF!important;
+  font-family:PingFang-SC-Medium;
+  font-weight:Medium;
+  padding-top: 15px;
+  padding-bottom: 30px;
+}
+// .weui-dialog__hd{
+//   width:462px;
+//   height: 55px;
+// }
 // .noselect{
 //   width: 640px!important;
 //   height: 505px!important;

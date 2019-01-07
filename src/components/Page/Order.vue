@@ -137,6 +137,7 @@ export default {
         border-radius: 27px 0px 0px 27px;
         border: 1px solid red;
         padding-left: 57px;
+        -webkit-appearance: none;
       }
       button{
         width:116px;

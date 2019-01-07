@@ -16,10 +16,10 @@
               <div class="circle" style="background:#FF5100"> </div><span>直属：</span><span class="number">{{underCount}}</span>
             </li>
             <li @click="SelectRefer()">
-              <div class="circle" style="background:#0057FF"> </div><span>推荐：</span><span class="number">{{referCount}}</span>
+              <div class="circle" style="background:#0057FF"> </div><span>运营商：</span><span class="number">{{agentCount}}</span>
             </li>
-            <li @click="SelectAgent()">
-              <div class="circle" style="background:#FF8F00"> </div><span>运营商：</span><span class="number">{{agentCount}}</span>
+            <li>
+              <div class="circle" style="background:#FF8F00"> </div><span>团队人数：</span><span class="number">{{teamCount}}</span>
             </li>
           </ul>
         </div>
@@ -63,8 +63,7 @@
               <p>付款笔数</p>
             </li>
             <li>
-              <span class="data_statistics_foot_money_icon">￥</span>
-              <span class="data_statistics_foot_money_number">{{commission}}</span>
+              <span class="data_statistics_foot_money_number"><span class="data_statistics_foot_money_icon">￥</span>{{commission}}</span>
               <p>消费收益预估</p>
             </li>
           </ul>
@@ -86,18 +85,15 @@
         <div class="revenue_statistics_foot">
           <ul>
             <li>
-              <span class="revenue_statistics_foot_money_icon">￥</span>
-              <span class="revenue_statistics_foot_money_number">{{lastMonthCommission}}</span>
+              <span class="revenue_statistics_foot_money_number"><span class="revenue_statistics_foot_money_icon">￥</span>{{lastMonthCommission}}</span>
               <p>上月结算</p>
             </li>
             <li>
-              <span class="revenue_statistics_foot_money_icon">￥</span>
-              <span class="revenue_statistics_foot_money_number">{{currentMonthTkMoney}}</span>
+              <span class="revenue_statistics_foot_money_number"><span class="revenue_statistics_foot_money_icon">￥</span>{{currentMonthTkMoney}}</span>
               <p>本月预估</p>
             </li>
             <li>
-              <span class="revenue_statistics_foot_money_icon">￥</span>
-              <span class="revenue_statistics_foot_money_number">{{lastMonthTkMoney}}</span>
+              <span class="revenue_statistics_foot_money_number"><span class="revenue_statistics_foot_money_icon">￥</span>{{lastMonthTkMoney}}</span>
               <p>上月预估</p>
             </li>
           </ul>
@@ -122,9 +118,9 @@ import foot from '@/components/foot'
 import VHead from '@/components/header'
 
 var data = [
-  { name: '直属', percent: localStorage.getItem('underCount'), a: '1' },
-  { name: '运营商', percent: localStorage.getItem('referCount'), a: '1' },
-  { name: '团队人数', percent: localStorage.getItem('agentCount'), a: '1' }
+  { name: '直属', percent: '', a: '1' },
+  { name: '运营商', percent: '', a: '1' },
+  { name: '团队人数', percent: '', a: '1' }
 ]
 const map = {}
 data.map(obj => {
@@ -159,11 +155,11 @@ export default {
       totalIncome: '', // 累计收益
       beforeTime: '', // 今日与昨日
       underCount: '', // 直属
-      referCount: '', // 推荐
+      teamCount: '', // 推荐
       agentCount: '', // 代理商
       derCountPercent: '', // 显示占比
       underCountPercent: '', // 直属占比
-      referCountPercent: '', // 推荐占比
+      teamCountPercent: '', // 推荐占比
       agentCountPercent: '', // 代理商占比
       getToken: '', // token
       alert_show: false, // 是否显示弹出框
@@ -195,6 +191,7 @@ export default {
     }
   },
   created () {
+    // console.log(MobileDevice)
     if (document.body.clientWidth > 640) {
       this.width = 380 * (600 / 412)
       this.height = 400
@@ -218,13 +215,13 @@ export default {
       this.countPercentName = '直属'
     },
     SelectRefer () {
-      this.derCountPercent = this.referCountPercent
-      this.countPercentName = '推荐'
-    },
-    SelectAgent () {
       this.derCountPercent = this.agentCountPercent
-      this.countPercentName = '代理商'
+      this.countPercentName = '运营商'
     },
+    // SelectAgent () {
+    //   this.derCountPercent = this.agentCountPercent
+    //   this.countPercentName = ''
+    // },
     renderVChart ({ chart }) {
       this.GetTeamSituation()
     },
@@ -355,18 +352,18 @@ export default {
       response => {
         if (response.data.code === 200) {
           this.underCount = response.data.data.underCount
-          this.referCount = response.data.data.referCount
+          this.teamCount = response.data.data.teamCount
           this.agentCount = response.data.data.agentCount
-          let sum = this.underCount + this.referCount + this.agentCount
-          this.data[0]['percent'] = this.underCount / sum
-          this.data[1]['percent'] = this.referCount / sum
-          this.data[2]['percent'] = this.agentCount / sum
-          this.underCountPercent = this.underCount / sum * 100
+          // let sum = this.underCount + this.teamCount + this.agentCount
+          this.data[0]['percent'] = this.underCount / this.teamCount
+          this.data[2]['percent'] = this.teamCount / this.teamCount
+          this.data[1]['percent'] = this.agentCount / this.teamCount
+          this.underCountPercent = this.underCount / this.teamCount * 100
           this.underCountPercent = this.underCountPercent.toFixed(2)
           this.derCountPercent = this.underCountPercent
-          this.referCountPercent = this.referCount / sum * 100
-          this.referCountPercent = this.referCountPercent.toFixed(2)
-          this.agentCountPercent = this.agentCount / sum * 100
+          this.teamCountPercent = this.teamCount / this.teamCount * 100
+          this.teamCountPercent = this.teamCountPercent.toFixed(2)
+          this.agentCountPercent = this.agentCount / this.teamCount * 100
           this.agentCountPercent = this.agentCountPercent.toFixed(2)
           this.$refs.chart.rerender()
         } else {
@@ -391,7 +388,7 @@ export default {
   padding-bottom: 85px;
   .left{
   width: 20px;
-  height: 480px;
+  height: 580px;
   position: fixed;
   background: #F5F5F5;
   left: 0px;
@@ -400,7 +397,7 @@ export default {
   }
   .right{
   width: 20px;
-  height: 480px;
+  height: 580px;
   position: fixed;
   background: #F5F5F5;
   right: 0px;
@@ -606,9 +603,6 @@ export default {
           position: relative;
           text-align: center;
           .data_statistics_foot_money_icon{
-            position: absolute;
-            left: 21px;
-            top: 64px;
             width:26px;
             height:16px;
             color: #333;
@@ -632,7 +626,7 @@ export default {
             left: 22px;
             top: 98px;
             width:150px;
-            height:23px;
+            height:26px;
             color: #999;
             font-size:24px;
             font-family: PingFang-SC-Bold;
@@ -742,11 +736,6 @@ export default {
           position: relative;
           text-align: center;
           .revenue_statistics_foot_money_icon{
-            position: absolute;
-            left: 41px;
-            top: 60px;
-            width:26px;
-            height:16px;
             color: #333;
             font-family: PingFang-SC-Bold;
             font-weight: Bold;
@@ -754,7 +743,7 @@ export default {
           }
           .revenue_statistics_foot_money_number{
             position: absolute;
-            left: 46px;
+            left: 36px;
             top: 57px;
             width:96px;
             height:23px;
@@ -762,6 +751,7 @@ export default {
             font-family: PingFang-SC-Bold;
             font-weight: Bold;
             font-size: 29px;
+            margin-left: 10px;
             text-align: center;
           }
           p{

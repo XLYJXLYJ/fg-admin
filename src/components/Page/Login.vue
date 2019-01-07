@@ -52,20 +52,20 @@ export default {
     }
   },
   mounted () {
-    this.clientHeight = document.documentElement.clientHeight
-    const that = this
-    // 安卓手机键盘吊起挡住输入框
-    window.onresize = function () {
-      if (document.documentElement.clientHeight < that.clientHeight) {
-      // scrollVal为负值
-        let scrollVal = document.documentElement.clientHeight - that.clientHeight
-        var div01 = document.getElementByClassName('login')
-        div01.setAttribute('marginTop', scrollVal)
-      } else {
-        var div02 = document.getElementByClassName('login')
-        div02.setAttribute('marginTop', 0)
-      }
-    }
+    // this.clientHeight = document.documentElement.clientHeight
+    // const that = this
+    // // 安卓手机键盘吊起挡住输入框
+    // window.onresize = function () {
+    //   if (document.documentElement.clientHeight < that.clientHeight) {
+    //   // scrollVal为负值
+    //     let scrollVal = document.documentElement.clientHeight - that.clientHeight
+    //     var div01 = document.getElementByClassName('login')
+    //     div01.setAttribute('marginTop', scrollVal)
+    //   } else {
+    //     var div02 = document.getElementByClassName('login')
+    //     div02.setAttribute('marginTop', 0)
+    //   }
+    // }
   },
   methods: {
     Reload () {

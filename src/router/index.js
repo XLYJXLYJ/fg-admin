@@ -119,7 +119,8 @@ export default new Router({
       ]
     },
     {
-      path: '/UserDetailOne',
+      path: '/UserDetailOne/:userid',
+      name: 'UserDetailOne',
       component: resolve => require(['@/components/Page/User/UserDetailOne'], resolve)
     },
     {

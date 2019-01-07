@@ -1,6 +1,7 @@
 <template>
   <div>
     <VHead></VHead>
+    <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
     <alert v-model="alert_show">{{error_type}}</alert>
     <confirm v-model="show"
       title="温馨提示"
@@ -11,11 +12,16 @@
     <div class="user_detail_one">
         <alert v-model="alert_show">{{error_type}}</alert>
         <div class="me">
-            <img src="../../../assets/statistics_icon_back2@2x.png" @click="BackFunction()">
-            <p>用户详情</p>
+          <div @click="BackFunction()" class="img_border"><img src="../../../assets/statistics_icon_back2@2x.png"></div>
+          <p>用户详情</p>
         </div>
         <div class="user_contain_head">
-            <img class="user_contain_headimg" :src="headImg" alt="">
+            <div v-if="headImg == null">
+              <img class="user_contain_headimg" src="../../../assets/community_picture@2x.png">
+            </div>
+            <div v-else>
+              <img class="user_contain_headimg" :src="headImg">
+            </div>
             <p class="user_title">{{mobile}}</p>
             <div v-if="userType == 0">
                 <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
@@ -35,25 +41,32 @@
             <span class="user_up">上级：{{upMobile}}</span>
             <span class="user_recommend">团队总数：<span style="color:#FF5100">{{teamCount}}</span></span>
         </div>
-        <div class="user_team_list_border"></div>
-        <p class="user_team_list">团队列表</p>
+        <div class="user_team_list_box">
+          <div class="user_team_list_border"></div>
+          <p class="user_team_list">团队列表</p>
+        </div>
         <ul>
-            <li v-for="(item, index) in getGetUserDetailList" :key="'time' + index"
-             @click="selectTimer(index)"
-             :class="timeIndex === index ? 'active_class' : 'unactive_class' ">
-                <div class="user_contain">
-                    <img class="user_contain_headimg" src="../../../assets/girl.jpg" alt="">
-                    <p class="user_title">{{item.mobile}}</p>
-                    <div v-if="item.userType == 1">
-                        <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
-                    </div>
-                    <div v-else>
-                        <img class="grade_level_img" src="../../../assets/user_icon_diamondmembers@2x.png">
-                    </div>
-                    <span class="user_name">{{item.nickName}}</span>
-                    <span class="user_time">{{item.createTime}}</span>
-                </div>
-            </li>
+          <li v-for="(item, index) in getGetUserDetailList" :key="'time' + index"
+            @click="selectTimer(item.userId)"
+            :class="timeIndex === index ? 'active_class' : 'unactive_class' ">
+              <div class="user_contain">
+                  <div v-if="item.headImg == null">
+                    <img class="user_contain_headimg" src="../../../assets/community_picture@2x.png">
+                  </div>
+                  <div v-else>
+                    <img class="user_contain_headimg" :src="item.headImg">
+                  </div>
+                  <p class="user_title">{{item.mobile}}</p>
+                  <div v-if="item.userType == 1">
+                      <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
+                  </div>
+                  <div v-else>
+                      <img class="grade_level_img" src="../../../assets/user_icon_diamondmembers@2x.png">
+                  </div>
+                  <span class="user_name">{{item.nickName}}</span>
+                  <span class="user_time">{{item.createTime}}</span>
+              </div>
+          </li>
         </ul>
         <button @click="DoShowToast()">升级</button>
     </div>
@@ -79,20 +92,41 @@ export default {
       createTime: '', // 创建时间
       upMobile: '', // 上级代理
       teamCount: '', // 团队总人数
-      getGetUserDetailList: '', // 循环数组
+      getGetUserDetailList: [], // 循环数组
       active: '', // 是否选中li样式
       timeIndex: '', // 选中li
-      show: false // 是否弹出确定框
+      show: false, // 是否弹出确定框
+      page: 1,
+      show_loading: false, // 是否显示加载框
+      text_loading: '正在加载...' // 加载框显示文字
+    }
+  },
+  created () {
+    var _this = this
+    window.onscroll = function () {
+      // 变量scrollTop是滚动条滚动时，距离顶部的距离
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      // 变量windowHeight是可视区的高度
+      var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      // 变量scrollHeight是滚动条的总高度
+      var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      // 滚动条到底部的条件
+      if (scrollTop + windowHeight === scrollHeight) {
+      // 写后台加载数据的函数
+        _this.page = _this.page + 1
+        _this.GetUserDetailList()
+      }
     }
   },
   mounted () {
+    this.userid = this.$route.params.userid
     this.GetUserDetailOne()
     this.GetUserDetailList()
   },
   methods: {
     GetUserDetailOne () {
-      let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocInfo?osType=0&uid=' + uid,
+      // let uid = localStorage.getItem('uid')
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocInfo?osType=0&uid=' + this.userid,
         response => {
           if (response.data.code === 200) {
             this.headImg = response.data.data.headImg
@@ -109,19 +143,36 @@ export default {
         })
     },
     GetUserDetailList () {
-      let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/query?osType=0&uid=' + uid + '&page=1&size=10',
+      this.show_loading = true
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/query?osType=0&uid=' + this.userid + '&size=10' + '&page=' + this.page,
         response => {
-          if (response.data.code === 200) {
-            this.getGetUserDetailList = response.data.data.records
+          if (response.data.data.records.length) {
+            this.noOrder = false
+            if (this.page === 1) {
+              this.getGetUserDetailList = response.data.data.records
+              this.show_loading = false
+            } else {
+              this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+              this.show_loading = false
+            }
           } else {
-            this.error_type = response.data.message
-            this.alert_show = true
+            if (this.page === 1) {
+              this.noOrder = true
+              this.show_loading = false
+              this.getGetUserDetailList = ''
+            } else {
+              this.error_type = '已显示全部订单'
+              this.alert_show = true
+              this.show_loading = false
+            }
           }
-        })
+        }
+      )
     },
     selectTimer (index) {
-      this.timeIndex = index
+      this.userid = index
+      this.GetUserDetailOne()
+      this.GetUserDetailList()
     },
     onCancel () {
       this.show = false
@@ -157,19 +208,27 @@ export default {
     background: #FF5100;
   }
   .me{
-    position: absolute;
+    position: fixed;
     top: 65px;
     width: 640px;
     height: 75px;
     background-color: #fff;
     text-align: center;
     border-top:1px solid #E8E8EA;
+    z-index: 500;
+    .img_border{
+        width: 47px;
+        height: 34px;
+        position: absolute;
+        left: 26px;
+        top: 26px;
+    }
     img{
         width: 17px;
         height: 24px;
         position: absolute;
-        left: 26px;
-        top: 26px;
+        left: 0px;
+        top: 0px;
     }
     p{
       color: #333;
@@ -180,11 +239,12 @@ export default {
     }
   }
   .user_contain_head{
-    width: 100%;
+    width: 640px;
     height:172px;
-    position: absolute;
+    position: fixed;
     top: 138px;
     background: #fff;
+    z-index: 500;
     .user_contain_headimg{
         width:110px;
         height:109px;
@@ -212,7 +272,7 @@ export default {
         left: 404px;
     }
     .user_name{
-        width:100px;
+        width:140px;
         height:22px;
         font-size:20px;
         font-family:PingFang-SC-Regular;
@@ -259,6 +319,14 @@ export default {
             font-size:29px;
         }
     }
+  }
+  .user_team_list_box{
+    width: 640px;
+    height:92px;
+    position: fixed;
+    top: 309px;
+    background: #F5F5F5;
+    z-index: 500;
   }
   .user_team_list{
     width:136px;
@@ -327,7 +395,7 @@ export default {
                 left: 307px;
             }
             .user_name{
-                width:100px;
+                width:140px;
                 height:22px;
                 font-size:20px;
                 font-family:PingFang-SC-Regular;
@@ -338,7 +406,7 @@ export default {
                 left: 115px;
             } 
             .user_time{
-                width:200px;
+                width:220px;
                 height:22px;
                 font-size:20px;
                 font-family:PingFang-SC-Regular;

@@ -11,9 +11,14 @@
       </div>
       <ul v-show="!noUser">
           <li v-for="item in getGetUserDetailList" :key='item.id'>
-              <router-link :to="{path:'/UserDetailOne?uid='+item.userId}">
+              <router-link :to="{name: 'UserDetailOne',params: { userid: item.userId}}">
                   <div class="user_contain">
-                      <img class="user_contain_headimg" :src="item.headImg">
+                      <div v-if="item.headImg == null">
+                        <img class="user_contain_headimg" src="../../../assets/community_picture@2x.png">
+                      </div>
+                      <div v-else>
+                        <img class="user_contain_headimg" :src="item.headImg">
+                      </div>
                       <p class="user_title">{{item.mobile}}</p>
                       <div v-if="item.userType == 1">
                           <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
@@ -89,31 +94,26 @@ export default {
     }
   },
   created () {
-    let uid = localStorage.getItem('uid')
-    if (!uid) {
-      this.$router.push('Login')
-    } else {
-      var _this = this
-      window.onscroll = function () {
-        // 变量scrollTop是滚动条滚动时，距离顶部的距离
-        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        // 变量windowHeight是可视区的高度
-        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
-        // 变量scrollHeight是滚动条的总高度
-        var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-        // 滚动条到底部的条件
-        if (scrollTop + windowHeight === scrollHeight) {
-        // 写后台加载数据的函数
-          if (_this.$route.path === '/User/UserTime') {
-            _this.pageDetail = _this.pageDetail + 1
-            _this.GetUserDetail()
-          } else if (_this.$route.path === '/User/UserNumber') {
-            _this.pageDetailNumber = _this.pageDetailNumber + 1
-            _this.GetUserDetailNumber()
-          } else if (_this.$route.path === '/User/UserDirectly') {
-            _this.pageDetailDirectly = _this.pageDetailDirectly + 1
-            _this.GetUserDetailDirectly()
-          }
+    var _this = this
+    window.onscroll = function () {
+      // 变量scrollTop是滚动条滚动时，距离顶部的距离
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      // 变量windowHeight是可视区的高度
+      var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      // 变量scrollHeight是滚动条的总高度
+      var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      // 滚动条到底部的条件
+      if (scrollTop + windowHeight === scrollHeight) {
+      // 写后台加载数据的函数
+        if (_this.$route.path === '/User/UserTime') {
+          _this.pageDetail = _this.pageDetail + 1
+          _this.GetUserDetail()
+        } else if (_this.$route.path === '/User/UserNumber') {
+          _this.pageDetailNumber = _this.pageDetailNumber + 1
+          _this.GetUserDetailNumber()
+        } else if (_this.$route.path === '/User/UserDirectly') {
+          _this.pageDetailDirectly = _this.pageDetailDirectly + 1
+          _this.GetUserDetailDirectly()
         }
       }
     }
@@ -214,7 +214,8 @@ export default {
     // 手机号查询
     GetUsertext () {
       this.show_loading = true
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&mobile=' + this.userText,
+      let uid = localStorage.getItem('uid')
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&mobile=' + this.userText + '&uid=' + uid,
         response => {
           if (response.data.data.records.length) {
             this.getGetUserDetailList = response.data.data.records

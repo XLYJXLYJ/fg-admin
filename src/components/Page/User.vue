@@ -2,23 +2,25 @@
   <div>
     <VHead></VHead>
     <alert v-model="alert_show">{{error_type}}</alert>
-    <div class="user" :class="{mask:ismask}">
-      <div class="user_search">
-        <span class="search_icon">
-          <img src="../../assets/user_icon_search@2x.png" @click.stop.prevent="SearchUser()">
-          <input type="text" placeholder="请输入手机号查找会员" v-model="userText" @focus="SearchUserInput()">
-          <button @click.stop.prevent="SearchUser()">搜索</button>
-          <p @click="AlertUserSelect">{{whichPerson}}</p>
-        </span>
-      </div>
-      <img src="../../assets/user_icon_tri.png" v-show="canvas_user_show" class="img_tri">
-      <div class="tab_class">
-        <ul>
-          <li><router-link to="/User/UserTime" class="tab_class_user">注册时间</router-link></li>
-          <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserNumber" class="tab_class_user mg40">团队总数</router-link></li>
-          <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserDirectly" class="tab_class_user mg80">直属</router-link></li>
-        </ul> 
-        <router-view></router-view>
+    <div :class="{mask:ismask}">
+      <div class="user">
+        <div class="user_search">
+          <span class="search_icon">
+            <img src="../../assets/user_icon_search@2x.png" @click.stop.prevent="SearchUser()">
+            <input type="text" placeholder="请输入手机号查找会员" v-model="userText" @focus="SearchUserInput()">
+            <button @click.stop.prevent="SearchUser()">搜索</button>
+            <p @click="AlertUserSelect">{{whichPerson}}</p>
+          </span>
+        </div>
+        <img src="../../assets/user_icon_tri.png" v-show="canvas_user_show" class="img_tri">
+        <div class="tab_class">
+          <ul>
+            <li><router-link to="/User/UserTime" class="tab_class_user">注册时间</router-link></li>
+            <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserNumber" class="tab_class_user mg40">团队总数</router-link></li>
+            <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserDirectly" class="tab_class_user mg80">直属</router-link></li>
+          </ul> 
+          <router-view></router-view>
+        </div>
       </div>
     </div>
     <div class="canvas_user" v-show="canvas_user_show">
@@ -121,10 +123,12 @@ export default {
   margin-left: 80px;
 }
 .mask{
-  opacity: 0.4;
-  background: #999;
-  z-index: 1000;
-  pointer-events:none;
+  width: 640px;
+  min-height: 640px;
+  opacity: 0.6;
+  background: rgba(0, 0, 0, 0.6)!important;
+  z-index: 1000!important;
+
 }
 .canvas_user{
   width: 319px;
@@ -199,6 +203,7 @@ export default {
         border-radius: 27px 0px 0px 27px;
         border: 1px solid red;
         padding-left: 57px;
+        -webkit-appearance: none;
       }
       button{
         width:116px;

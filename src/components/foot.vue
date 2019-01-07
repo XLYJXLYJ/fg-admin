@@ -1,6 +1,6 @@
 <template>
   <div>
-    <tabbar class="foot">
+    <tabbar :class="{foot01:is_padding,foot:!is_padding}">
       <tabbar-item link="/Statistics" :selected="$route.path == '/Statistics'">
         <img class="foot_icon" slot="icon" src="../assets/statistics_icon@3x.png">
         <img class="foot_icon" slot="icon-active" src="../assets/statistics_icon_choose@3x.png">
@@ -29,7 +29,29 @@ import { Tabbar, TabbarItem } from 'vux'
 // import store from '@/vuex/store'
 // import { mapActions, mapMutations } from 'vuex'
 export default {
-  mounted () {
+  data () {
+    return {
+      is_padding: false
+    }
+  },
+  created () {
+    console.log(navigator.userAgent)
+    this.IsIPhoneX()
+  },
+  methods: {
+    IsIPhoneX (fn) {
+      var u = navigator.userAgent
+      var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // ios终端
+      if (isIOS) {
+        if (screen.height === 812 && screen.width === 375) {
+          // 是iphoneX
+          this.is_padding = true
+        } else {
+          // 不是iphoneX
+          console.log('不是iphoneX')
+        }
+      }
+    }
   },
   components: {
     Tabbar,
@@ -61,6 +83,39 @@ export default {
     left: 0px;
     margin-bottom:20px;
     z-index: 2000;
+  }
+  .padding10{
+    margin-bottom: 20px;
+    border: 1px solid red;
+  }
+}
+.foot01{
+  width: 640px;
+  height: 84px;
+  position: fixed;
+  bottom: 0px;
+  margin: 0px;
+  padding-bottom: 20px;
+  .foot_icon{
+    width: 43px;
+    height: 43px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+  }
+  .foot_text{
+    width: 36px;
+    height: 20px;
+    font-size: 17px;
+    position:relative;
+    top: 0px;
+    left: 0px;
+    margin-bottom:20px;
+    z-index: 2000;
+  }
+  .padding10{
+    margin-bottom: 20px;
+    border: 1px solid red;
   }
 }
 </style>

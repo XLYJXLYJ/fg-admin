@@ -40,7 +40,7 @@ export default {
       createTime: '', // 创建时间
       noOrder: false,
       getGetUserDetailList: [],
-      page: 0,
+      page: 1,
       alert_show: false, // 是否显示弹出框
       error_type: '', // 弹出框的弹出说明
       show_loading: false, // 是否显示加载框
@@ -48,23 +48,19 @@ export default {
     }
   },
   created () {
-    let uid = localStorage.getItem('uid')
-    if (!uid) {
-      this.$router.push('Login')
-    } else {
-      var _this = this
-      window.onscroll = function () {
-        // 变量scrollTop是滚动条滚动时，距离顶部的距离
-        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-        // 变量windowHeight是可视区的高度
-        var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
-        // 变量scrollHeight是滚动条的总高度
-        var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-        // 滚动条到底部的条件
-        if (scrollTop + windowHeight === scrollHeight) {
-        // 写后台加载数据的函数
-          _this.GetPaymentOrder()
-        }
+    var _this = this
+    window.onscroll = function () {
+      // 变量scrollTop是滚动条滚动时，距离顶部的距离
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      // 变量windowHeight是可视区的高度
+      var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      // 变量scrollHeight是滚动条的总高度
+      var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      // 滚动条到底部的条件
+      if (scrollTop + windowHeight === scrollHeight) {
+      // 写后台加载数据的函数
+        _this.page = _this.page + 1
+        _this.GetPaymentOrder()
       }
     }
   },
@@ -89,7 +85,6 @@ export default {
   methods: {
     GetPaymentOrder () {
       this.show_loading = true
-      this.page = this.page + 1
       let uid = localStorage.getItem('uid')
       func.ajaxGet(this.$store.state.baseUrl + '/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=12' + '&page=' + this.page,
       response => {

@@ -4,8 +4,8 @@
     <div class="change_password">
       <alert v-model="alert_show">{{error_type}}</alert>
       <div class="me">
-          <img src="../../assets/statistics_icon_back2@2x.png" @click="BackFunction()">
-          <p>忘记密码</p>
+        <div @click="BackFunction()" class="img_border"><img src="../../assets/statistics_icon_back2@2x.png"></div>
+        <p>忘记密码</p>
       </div>
       <form>
       <!-- 第一个表单 -->
@@ -37,7 +37,7 @@
       <img src="../../assets/password_icon_eye1@2x.png" v-show="icon_eye_two" class="confirm_register_show_passage" alt="" @click="SwitchConfirmPassword()">
       <img src="../../assets/password_icon_eye@2x.png" v-show="!icon_eye_two" class="confirm_register_show_passage" @click="SwitchConfirmPassword()">
       <div class="confirm_set_password">
-        <input :type="confirm_text_or_password" v-model="confirm_password" placeholder="请输入6-16位字母和数字组合新密码" autocomplete="off" @focus.stop.prevent="ForgetPasswordComfirmPasswordFocus()" @blur.stop.prevent="ForgetPasswordComfirmPasswordBlur()">
+        <input :type="confirm_text_or_password" v-model="confirm_password" placeholder="请确认密码" autocomplete="off" @focus.stop.prevent="ForgetPasswordComfirmPasswordFocus()" @blur.stop.prevent="ForgetPasswordComfirmPasswordBlur()">
       </div>
       <div class="setpassword_confirm">
       <button @click="ConfirmChangePassword()" :class="{forget_password_button:is_forget_password_button,ok_forget_password_button:!is_forget_password_button}">确定</button>
@@ -99,29 +99,24 @@ export default {
     }
   },
   created () {
-    let uid = localStorage.getItem('uid')
-    if (!uid) {
-      this.GetImgCode()
-      if (localStorage.getItem('mobile')) {
-        this.phone = localStorage.getItem('mobile')
-      }
-    }
+    this.GetImgCode()
+    this.phone = localStorage.getItem('mobile')
   },
   mounted () {
-    this.clientHeight = document.documentElement.clientHeight
-    const that = this
-    // 安卓手机键盘吊起挡住输入框
-    window.onresize = function () {
-      if (document.documentElement.clientHeight < that.clientHeight) {
-      // scrollVal为负值
-        let scrollVal = document.documentElement.clientHeight - that.clientHeight
-        var div03 = document.getElementByClassName('change_password')
-        div03.setAttribute('marginTop', scrollVal)
-      } else {
-        var div04 = document.getElementByClassName('change_password')
-        div04.setAttribute('marginTop', 0)
-      }
-    }
+    // this.clientHeight = document.documentElement.clientHeight
+    // const that = this
+    // // 安卓手机键盘吊起挡住输入框
+    // window.onresize = function () {
+    //   if (document.documentElement.clientHeight < that.clientHeight) {
+    //   // scrollVal为负值
+    //     let scrollVal = document.documentElement.clientHeight - that.clientHeight
+    //     var div03 = document.getElementByClassName('change_password')
+    //     div03.setAttribute('marginTop', scrollVal)
+    //   } else {
+    //     var div04 = document.getElementByClassName('change_password')
+    //     div04.setAttribute('marginTop', 0)
+    //   }
+    // }
   },
   methods: {
     // 第一个表单函数
@@ -326,12 +321,19 @@ export default {
     background-color: #fff;
     text-align: center;
     border-top:1px solid #E8E8EA;
+    .img_border{
+        width: 47px;
+        height: 34px;
+        position: absolute;
+        left: 26px;
+        top: 26px;
+    }
     img{
         width: 17px;
         height: 24px;
         position: absolute;
-        left: 26px;
-        top: 26px;
+        left: 0px;
+        top: 0px;
     }
     p{
       color: #333;
@@ -466,7 +468,7 @@ export default {
   }
   .confirm_set_password{
     position: absolute;
-    top: 638px;
+    top: 639px;
     left: 34px;
     width: 572px;
     height: 94px;
