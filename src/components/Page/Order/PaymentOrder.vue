@@ -102,7 +102,7 @@ export default {
             this.noOrder = true
             this.show_loading = false
           } else {
-            this.error_type = '已显示全部订单'
+            this.error_type = '已显示全部数据'
             this.alert_show = true
             this.show_loading = false
           }

@@ -194,9 +194,9 @@ export default {
     // console.log(MobileDevice)
     if (document.body.clientWidth > 640) {
       this.width = 380 * (600 / 412)
-      this.height = 400
+      this.height = 440
     } else {
-      this.width = 380 * (document.body.clientWidth / 400)
+      this.IsIPhoneX()
     }
     let uid = localStorage.getItem('uid')
     if (!uid) {
@@ -210,6 +210,24 @@ export default {
     }
   },
   methods: {
+    IsIPhoneX (fn) {
+      var u = navigator.userAgent
+      var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) // 是否是ios终端
+      if (isIOS) {
+        this.width = 387 * (document.body.clientWidth / 400)
+        if (screen.height === 812 && screen.width === 375) {
+          // 是iphoneX
+          this.is_padding = true
+          this.height = 300
+        } else {
+          // 不是iphoneX
+          this.height = 330
+        }
+      } else {
+        this.height = 290
+        this.width = 380 * (document.body.clientWidth / 400)
+      }
+    },
     SelectUnder () {
       this.derCountPercent = this.underCountPercent
       this.countPercentName = '直属'
@@ -299,6 +317,7 @@ export default {
     },
     // 今日数据统计
     IsSelectButton1 () {
+      this.newTeam = ''
       this.is_select_buttn = true
       let uid = localStorage.getItem('uid')
       func.ajaxGet(this.$store.state.baseUrl + '/account/auth/findCommission?osType=0&userId=' + uid,
@@ -315,6 +334,7 @@ export default {
     },
     // 昨日数据统计
     IsSelectButton2 () {
+      this.newTeam = ''
       this.is_select_buttn = false
       let uid = localStorage.getItem('uid')
       func.ajaxGet(this.$store.state.baseUrl + '/account/auth/findCommission?osType=0&userId=' + uid,
@@ -330,6 +350,7 @@ export default {
       })
     },
     GetDataStatistics () {
+      this.newTeam = ''
       let uid = localStorage.getItem('uid')
       if (this.is_select_buttn === false) {
         this.beforeTime = 1
@@ -415,7 +436,7 @@ export default {
     .zhishunum{
       position:absolute;
       top: 230px;
-      left: 342px;
+      left: 358px;
       width: 60px;
       height: 60px;
       z-index: 1000;
@@ -424,7 +445,7 @@ export default {
     .zhishu{
       position:absolute;
       top: 270px;
-      left: 340px;
+      left: 343px;
       width: 100px;
       height: 60px;
       z-index: 1000;
@@ -613,7 +634,7 @@ export default {
           .data_statistics_foot_money_number{
             position: relative;
             top: 58px;
-            width:26px;
+            width:28px;
             height:23px;
             color: #333;
             font-family: PingFang-SC-Bold;
@@ -624,13 +645,14 @@ export default {
           p{
             position: absolute;
             left: 22px;
-            top: 98px;
+            top: 96px;
             width:150px;
-            height:26px;
+            height:28px;
             color: #999;
             font-size:24px;
             font-family: PingFang-SC-Bold;
             font-weight: Regular;
+            padding-top: 2px;
           }
         }
       }
@@ -764,6 +786,7 @@ export default {
             font-size:24px;
             font-family: PingFang-SC-Bold;
             font-weight: Regular;
+            padding-top: 2px;
           }
         }
       }

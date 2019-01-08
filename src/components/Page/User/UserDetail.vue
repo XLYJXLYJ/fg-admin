@@ -3,7 +3,7 @@
     <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
     <alert v-model="alert_show">{{error_type}}</alert>
     <div class="user_detail">
-      <div class="img_time" v-show="user_icon_screen1" @click="SwitchUserIcon1()"><p style="opacity: 0;z-index:1000">注册时间</p><img src="../../../assets/user_icon_screen1@2x.png"></div>
+      <div class="img_time" v-show="user_icon_screen1" @click="SwitchUserIcon1()"><p style="opacity: 0;z-index:1000">注册时间</p><img src="../../../assets/user_icon_screen1@3x.png"></div>
       <div class="img_time" v-show="user_icon_screen2" @click="SwitchUserIcon2()"><p style="opacity: 0;z-index:1000">注册时间</p><img src="../../../assets/user_icon_screen2@2x.png"></div>
       <div class="no_user" v-show="noUser">
         <img src="../../../assets/user_icon_emptystate@2x.png">
@@ -83,12 +83,15 @@ export default {
     listenUserType: function () {
       if (this.$route.path === '/User/UserTime') {
         this.pageDetail = 1
+        this.getGetUserDetailList = ''
         this.GetUserDetail()
       } else if (this.$route.path === '/User/UserNumber') {
         this.pageDetailNumber = 1
+        this.getGetUserDetailList = ''
         this.GetUserDetailNumber()
       } else if (this.$route.path === '/User/UserDirectly') {
         this.pageDetailDirectly = 1
+        this.getGetUserDetailList = ''
         this.GetUserDetailDirectly()
       }
     }
@@ -148,7 +151,7 @@ export default {
               this.show_loading = false
               this.getGetUserDetailList = ''
             } else {
-              this.error_type = '已显示全部会员'
+              this.error_type = '已显示全部数据'
               this.alert_show = true
               this.show_loading = false
             }
@@ -176,7 +179,7 @@ export default {
               this.show_loading = false
               this.getGetUserDetailList = ''
             } else {
-              this.error_type = '已显示全部会员'
+              this.error_type = '已显示全部数据'
               this.alert_show = true
               this.show_loading = false
             }
@@ -204,7 +207,7 @@ export default {
               this.show_loading = false
               this.getGetUserDetailList = ''
             } else {
-              this.error_type = '已显示全部会员'
+              this.error_type = '已显示全部数据'
               this.alert_show = true
               this.show_loading = false
             }

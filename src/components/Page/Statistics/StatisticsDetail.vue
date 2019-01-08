@@ -3,7 +3,7 @@
         <VHead></VHead>
         <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
         <alert v-model="alert_show">{{error_type}}</alert>
-        <div class="statistics_detail">
+        <div class="statistics_detail" v-show="show_stastics">
             <div class="me">
                 <div @click="BackFunction()" class="statistics_detail_back"><img src="../../../assets/statistics_icon_back2@2x.png"></div>
                 <p>团队会员收益</p>
@@ -62,23 +62,24 @@ export default {
       alert_show: false, // 是否显示弹出框
       error_type: '', // 弹出框的弹出说明
       show_loading: false, // 是否显示加载框
-      text_loading: '正在加载...' // 加载框显示文字
+      text_loading: '正在加载...', // 加载框显示文字
+      show_stastics: true
     }
   },
   mounted () {
     this.GetStatisticsDetail()
   },
   created () {
-    var _this = this
+    let _this = this
     window.onscroll = function () {
       // 变量scrollTop是滚动条滚动时，距离顶部的距离
-      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       // 变量windowHeight是可视区的高度
-      var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       // 变量scrollHeight是滚动条的总高度
-      var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       // 滚动条到底部的条件
-      if (scrollTop + windowHeight === scrollHeight) {
+      if (scrollTop + windowHeight === scrollHeight && scrollTop !== 0) {
       // 写后台加载数据的函数
         _this.page = _this.page + 1
         _this.GetStatisticsDetail()
@@ -105,8 +106,9 @@ export default {
           if (this.page === 1) {
             this.noOrder = true
             this.show_loading = false
+            this.show_stastics = false
           } else {
-            this.error_type = '已显示全部会员'
+            this.error_type = '已显示全部数据'
             this.alert_show = true
             this.show_loading = false
           }

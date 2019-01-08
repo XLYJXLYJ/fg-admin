@@ -35,7 +35,6 @@ export default {
     }
   },
   created () {
-    console.log(navigator.userAgent)
     this.IsIPhoneX()
   },
   methods: {
@@ -48,7 +47,6 @@ export default {
           this.is_padding = true
         } else {
           // 不是iphoneX
-          console.log('不是iphoneX')
         }
       }
     }

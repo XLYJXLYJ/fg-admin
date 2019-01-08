@@ -52,7 +52,7 @@ export default {
   },
   created () {
     let uid = localStorage.getItem('uid')
-    if (uid) {
+    if (!uid) {
       this.$router.push('Login')
     }
   },
@@ -123,12 +123,19 @@ export default {
   margin-left: 80px;
 }
 .mask{
+  position: relative;
   width: 640px;
   min-height: 640px;
   opacity: 0.6;
-  background: rgba(0, 0, 0, 0.6)!important;
+  background: rgba(0, 0, 0, .9)!important;
   z-index: 1000!important;
-
+  pointer-events:none;
+    // position: fixed;
+    // top: 0;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
+    // background: rgba(0,0,0,0.3);
 }
 .canvas_user{
   width: 319px;
@@ -159,6 +166,7 @@ export default {
   min-height: 100vh;
   background: #F5F5F5;
   width: 100%;
+  z-index: 100;
   .img_tri{
     width: 36px;
     height: 17px;

@@ -35,7 +35,6 @@
             <div v-else-if="userType == 3">
                 <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
             </div>
-            <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
             <span class="user_name">{{nickName}}</span>
             <span class="user_time">{{createTime}}</span>
             <span class="user_up">上级：{{upMobile}}</span>
@@ -111,7 +110,7 @@ export default {
       // 变量scrollHeight是滚动条的总高度
       var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       // 滚动条到底部的条件
-      if (scrollTop + windowHeight === scrollHeight) {
+      if (scrollTop + windowHeight === scrollHeight && scrollTop !== 0) {
       // 写后台加载数据的函数
         _this.page = _this.page + 1
         _this.GetUserDetailList()
@@ -161,7 +160,7 @@ export default {
               this.show_loading = false
               this.getGetUserDetailList = ''
             } else {
-              this.error_type = '已显示全部订单'
+              this.error_type = '已显示全部数据'
               this.alert_show = true
               this.show_loading = false
             }
@@ -170,6 +169,7 @@ export default {
       )
     },
     selectTimer (index) {
+      this.page = 1
       this.userid = index
       this.GetUserDetailOne()
       this.GetUserDetailList()
@@ -354,7 +354,7 @@ export default {
     min-height:400px;
     position: relative;
     top: 409px;
-    margin-bottom: 230px;
+    margin-bottom: 510px;
     li{
         width: 599px;
         height: 123px;

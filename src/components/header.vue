@@ -11,7 +11,8 @@
 export default {
   methods: {
     Reload () {
-      this.$router.go(0)
+      // this.$router.go(0)
+      window.location.reload()
     },
     Back () {
       this.$router.go(-1)
@@ -25,7 +26,7 @@ export default {
     width: 640px;
     position: fixed;
     top: 0px;
-    z-index: 1000;
+    z-index: 2000;
     background-color: #fff;
     .close_icon{
       width: 17px;
@@ -70,6 +71,7 @@ export default {
       font-weight: Regular;
       font-family: PingFang-SC-Regular;
       cursor: pointer;
+      z-index: 1000;
     }
 }
 </style>
