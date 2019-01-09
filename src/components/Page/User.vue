@@ -10,6 +10,10 @@
             <input type="text" placeholder="请输入手机号查找会员" v-model="userText" @focus="SearchUserInput()">
             <button @click.stop.prevent="SearchUser()">搜索</button>
             <p @click="AlertUserSelect">{{whichPerson}}</p>
+            <span>
+              <img class="search_tri" src="../../assets/user_icon_screen3@2x.png" v-show="!canvas_user_show">
+              <img class="search_tri" src="../../assets/user_icon_screen4@2x.png" v-show="canvas_user_show">
+            </span>
           </span>
         </div>
         <img src="../../assets/user_icon_tri.png" v-show="canvas_user_show" class="img_tri">
@@ -48,6 +52,13 @@ export default {
       whichPerson: '全部会员', // 全部会员
       userText: '', // 搜索的内容
       ismask: false // 遮罩层
+    }
+  },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/User') {
+        this.$router.push({name: 'UserTime'})
+      }
     }
   },
   created () {
@@ -230,7 +241,7 @@ export default {
         width:116px;
         height: 56px;
         position: absolute;
-        left: 488px;
+        left: 478px;
         top: 16px;
         font-size: 24px;
         color: #333;
@@ -238,6 +249,13 @@ export default {
         font-weight:Regular;
         letter-spacing:2px;
         padding-top: 4px;
+      }
+      .search_tri{
+        width: 12px;
+        height: 6px;
+        position: absolute;
+        left: 585px;
+        top: 30px;
       }
     }
   }

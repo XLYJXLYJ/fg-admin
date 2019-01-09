@@ -97,7 +97,9 @@ export default new Router({
       component: resolve => require(['@/components/Page/Statistics/StatisticsDetail'], resolve)
     },
     {
+      // path: '/User',
       path: '/User',
+      // redirect: '/User/UserTime',
       name: 'User',
       component: resolve => require(['@/components/Page/User'], resolve),
       children: [

@@ -26,7 +26,7 @@ export default {
     width: 640px;
     position: fixed;
     top: 0px;
-    z-index: 2000;
+    z-index: 1000;
     background-color: #fff;
     .close_icon{
       width: 17px;

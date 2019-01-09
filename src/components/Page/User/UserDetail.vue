@@ -83,15 +83,15 @@ export default {
     listenUserType: function () {
       if (this.$route.path === '/User/UserTime') {
         this.pageDetail = 1
-        this.getGetUserDetailList = ''
+        this.getGetUserDetailList = []
         this.GetUserDetail()
       } else if (this.$route.path === '/User/UserNumber') {
         this.pageDetailNumber = 1
-        this.getGetUserDetailList = ''
+        this.getGetUserDetailList = []
         this.GetUserDetailNumber()
       } else if (this.$route.path === '/User/UserDirectly') {
         this.pageDetailDirectly = 1
-        this.getGetUserDetailList = ''
+        this.getGetUserDetailList = []
         this.GetUserDetailDirectly()
       }
     }
@@ -149,7 +149,7 @@ export default {
             if (this.pageDetail === 1) {
               this.noOrder = true
               this.show_loading = false
-              this.getGetUserDetailList = ''
+              this.getGetUserDetailList = []
             } else {
               this.error_type = '已显示全部数据'
               this.alert_show = true
@@ -177,7 +177,7 @@ export default {
             if (this.pageDetailNumber === 1) {
               this.noOrder = true
               this.show_loading = false
-              this.getGetUserDetailList = ''
+              this.getGetUserDetailList = []
             } else {
               this.error_type = '已显示全部数据'
               this.alert_show = true
@@ -205,7 +205,7 @@ export default {
             if (this.pageDetailDirectly === 1) {
               this.noOrder = true
               this.show_loading = false
-              this.getGetUserDetailList = ''
+              this.getGetUserDetailList = []
             } else {
               this.error_type = '已显示全部数据'
               this.alert_show = true

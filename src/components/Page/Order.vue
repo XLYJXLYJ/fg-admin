@@ -43,6 +43,13 @@ export default {
       this.$router.push('Login')
     }
   },
+  watch: {
+    $route (to, from) {
+      if (to.path === '/Order') {
+        this.$router.push({name: 'PaymentOrder'})
+      }
+    }
+  },
   mounted () {
     this.$router.push({name: 'PaymentOrder'})
   },

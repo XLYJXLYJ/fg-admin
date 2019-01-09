@@ -45,7 +45,8 @@ export default {
       alert_show: false, // 是否显示弹出框
       error_type: '', // 弹出框的弹出说明
       show_loading: false, // 是否显示加载框
-      text_loading: '正在加载...' // 加载框显示文字
+      text_loading: '正在加载...', // 加载框显示文字
+      stopPage: 100000 // 停止页面加载页数
     }
   },
   created () {
@@ -61,19 +62,13 @@ export default {
       if (scrollTop + windowHeight === scrollHeight) {
       // 写后台加载数据的函数
         _this.page = _this.page + 1
-        _this.GetComfirmOrder()
+        if (_this.page > _this.stopPage) {
+          _this.error_type = '已显示全部数据'
+          _this.alert_show = true
+        } else {
+          _this.GetComfirmOrder()
+        }
       }
-    }
-  },
-  watch: {
-    $route (to, from) {
-      // let oldValue = from.params.value
-      // let newValue = to.params.value
-      console.log(to)
-      console.log(from)
-      // if(oldValue !== newValue) {
-      // }else{
-      // }
     }
   },
   mounted () {
@@ -103,6 +98,7 @@ export default {
             this.noOrder = true
             this.show_loading = false
           } else {
+            this.stopPage = this.page
             this.error_type = '已显示全部数据'
             this.alert_show = true
             this.show_loading = false
