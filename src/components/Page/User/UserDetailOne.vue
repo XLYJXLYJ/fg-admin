@@ -23,8 +23,8 @@
               <img class="user_contain_headimg" :src="headImg">
             </div>
             <p class="user_title">{{mobile}}</p>
-            <div v-if="userType == 1">
-                <p class="grade_level_img" style="font-size:14px;padding-top:2px">普通会员</p>
+            <div v-if="userType == 0">
+                <p class="grade_level_img p_img">普通会员</p>
             </div>
             <div v-if="userType == 1">
                 <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
@@ -57,7 +57,7 @@
                   </div>
                   <p class="user_title">{{item.mobile}}</p>
                   <div v-if="item.userType == 0">
-                    <p class="grade_level_img" style="font-size:14px;padding-top:2px">普通会员</p>
+                    <p class="grade_level_img  p_img">普通会员</p>
                   </div>
                   <div v-else-if="item.userType == 1">
                     <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
@@ -76,6 +76,7 @@
         <div v-if="userType !== 2">
           <button @click="DoShowToast()">升级</button>
         </div>
+        <p class="foot_text" v-show="isBottom">已经到底咯~</p>
     </div>
   </div>
 </template>
@@ -103,9 +104,11 @@ export default {
       active: '', // 是否选中li样式
       timeIndex: '', // 选中li
       show: false, // 是否弹出确定框
-      page: 1,
+      page: 1, // 加载页数
+      stopPage: 100000, // 停止加载页数
       show_loading: false, // 是否显示加载框
-      text_loading: '正在加载...' // 加载框显示文字
+      text_loading: '正在加载...', // 加载框显示文字
+      isBottom: false
     }
   },
   created () {
@@ -121,7 +124,12 @@ export default {
       if (scrollTop + windowHeight === scrollHeight && scrollTop !== 0) {
       // 写后台加载数据的函数
         _this.page = _this.page + 1
-        _this.GetUserDetailList()
+        if (_this.page > _this.stopPage) {
+          _this.error_type = '已显示全部数据'
+          _this.alert_show = true
+        } else {
+          _this.GetUserDetailList()
+        }
       }
     }
   },
@@ -168,7 +176,9 @@ export default {
               this.show_loading = false
               this.getGetUserDetailList = ''
             } else {
+              this.stopPage = this.page
               this.error_type = '已显示全部数据'
+              this.isBottom = true
               this.alert_show = true
               this.show_loading = false
             }
@@ -179,6 +189,7 @@ export default {
     selectTimer (index) {
       this.page = 1
       this.userid = index
+      this.isBottom = false
       this.GetUserDetailOne()
       this.GetUserDetailList()
     },
@@ -272,6 +283,12 @@ export default {
         top: 10px;
         left: 164px;
     }
+    .p_img{
+      font-size:25px;
+      margin-top:6px;
+      padding-bottom:2px;
+      color:#999;
+    }
     .grade_level_img{
         min-width:102px;
         height:30px;
@@ -362,7 +379,7 @@ export default {
     min-height:400px;
     position: relative;
     top: 409px;
-    margin-bottom: 510px;
+    margin-bottom: 460px;
     li{
         width: 599px;
         height: 123px;
@@ -394,6 +411,12 @@ export default {
                 position: absolute;
                 top: 32px;
                 left: 115px;
+            }
+            .p_img{
+              font-size:25px;
+              margin-top:6px;
+              padding-bottom:2px;
+              color:#999;
             }
             .grade_level_img{
                 min-width:102px;
@@ -437,6 +460,17 @@ export default {
       font-family: PingFang-SC-Medium;
       font-weight: Medium;
       font-size: 29px;
+  }
+  .foot_text{
+    position: relative;
+    bottom: 20px;
+    left: 263px;
+    height: 23px;
+    width:130px;
+    font-size: 20px;
+    color: #999;
+    font-weight: Regular;
+    font-family: PingFang-SC-Regular;
   }
 }
 </style>

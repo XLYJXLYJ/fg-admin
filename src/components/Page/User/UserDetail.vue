@@ -2,6 +2,13 @@
 <div>
     <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
     <alert v-model="alert_show">{{error_type}}</alert>
+    <div class="user_search">
+      <span class="search_icon">
+        <img src="../../../assets/user_icon_search@2x.png" @click.stop.prevent="GetUsertext()">
+        <input type="text" placeholder="请输入手机号查找会员" v-model="userText">
+        <button @click.stop.prevent="GetUsertext()">搜索</button>
+      </span>
+    </div>
     <div class="user_detail">
       <div class="img_time" v-show="user_icon_screen1" @click="SwitchUserIcon1()"><p style="opacity: 0;z-index:1000">注册时间</p><img src="../../../assets/user_icon_screen1@3x.png"></div>
       <div class="img_time" v-show="user_icon_screen2" @click="SwitchUserIcon2()"><p style="opacity: 0;z-index:1000">注册时间</p><img src="../../../assets/user_icon_screen2@2x.png"></div>
@@ -20,9 +27,8 @@
                         <img class="user_contain_headimg" :src="item.headImg">
                       </div>
                       <p class="user_title">{{item.mobile}}</p>
-
                       <div v-if="item.userType == 0">
-                        <p class="grade_level_img" style="font-size:14px;padding-top:2px">普通会员</p>
+                        <p class="grade_level_img p_img">普通会员</p>
                       </div>
                       <div v-if="item.userType == 1">
                         <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
@@ -153,12 +159,17 @@ export default {
     }
   },
   mounted () {
-    this.userText = this.$route.params.data
-    if (this.userText) {
-      this.GetUsertext()
-    } else {
-      this.GetUserDetail()
-    }
+    // console.log(this.$route.params)
+    // this.userText = this.$route.params.data
+    // if (this.userText) {
+    //   console.log(22222222222)
+    //   this.getGetUserDetailList = []
+    //   this.GetUsertext()
+    // } else {
+    //   this.GetUserDetail()
+    // }
+    this.getGetUserDetailList = []
+    this.GetUserDetail()
   },
   methods: {
     // 注册时间
@@ -252,6 +263,7 @@ export default {
     GetUsertext () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
+      this.userText = this.userText
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&mobile=' + this.userText + '&uid=' + uid,
         response => {
           if (response.data.data.records.length) {
@@ -270,6 +282,8 @@ export default {
       this.user_icon_screen1 = false
       this.user_icon_screen2 = true
       this.sort = 'registAsc'
+      this.getGetUserDetailList = []
+      this.pageDetail = 1
       this.$router.push({name: 'UserTime'})
       this.GetUserDetail()
     },
@@ -278,6 +292,8 @@ export default {
       this.user_icon_screen1 = true
       this.user_icon_screen2 = false
       this.sort = 'registDesc'
+      this.getGetUserDetailList = []
+      this.pageDetail = 1
       this.$router.push({name: 'UserTime'})
       this.GetUserDetail()
     }
@@ -289,6 +305,79 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+  .user_search{
+    position: fixed;
+    top: 58px;
+    width:480px;
+    height: 95px;
+    margin: 0 auto;
+    display: table-cell;
+    vertical-align: middle;
+    z-index: 800;
+    padding-top: 20px;
+    background: #F5F5F5;
+    margin-bottom: 6px;
+    .search_icon{
+      width: 439px;
+      height: 55px;
+      position: absolute;
+      left: 20px;
+      top: 34px;
+      img{
+        width:24px;
+        height: 25px;
+        position: absolute;
+        left: 20px;
+        top: 14px;
+        z-index: 500;
+      }
+      input{
+        width:279px;
+        height: 54px;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        background: #F5F5F5;
+        border-radius: 27px 0px 0px 27px;
+        border: 1px solid red;
+        padding-left: 57px;
+        -webkit-appearance: none;
+      }
+      button{
+        width:116px;
+        height: 58px;
+        position: absolute;
+        left: 337px;
+        top: -1px;
+        background: #FF5100;
+        border-radius: 0px 27px 27px 0px;
+        font-size: 24px;
+        color: #fff;
+        font-family:PingFang-SC-Regular;
+        font-weight:Regular;
+      }
+      p{
+        width:116px;
+        height: 56px;
+        position: absolute;
+        left: 478px;
+        top: 16px;
+        font-size: 24px;
+        color: #333;
+        font-family:PingFang-SC-Regular;
+        font-weight:Regular;
+        letter-spacing:2px;
+        padding-top: 4px;
+      }
+      .search_tri{
+        width: 12px;
+        height: 6px;
+        position: absolute;
+        left: 585px;
+        top: 30px;
+      }
+    }
+  }
 .user_detail{
   width: 640px;
   height: auto;
@@ -372,6 +461,12 @@ export default {
                 position: absolute;
                 top: 32px;
                 left: 115px;
+            }
+            .p_img{
+              font-size:25px;
+              margin-top:6px;
+              padding-bottom:2px;
+              color:#999;
             }
             .grade_level_img{
                 min-width:102px;

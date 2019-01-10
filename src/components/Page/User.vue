@@ -9,9 +9,9 @@
       <div class="user">
         <div class="user_search">
           <span class="search_icon">
-            <img src="../../assets/user_icon_search@2x.png" @click.stop.prevent="SearchUser()">
+            <!-- <img src="../../assets/user_icon_search@2x.png" @click.stop.prevent="SearchUser()">
             <input type="text" placeholder="请输入手机号查找会员" v-model="userText" @focus="SearchUserInput()">
-            <button @click.stop.prevent="SearchUser()">搜索</button>
+            <button @click.stop.prevent="SearchUser()">搜索</button> -->
             <p @click="AlertUserSelect">{{whichPerson}}</p>
             <span>
               <img class="search_tri" src="../../assets/user_icon_screen3@2x.png" v-show="!canvas_user_show">
@@ -108,10 +108,9 @@ export default {
     },
     // 查找用户
     SearchUser () {
-      console.log('搜索')
       if (this.userText) {
         var data = this.userText
-        console.log('搜索1')
+        this.$store.state.search_phone = this.userText
         this.$router.push({name: 'UserTime', params: {data: data}})
       } else {
         this.error_type = '请输入手机号'
@@ -195,12 +194,13 @@ export default {
   .user_search{
     position: fixed;
     top: 58px;
-    width:640px;
+    // 这个宽度需要注意
+    width:0px;
     height: 95px;
     margin: 0 auto;
     display: table-cell;
     vertical-align: middle;
-    z-index: 500;
+    z-index: 800;
     padding-top: 20px;
     background: #F5F5F5;
     margin-bottom: 6px;
@@ -244,24 +244,28 @@ export default {
         font-weight:Regular;
       }
       p{
-        width:116px;
-        height: 56px;
+        width:146px;
+        height: 46px;
         position: absolute;
-        left: 478px;
-        top: 16px;
+        left: 455px;
+        top: -46px;
         font-size: 24px;
         color: #333;
         font-family:PingFang-SC-Regular;
         font-weight:Regular;
         letter-spacing:2px;
         padding-top: 4px;
+        z-index: 500;
+        background: #F5F5F5;
+        padding-top: 62px;
+        padding-left: 26px;
       }
       .search_tri{
         width: 12px;
         height: 6px;
         position: absolute;
         left: 585px;
-        top: 30px;
+        top: 26px;
       }
     }
   }

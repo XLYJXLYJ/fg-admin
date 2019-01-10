@@ -7,6 +7,7 @@ const state = {
   dpr: '', // 设备像素比
   userType: 0, // 用户类型
   have_order: true, // 是否有订单
+  search_phone: '', // 是否有订单
   StoreUnderCountPercent: '', // 直属占比
   StoreReferCountPercent: '', // 推荐占比
   StoreAgentCountPercent: '', // 代理商占比
