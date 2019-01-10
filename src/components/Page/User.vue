@@ -2,7 +2,10 @@
   <div>
     <VHead></VHead>
     <alert v-model="alert_show">{{error_type}}</alert>
-    <div :class="{mask:ismask}">
+    <transition name="bounceInDown">
+      <div :class="{mask:ismask}">
+      </div>
+    </transition>
       <div class="user">
         <div class="user_search">
           <span class="search_icon">
@@ -16,7 +19,9 @@
             </span>
           </span>
         </div>
+      <transition name="bounceInDown">
         <img src="../../assets/user_icon_tri.png" v-show="canvas_user_show" class="img_tri">
+      </transition>
         <div class="tab_class">
           <ul>
             <li><router-link to="/User/UserTime" class="tab_class_user">注册时间</router-link></li>
@@ -26,14 +31,15 @@
           <router-view></router-view>
         </div>
       </div>
-    </div>
-    <div class="canvas_user" v-show="canvas_user_show">
-      <ul>
-        <li @click="GetAllPerson()">全部会员</li>
-        <li @click="GetSecondPerson()" style="border-top: 1px solid #E8E8EA;border-bottom: 1px solid #E8E8EA;">钻石会员</li>
-        <li @click="GetThreePerson()">运营商</li>
-      </ul>
-    </div>
+    <transition name="bounceInDown">
+      <div class="canvas_user" v-show="canvas_user_show">
+        <ul>
+          <li @click="GetAllPerson()">全部会员</li>
+          <li @click="GetSecondPerson()" style="border-top: 1px solid #E8E8EA;border-bottom: 1px solid #E8E8EA;">钻石会员</li>
+          <li @click="GetThreePerson()">运营商</li>
+        </ul>
+      </div>
+    </transition>
     <foot></foot>
   </div>
 </template>
@@ -127,6 +133,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+.bounceInDown-enter-active, .bounceInDown-leave-active {
+  transition: opacity 1s;
+}
+.bounceInDown-enter, .bounceInDown-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 .mg40{
   margin-left: 40px;
 }
@@ -134,19 +146,13 @@ export default {
   margin-left: 80px;
 }
 .mask{
-  position: relative;
+  position: fixed;
   width: 640px;
-  min-height: 640px;
+  min-height:100%;
   opacity: 0.6;
-  background: rgba(0, 0, 0, .9)!important;
+  background: black!important;
   z-index: 1000!important;
   pointer-events:none;
-    // position: fixed;
-    // top: 0;
-    // left: 0;
-    // right: 0;
-    // bottom: 0;
-    // background: rgba(0,0,0,0.3);
 }
 .canvas_user{
   width: 319px;
@@ -184,7 +190,7 @@ export default {
     position: fixed;
     top: 151px;
     margin-left: 525px;
-    z-index: 2000;
+    z-index: 1000;
   }
   .user_search{
     position: fixed;
@@ -194,7 +200,7 @@ export default {
     margin: 0 auto;
     display: table-cell;
     vertical-align: middle;
-    z-index: 1000;
+    z-index: 500;
     padding-top: 20px;
     background: #F5F5F5;
     margin-bottom: 6px;
@@ -210,7 +216,7 @@ export default {
         position: absolute;
         left: 20px;
         top: 14px;
-        z-index: 1000;
+        z-index: 500;
       }
       input{
         width:279px;
@@ -272,7 +278,7 @@ export default {
       vertical-align: middle;
       text-align: center; 
       position: fixed;
-      z-index: 1000;
+      z-index: 500;
       padding-top: 20px;
       background: #F5F5F5;
       li{

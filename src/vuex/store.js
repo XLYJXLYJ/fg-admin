@@ -10,8 +10,8 @@ const state = {
   StoreUnderCountPercent: '', // 直属占比
   StoreReferCountPercent: '', // 推荐占比
   StoreAgentCountPercent: '', // 代理商占比
-  // baseUrl: 'https://api.fgoushop.com'
-  baseUrl: 'http://47.107.48.61:8820'
+  baseUrl: 'https://api.fgoushop.com'
+  // baseUrl: 'http://47.107.48.61:8820'
 }
 
 const actions = {

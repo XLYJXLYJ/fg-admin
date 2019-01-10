@@ -23,8 +23,8 @@
               <img class="user_contain_headimg" :src="headImg">
             </div>
             <p class="user_title">{{mobile}}</p>
-            <div v-if="userType == 0">
-                <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
+            <div v-if="userType == 1">
+                <p class="grade_level_img" style="font-size:14px;padding-top:2px">普通会员</p>
             </div>
             <div v-if="userType == 1">
                 <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
@@ -33,7 +33,7 @@
                 <img class="grade_level_img" src="../../../assets/user_icon_diamondmembers@2x.png">
             </div>
             <div v-else-if="userType == 3">
-                <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
+                <img class="grade_level_img" src="../../../assets/myteam_icon_operationcenter@2x.png">
             </div>
             <span class="user_name">{{nickName}}</span>
             <span class="user_time">{{createTime}}</span>
@@ -56,18 +56,26 @@
                     <img class="user_contain_headimg" :src="item.headImg">
                   </div>
                   <p class="user_title">{{item.mobile}}</p>
-                  <div v-if="item.userType == 1">
-                      <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
+                  <div v-if="item.userType == 0">
+                    <p class="grade_level_img" style="font-size:14px;padding-top:2px">普通会员</p>
                   </div>
-                  <div v-else>
-                      <img class="grade_level_img" src="../../../assets/user_icon_diamondmembers@2x.png">
+                  <div v-else-if="item.userType == 1">
+                    <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
+                  </div>
+                  <div v-else-if="item.userType == 2">
+                    <img class="grade_level_img" src="../../../assets/user_icon_diamondmembers@2x.png">
+                  </div>
+                  <div v-else-if="item.userType == 3">
+                    <img class="grade_level_img" src="../../../assets/myteam_icon_operationcenter@2x.png">
                   </div>
                   <span class="user_name">{{item.nickName}}</span>
                   <span class="user_time">{{item.createTime}}</span>
               </div>
           </li>
         </ul>
-        <button @click="DoShowToast()">升级</button>
+        <div v-if="userType !== 2">
+          <button @click="DoShowToast()">升级</button>
+        </div>
     </div>
   </div>
 </template>

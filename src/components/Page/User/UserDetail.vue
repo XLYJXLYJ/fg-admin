@@ -20,11 +20,18 @@
                         <img class="user_contain_headimg" :src="item.headImg">
                       </div>
                       <p class="user_title">{{item.mobile}}</p>
-                      <div v-if="item.userType == 1">
-                          <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
+
+                      <div v-if="item.userType == 0">
+                        <p class="grade_level_img" style="font-size:14px;padding-top:2px">普通会员</p>
                       </div>
-                      <div v-else>
-                          <img class="grade_level_img" src="../../../assets/user_icon_diamondmembers@2x.png">
+                      <div v-if="item.userType == 1">
+                        <img class="grade_level_img" src="../../../assets/user_icon_screen@2x.png">
+                      </div>
+                      <div v-if="item.userType == 2">
+                        <img class="grade_level_img" src="../../../assets/user_icon_diamondmembers@2x.png">
+                      </div>
+                      <div v-if="item.userType == 3">
+                        <img class="grade_level_img" src="../../../assets/myteam_icon_operationcenter@2x.png">
                       </div>
                       <span class="user_name">{{item.nickname}}</span>
                       <span class="user_time">{{item.creatTime}}</span>
@@ -72,10 +79,16 @@ export default {
     // 检测跳转了哪一个路由，就初始加载哪一个函数
     $route (to, from) {
       if (to.path === '/User/UserTime') {
+        this.pageDetail = 1
+        this.getGetUserDetailList = []
         this.GetUserDetail()
       } else if (to.path === '/User/UserNumber') {
+        this.pageDetailNumber = 1
+        this.getGetUserDetailList = []
         this.GetUserDetailNumber()
       } else {
+        this.pageDetailDirectly = 1
+        this.getGetUserDetailList = []
         this.GetUserDetailDirectly()
       }
     },
@@ -106,7 +119,7 @@ export default {
       // 变量scrollHeight是滚动条的总高度
       var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       // 滚动条到底部的条件
-      if (scrollTop + windowHeight === scrollHeight) {
+      if (scrollTop + windowHeight === scrollHeight && scrollTop !== 0) {
       // 写后台加载数据的函数
         if (_this.$route.path === '/User/UserTime') {
           _this.pageDetail = _this.pageDetail + 1
@@ -264,7 +277,7 @@ export default {
     height: 15px;
     position: fixed;
     top: 184px;
-    z-index: 1000;
+    z-index: 500;
     font-size:24px;
     font-family:PingFang-SC-Regular;
     font-weight:bold;
@@ -402,7 +415,7 @@ export default {
                 left: 226px;
             }
             .user_carrieroperator{
-                width:100px;
+                width:120px;
                 height:22px;
                 font-size:20px;
                 font-family:PingFang-SC-Regular;

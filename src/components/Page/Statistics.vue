@@ -462,7 +462,7 @@ export default {
         height: 340px;
         position: relative;
         li{
-          width:186px;
+          width:206px;
           height:23px;
           font-size:24px;
           font-family:PingFang-SC-Regular;

@@ -69,7 +69,7 @@ export default {
       // 变量scrollHeight是滚动条的总高度
       var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       // 滚动条到底部的条件
-      if (scrollTop + windowHeight === scrollHeight) {
+      if (scrollTop + windowHeight === scrollHeight && scrollTop !== 0) {
       // 写后台加载数据的函数
         _this.page = _this.page + 1
         if (_this.page > _this.stopPage) {
