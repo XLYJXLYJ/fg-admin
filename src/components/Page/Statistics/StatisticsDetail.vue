@@ -82,7 +82,12 @@ export default {
       if (scrollTop + windowHeight === scrollHeight && scrollTop !== 0) {
       // 写后台加载数据的函数
         _this.page = _this.page + 1
-        _this.GetStatisticsDetail()
+        if (_this.page > _this.stopPage) {
+          _this.error_type = '已显示全部数据'
+          _this.alert_show = true
+        } else {
+          _this.GetStatisticsDetail()
+        }
       }
     }
   },
@@ -108,6 +113,7 @@ export default {
             this.show_loading = false
             this.show_stastics = false
           } else {
+            this.stopPage = this.page
             this.error_type = '已显示全部数据'
             this.alert_show = true
             this.show_loading = false

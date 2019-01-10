@@ -67,7 +67,10 @@ export default {
       alert_show: false, // 是否显示弹出框
       error_type: '', // 弹出框的弹出说明
       show_loading: false, // 是否显示加载框
-      text_loading: '正在加载...' // 加载框显示文字
+      text_loading: '正在加载...', // 加载框显示文字
+      stopPageDetail: 1000000, // 停止注册时间加载页数
+      stopPageDetailNumber: 1000000, // 停止团队总数加载页数
+      stopPageDetailDirectly: 1000000 // 停止直属加载页数
     }
   },
   computed: {
@@ -123,13 +126,28 @@ export default {
       // 写后台加载数据的函数
         if (_this.$route.path === '/User/UserTime') {
           _this.pageDetail = _this.pageDetail + 1
-          _this.GetUserDetail()
+          if (_this.pageDetail > _this.stopPageDetail) {
+            _this.error_type = '已显示全部数据'
+            _this.alert_show = true
+          } else {
+            _this.GetUserDetail()
+          }
         } else if (_this.$route.path === '/User/UserNumber') {
           _this.pageDetailNumber = _this.pageDetailNumber + 1
-          _this.GetUserDetailNumber()
+          if (_this.pageDetailNumber > _this.stopPageDetailNumber) {
+            _this.error_type = '已显示全部数据'
+            _this.alert_show = true
+          } else {
+            _this.GetUserDetailNumber()
+          }
         } else if (_this.$route.path === '/User/UserDirectly') {
           _this.pageDetailDirectly = _this.pageDetailDirectly + 1
-          _this.GetUserDetailDirectly()
+          if (_this.pageDetailDirectly > _this.stopPageDetailDirectly) {
+            _this.error_type = '已显示全部数据'
+            _this.alert_show = true
+          } else {
+            _this.GetUserDetailDirectly()
+          }
         }
       }
     }
@@ -164,6 +182,7 @@ export default {
               this.show_loading = false
               this.getGetUserDetailList = []
             } else {
+              this.stopPageDetail = this.pageDetail
               this.error_type = '已显示全部数据'
               this.alert_show = true
               this.show_loading = false
@@ -192,6 +211,7 @@ export default {
               this.show_loading = false
               this.getGetUserDetailList = []
             } else {
+              this.stopPageDetailNumber = this.pageDetailNumber
               this.error_type = '已显示全部数据'
               this.alert_show = true
               this.show_loading = false
@@ -220,6 +240,7 @@ export default {
               this.show_loading = false
               this.getGetUserDetailList = []
             } else {
+              this.stopPageDetailDirectly = this.pageDetailDirectly
               this.error_type = '已显示全部数据'
               this.alert_show = true
               this.show_loading = false
