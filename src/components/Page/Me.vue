@@ -60,9 +60,13 @@ export default {
         if (response.data.code === 200) {
           localStorage.setItem('uid', '')
           this.$router.push({name: 'Login'})
+        } else if (response.data.code === 401) {
+            this.error_type = '登录超时，请重新登录'
+            this.alert_show = true
+            setTimeout(() => {this.$router.push('Login')}, 1500);
         } else {
-          this.error_type = response.data.message
-          this.alert_show = true
+        this.error_type = response.data.message
+        this.alert_show = true
         }
       })
     },

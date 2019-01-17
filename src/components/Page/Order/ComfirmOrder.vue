@@ -15,10 +15,10 @@
                   <img :src="item.itemPic" alt="">
                   <p class="order_title">{{item.itemTitle}}</p>
                   <span class="order_time">创建日：{{item.createTime}}</span>
-                  <span class="operation_enter">运营中心收益:￥{{item.agentUserCommission}}</span>
-                  <span class="carrieroperator">运营商收益:￥{{item.superUserCommission}}</span>
-                  <span class="one_income">一级收益:￥{{item.userCommission}}</span>
-                  <span class="up_income">上级收益:￥{{item.upUserCommission}}</span>
+                  <span class="operation_enter" v-show="userType == 3">运营中心收益:￥{{item.agentUserCommission}}</span>
+                  <span class="carrieroperator" :class="{ismargin:istype}">运营商收益:￥{{item.superUserCommission}}</span>
+                  <span class="one_income" :class="{ismargin:istype}">一级收益:￥{{item.userCommission}}</span>
+                  <span class="up_income" :class="{ismargin:istype}">上级收益:￥{{item.upUserCommission}}</span>
                   <span class="one_belong">一级归属:{{item.userMobile}}</span>
                   <span class="two_belong">上级归属:{{item.upUserMobile}}</span>
                   <span class="three_belong">运营商:{{item.agentUserMobile}}</span>
@@ -46,10 +46,18 @@ export default {
       error_type: '', // 弹出框的弹出说明
       show_loading: false, // 是否显示加载框
       text_loading: '正在加载...', // 加载框显示文字
-      stopPage: 100000 // 停止页面加载页数
+      stopPage: 100000, // 停止页面加载页数
+      userType: 3,
+      istype: false
     }
   },
   created () {
+    this.userType = localStorage.getItem('userType')
+    if (this.userType == 3) {
+      this.istype = false
+    } else{
+      this.istype = true
+    }
     var _this = this
     window.onscroll = function () {
       // 变量scrollTop是滚动条滚动时，距离顶部的距离
@@ -82,7 +90,8 @@ export default {
     GetComfirmOrder () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=3' + '&page=' + this.page,
+      var uType = localStorage.getItem('uType')
+      func.ajaxGet(this.$store.state.baseUrl + '/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=3' + '&page=' + this.page + '&uType=' + uType,
       response => {
         if (response.data.data.records.length) {
           this.noOrder = false
@@ -93,7 +102,11 @@ export default {
             this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
             this.show_loading = false
           }
-        } else {
+        } else if (response.data.code === 401) {
+            this.error_type = '登录超时，请重新登录'
+            this.alert_show = true
+            setTimeout(() => {this.$router.push('Login')}, 1500);
+          } else {
           if (this.page === 1) {
             this.noOrder = true
             this.show_loading = false
@@ -114,6 +127,9 @@ export default {
   width: 640px;
   height: auto;
   position: relative;
+  .ismargin{
+    margin-left: -164px;
+  }
   .no_order{
     width: 100%;
     min-height:400px;

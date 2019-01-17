@@ -4,43 +4,43 @@
     <div class="change_password">
       <alert v-model="alert_show">{{error_type}}</alert>
       <div class="me">
-        <div @click="BackFunction()" class="img_border"><img src="../../assets/statistics_icon_back2@2x.png"></div>
+        <div @click.stop.prevent="BackFunction()" class="img_border"><img src="../../assets/statistics_icon_back2@2x.png"></div>
         <p>忘记密码</p>
       </div>
       <form>
       <!-- 第一个表单 -->
-      <img class="one_close" src="../../assets/delete@2x.png" v-show="forget_password_phone" @click="ClearPhone()">
+      <img class="one_close" src="../../assets/delete@2x.png" v-show="forget_password_phone" @click.stop.prevent="ClearPhone()">
       <div class="get_identifying_code">
         <input type="text" v-model="phone" placeholder="请输入您的手机号" autocomplete="off" @focus.stop.prevent="ForgetPasswordPhoneFocus()" @blur.stop.prevent="ForgetPasswordPhoneBlur()">
       </div>
       <!-- 第二个表单 -->
-      <img class="two_close" src="../../assets/delete@2x.png" v-show="forget_password_picture_code" @click="ClearForgetPasswordPictureCode()">
+      <img class="two_close" src="../../assets/delete@2x.png" v-show="forget_password_picture_code" @click.stop.prevent="ClearForgetPasswordPictureCode()">
       <div class="get_picture_identifying_code">
         <input type="text" v-model="picture_code" placeholder="请输入您的图形验证码" autocomplete="off" @focus.stop.prevent="ForgetPasswordPictureCodeFocus()" @blur.stop.prevent="ForgetPasswordPictureCodeBlur()">
-        <img :src="get_picture_identifying_code" @click="ReloadImgCode()">
+        <img :src="get_picture_identifying_code" @click.stop.prevent="ReloadImgCode()">
       </div>
       <!-- 第三个表单 -->
-      <img class="three_close" src="../../assets/delete@2x.png" v-show="forget_password_phone_code" @click="ClearForgetPasswordPhoneCode()">
+      <img class="three_close" src="../../assets/delete@2x.png" v-show="forget_password_phone_code" @click.stop.prevent="ClearForgetPasswordPhoneCode()">
       <div class="get_phone_identifying_code">
         <input type="text" v-model="phone_code" placeholder="请输入您的手机验证码" autocomplete="off" @focus.stop.prevent="ForgetPasswordPhoneCodeFocus()" @blur.stop.prevent="ForgetPasswordPhoneCodeBlur()">
-        <button @click.stop="GetCodeNumber" :class="{getCodeNumber:btnTxtColor01 , getCodeNumberDisabled:btnTxtColor02}" :disabled="disabled">{{btnTxt}}</button>
+        <button @click.stop.prevent="GetCodeNumber" :class="{getCodeNumber:btnTxtColor01 , getCodeNumberDisabled:btnTxtColor02}" :disabled="disabled">{{btnTxt}}</button>
       </div>
       <!-- 第四个表单 -->
-      <img class="four_close" src="../../assets/delete@2x.png" v-show="forget_password_password" @click="ClearForgetPasswordPassword()">
-      <img src="../../assets/password_icon_eye1@2x.png" v-show="icon_eye_one" class="register_show_passage" @click="SwitchPassword()">
-      <img src="../../assets/password_icon_eye@2x.png" v-show="!icon_eye_one" class="register_show_passage" @click="SwitchPassword()">
+      <img class="four_close" src="../../assets/delete@2x.png" v-show="forget_password_password" @click.stop.prevent="ClearForgetPasswordPassword()">
+      <img src="../../assets/password_icon_eye1@2x.png" v-show="icon_eye_one" class="register_show_passage" @click.stop.prevent="SwitchPassword()">
+      <img src="../../assets/password_icon_eye@2x.png" v-show="!icon_eye_one" class="register_show_passage" @click.stop.prevent="SwitchPassword()">
       <div class="set_password">
         <input :type="text_or_password" v-model="password" placeholder="请输入6-16位字母和数字组合新密码" autocomplete="off" @focus.stop.prevent="ForgetPasswordPasswordFocus()" @blur.stop.prevent="ForgetPasswordPasswordBlur()">
       </div>
       <!-- 第五个表单 -->
-      <img class="five_close" src="../../assets/delete@2x.png" v-show="forget_password_comfirm_password" @click="ClearForgetPasswordComfirmPassword()">
-      <img src="../../assets/password_icon_eye1@2x.png" v-show="icon_eye_two" class="confirm_register_show_passage" alt="" @click="SwitchConfirmPassword()">
-      <img src="../../assets/password_icon_eye@2x.png" v-show="!icon_eye_two" class="confirm_register_show_passage" @click="SwitchConfirmPassword()">
+      <img class="five_close" src="../../assets/delete@2x.png" v-show="forget_password_comfirm_password" @click.stop.prevent="ClearForgetPasswordComfirmPassword()">
+      <img src="../../assets/password_icon_eye1@2x.png" v-show="icon_eye_two" class="confirm_register_show_passage" alt="" @click.stop.prevent="SwitchConfirmPassword()">
+      <img src="../../assets/password_icon_eye@2x.png" v-show="!icon_eye_two" class="confirm_register_show_passage" @click.stop.prevent="SwitchConfirmPassword()">
       <div class="confirm_set_password">
         <input :type="confirm_text_or_password" v-model="confirm_password" placeholder="请确认密码" autocomplete="off" @focus.stop.prevent="ForgetPasswordComfirmPasswordFocus()" @blur.stop.prevent="ForgetPasswordComfirmPasswordBlur()">
       </div>
       <div class="setpassword_confirm">
-      <button @click="ConfirmChangePassword()" :class="{forget_password_button:is_forget_password_button,ok_forget_password_button:!is_forget_password_button}">确定</button>
+      <button @click.stop.prevent="ConfirmChangePassword()" :class="{forget_password_button:is_forget_password_button,ok_forget_password_button:!is_forget_password_button}">确定</button>
       </div>
       </form>
     </div>
@@ -51,6 +51,7 @@
 // import store from '@/vuex/store'
 import VHead from '@/components/header'
 import Qs from 'qs'
+import func from '@/common/func'
 export default {
   name: 'Editpassage',
   data () {
@@ -264,11 +265,11 @@ export default {
     },
     // 确认修改密码
     ConfirmChangePassword () {
-      let regpassword = /^[a-zA-Z0-9]\w{6,16}$/
+      let regpassword = /^[a-zA-Z0-9]\w{5,16}$/
       let data = {
         mobile: this.phone.toString(),
         password: this.$md5(this.confirm_password),
-        verifiCode: this.phone_code,
+        verifiCode: this.phone_code.toString(),
         osType: 0
       }
       if (!this.phone) {
@@ -283,20 +284,35 @@ export default {
       } else if (!regpassword.test(this.password)) {
         this.error_type = '密码长度（6~20 英文+数字）'
         this.alert_show = true
-      } else if (this.formRegister.password !== this.formRegister.checkPassword) {
+      } else if (this.password !== this.confirm_password) {
         this.error_type = '密码输入不一致'
         this.alert_show = true
       } else {
         data = Qs.stringify(data)
-        this.axios.get(this.$store.state.baseUrl + '/media/info/modifyPassword?' + data)
-        .then(response => {
+        func.ajaxGet(this.$store.state.baseUrl + '/user/info/modifyPassword?' + data,
+        response => {
           if (response.data.code === 200) {
+            this.error_type = '修改密码成功'
+            this.alert_show = true
             this.get_picture_identifying_code = response.data.data
+            setTimeout(() => {this.$router.push('Login')}, 1500);
           } else {
             this.error_type = response.data.message
             this.alert_show = true
           }
         })
+        // this.axios.get(this.$store.state.baseUrl + '/user/info/modifyPassword?' + data)
+        // .then(response => {
+        //   if (response.data.code === 200) {
+        //     this.error_type = '修改密码成功'
+        //     this.alert_show = true
+        //     this.get_picture_identifying_code = response.data.data
+        //     setTimeout(() => {this.$router.push('Login')}, 1500);
+        //   } else {
+        //     this.error_type = response.data.message
+        //     this.alert_show = true
+        //   }
+        // })
       }
     }
   },
@@ -468,7 +484,7 @@ export default {
   }
   .confirm_set_password{
     position: absolute;
-    top: 639px;
+    top: 640px;
     left: 34px;
     width: 572px;
     height: 94px;

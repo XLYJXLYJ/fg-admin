@@ -12,7 +12,7 @@
     <div class="user_detail_one">
         <alert v-model="alert_show">{{error_type}}</alert>
         <div class="me">
-          <div @click="BackFunction()" class="img_border"><img src="../../../assets/statistics_icon_back2@2x.png"></div>
+          <div @click.stop.prevent="BackFunction()" class="img_border"><img src="../../../assets/statistics_icon_back2@2x.png"></div>
           <p>用户详情</p>
         </div>
         <div class="user_contain_head">
@@ -74,7 +74,7 @@
           </li>
         </ul>
         <div v-if="userType !== 2">
-          <button @click="DoShowToast()">升级</button>
+          <button @click.stop.prevent="DoShowToast()">升级</button>
         </div>
         <p class="foot_text" v-show="isBottom">已经到底咯~</p>
     </div>
@@ -86,7 +86,7 @@ import { Confirm } from 'vux'
 import func from '@/common/func'
 import VHead from '@/components/header'
 // import store from '@/vuex/store'
-// import Qs from 'qs'
+import Qs from 'qs'
 export default {
   name: 'UserDetailOne',
   data () {
@@ -96,7 +96,7 @@ export default {
       nickName: '', // 名称
       headImg: '', // 头像图片
       mobile: '', // 用户名
-      userType: '', // 会员类型
+      userType: 2, // 会员类型
       createTime: '', // 创建时间
       upMobile: '', // 上级代理
       teamCount: '', // 团队总人数
@@ -108,7 +108,7 @@ export default {
       stopPage: 100000, // 停止加载页数
       show_loading: false, // 是否显示加载框
       text_loading: '正在加载...', // 加载框显示文字
-      isBottom: false
+      isBottom: false,
     }
   },
   created () {
@@ -170,7 +170,11 @@ export default {
               this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
               this.show_loading = false
             }
-          } else {
+          } else if (response.data.code === 401) {
+              this.error_type = '登录超时，请重新登录'
+              this.alert_show = true
+              setTimeout(() => {this.$router.push('Login')}, 1500);
+            } else {
             if (this.page === 1) {
               this.noOrder = true
               this.show_loading = false
@@ -197,8 +201,46 @@ export default {
       this.show = false
     },
     onConfirm () {
-      this.error_type = '升级成功，你还有9次机会'
-      this.alert_show = true
+      let loginToken = localStorage.getItem('loginToken')
+      // this.axios.post('http://47.107.48.61:8830/auth/applyUpgrade?osType=0&uid=' + this.userid,
+      //   {
+      //       headers:{'token': loginToken}
+      //   }
+      // )      
+      let uid = localStorage.getItem('uid')
+      let data = Qs.stringify({       
+        osType: 0,
+        uid: this.userid,
+        userId: uid
+      })
+      this.axios({
+        method:'post',
+        url: this.$store.state.baseUrl + '/user/auth/itoc/upgradeAgent?' + data,
+        headers:{'token':loginToken},
+      })
+      .then(function (response) {
+        if (response.data.code === 200) {
+          this.error_type = '升级成功，你还有'+ response.data.data +'次机会'
+          this.alert_show = true
+        } else {
+          this.error_type = response.data.message
+          this.alert_show = true
+        }
+      })
+      // this.axios.post(this.$store.state.baseUrl + '/user/auth/itoc/upgradeAgent?' + data)
+      // .then(response => {
+      //   if (response.data.code === 200) {
+      //     console.log(response)
+      //     this.error_type = '升级成功，你还有'+ response.data.data +'次机会'
+      //     this.alert_show = true
+      //   } else {
+      //     this.error_type = response.data.message
+      //     this.alert_show = true
+      //   }
+      // })
+      // .catch(function (error) {
+      //     console.log(error);
+      // });
     },
     DoShowToast () {
       this.show = true
@@ -297,7 +339,7 @@ export default {
         left: 404px;
     }
     .user_name{
-        width:140px;
+        width:440px;
         height:22px;
         font-size:20px;
         font-family:PingFang-SC-Regular;
@@ -340,8 +382,8 @@ export default {
         top: 114px;
         left: 164px;
         span{
-            color: #FF5100;
-            font-size:29px;
+          color: #FF5100;
+          font-size:29px;
         }
     }
   }
@@ -374,7 +416,7 @@ export default {
     margin-left: 20px;
     border-radius: 9px;
   }
-    ul{
+  ul{
     width: 100%;
     min-height:400px;
     position: relative;

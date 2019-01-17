@@ -259,6 +259,8 @@ export default {
             localStorage.setItem('headImg', headImg)
             localStorage.setItem('mobile', mobile)
             localStorage.setItem('nickname', nickname)
+          } else if (response.data.code === 401) {
+            this.$router.push('Login')
           } else {
             this.error_type = response.data.message
             this.alert_show = true
@@ -286,9 +288,13 @@ export default {
           localStorage.setItem('headImg', headImg)
           localStorage.setItem('mobile', mobile)
           localStorage.setItem('nickname', nickname)
+        } else if (response.data.code === 401) {
+            this.error_type = '登录超时，请重新登录'
+            this.alert_show = true
+            setTimeout(() => {this.$router.push('Login')}, 1500);
         } else {
-          this.error_type = response.data.message
-          this.alert_show = true
+        this.error_type = response.data.message
+        this.alert_show = true
         }
       })
     },
@@ -305,6 +311,8 @@ export default {
             this.currentMonthTkMoney = response.data.data.currentMonthTkMoney
             this.lastMonthTkMoney = response.data.data.lastMonthTkMoney
             this.totalIncome = response.data.data.totalIncome
+          } else if (response.data.code === 401) {
+            this.$router.push('Login')
           } else {
             this.error_type = response.data.message
             this.alert_show = true
@@ -326,9 +334,11 @@ export default {
           this.payCount = response.data.data.payCount
           this.commission = response.data.data.commission
           this.GetDataStatistics()
+        } else if (response.data.code === 401) {
+            this.$router.push('Login')
         } else {
-          this.error_type = response.data.message
-          this.alert_show = true
+        this.error_type = response.data.message
+        this.alert_show = true
         }
       })
     },
@@ -343,9 +353,11 @@ export default {
           this.payCount = response.data.data.yesterdayPayCount
           this.commission = response.data.data.yesterdayCommission
           this.GetDataStatistics()
+        } else if (response.data.code === 401) {
+            this.$router.push('Login')
         } else {
-          this.error_type = response.data.message
-          this.alert_show = true
+        this.error_type = response.data.message
+        this.alert_show = true
         }
       })
     },
@@ -361,6 +373,8 @@ export default {
         response => {
           if (response.data.code === 200) {
             this.newTeam = response.data.data
+          } else if (response.data.code === 401) {
+            this.$router.push('Login')
           } else {
             this.error_type = response.data.message
             this.alert_show = true
@@ -387,9 +401,11 @@ export default {
           this.agentCountPercent = this.agentCount / this.teamCount * 100
           this.agentCountPercent = this.agentCountPercent.toFixed(2)
           this.$refs.chart.rerender()
+        } else if (response.data.code === 401) {
+            this.$router.push('Login')
         } else {
-          this.error_type = response.data.message
-          this.alert_show = true
+        this.error_type = response.data.message
+        this.alert_show = true
         }
       })
     }

@@ -3,7 +3,7 @@
         <!-- <img src="../assets/statistics_icon_back@2x.png" class="close_icon" @click="Back"> -->
         <span class="close"><a href="fangou://close">关闭</a></span>
         <span class='fg-center'>凡购运营中心后台</span>
-        <span class="reload" @click="Reload">刷新</span>
+        <span class="reload" @click.stop.prevent="Reload()">刷新</span>
         <!-- <img class="reload" src="../assets/statistics_icon_refresh@2x.png" @click="Reload"> -->
     </div>
 </template>

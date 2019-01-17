@@ -152,14 +152,18 @@ export default {
           var headImg = response.data.data.headImg
           var mobile = response.data.data.mobile
           var nickname = response.data.data.nickname
+          var userType = response.data.data.userType
+          localStorage.setItem('uType', userType)
           localStorage.setItem('uid', uid)
           localStorage.setItem('headImg', headImg)
           localStorage.setItem('mobile', mobile)
           localStorage.setItem('nickname', nickname)
           this.$router.push({name: 'Statistics'})
+        } else if (response.data.code === 401) {
+            this.$router.push('Login')
         } else {
-          this.error_type = response.data.message
-          this.alert_show = true
+        this.error_type = response.data.message
+        this.alert_show = true
         }
       })
     },

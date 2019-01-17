@@ -17,7 +17,7 @@
         <p>您还没有会员，继续加油哦~</p>
       </div>
       <ul v-show="!noUser">
-          <li v-for="item in getGetUserDetailList" :key='item.id'>
+          <li v-for="item in getGetUserDetailList" :key='item.userId'>
               <router-link :to="{name: 'UserDetailOne',params: { userid: item.userId}}">
                   <div class="user_contain">
                       <div v-if="item.headImg == null">
@@ -62,7 +62,7 @@ export default {
     return {
       getGetUserDetailList: [], // 循环数组
       userText: '', // 搜索的内容
-      sort: '', // 时间排序
+      sort: 'registAsc', // 时间排序
       noUser: '',
       pageDetail: 1, // 注册时间页数
       pageDetailNumber: 1, // 团队总数页数
@@ -176,7 +176,8 @@ export default {
     GetUserDetail () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&sort=' + this.sort + '&page=' + this.pageDetail + '&userType=' + this.$store.state.userType,
+      var uType = localStorage.getItem('uType')
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&sort=' + this.sort + '&page=' + this.pageDetail + '&userType=' + this.$store.state.userType + '&uType=' + uType,
         response => {
           if (response.data.code === 200 & response.data.data.records.length !== 0) {
             this.noOrder = false
@@ -187,7 +188,11 @@ export default {
               this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
               this.show_loading = false
             }
-          } else {
+          } else if (response.data.code === 401) {
+              this.error_type = '登录超时，请重新登录'
+              this.alert_show = true
+              setTimeout(() => {this.$router.push('Login')}, 1500);
+            } else {
             if (this.pageDetail === 1) {
               this.noOrder = true
               this.show_loading = false
@@ -205,7 +210,8 @@ export default {
     GetUserDetailNumber () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&sort=teamDesc&uid=' + uid + '&page=' + this.pageDetailNumber + '&userType=' + this.$store.state.userType,
+      var uType = localStorage.getItem('uType')
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&sort=teamDesc&uid=' + uid + '&page=' + this.pageDetailNumber + '&userType=' + this.$store.state.userType + '&uType=' + uType,
         response => {
           if (response.data.code === 200 & response.data.data.records.length !== 0) {
             this.noOrder = false
@@ -234,7 +240,8 @@ export default {
     GetUserDetailDirectly () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&sort=underDesc&uid=' + uid + '&page=' + this.pageDetailDirectly + '&userType=' + this.$store.state.userType,
+      let uType = localStorage.getItem('uType')
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&sort=underDesc&uid=' + uid + '&page=' + this.pageDetailDirectly + '&userType=' + this.$store.state.userType + '&uType=' + uType,
         response => {
           if (response.data.code === 200 & response.data.data.records.length !== 0) {
             this.noOrder = false
@@ -263,8 +270,9 @@ export default {
     GetUsertext () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
+      let uType = localStorage.getItem('userType')
       this.userText = this.userText
-      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&mobile=' + this.userText + '&uid=' + uid,
+      func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&mobile=' + this.userText + '&uid=' + uid + '&uType=' + uType,
         response => {
           if (response.data.data.records.length) {
             this.getGetUserDetailList = response.data.data.records
