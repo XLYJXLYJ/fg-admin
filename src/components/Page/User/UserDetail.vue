@@ -1,5 +1,5 @@
 <template>
-<div>
+  <div>
     <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
     <alert v-model="alert_show">{{error_type}}</alert>
     <div class="user_search">
@@ -50,13 +50,12 @@
           </li>
       </ul>
     </div>
-</div>
+  </div>
 </template>
 <script>
 import func from '@/common/func'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
-// import store from '@/vuex/store'
 export default {
   data () {
     return {
@@ -159,15 +158,6 @@ export default {
     }
   },
   mounted () {
-    // console.log(this.$route.params)
-    // this.userText = this.$route.params.data
-    // if (this.userText) {
-    //   console.log(22222222222)
-    //   this.getGetUserDetailList = []
-    //   this.GetUsertext()
-    // } else {
-    //   this.GetUserDetail()
-    // }
     this.getGetUserDetailList = []
     this.GetUserDetail()
   },
@@ -179,22 +169,37 @@ export default {
       var uType = localStorage.getItem('uType')
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&uid=' + uid + '&sort=' + this.sort + '&page=' + this.pageDetail + '&userType=' + this.$store.state.userType + '&uType=' + uType,
         response => {
-          if (response.data.code === 200 & response.data.data.records.length !== 0) {
-            this.noOrder = false
-            if (this.pageDetail === 1) {
-              this.getGetUserDetailList = response.data.data.records
-              this.show_loading = false
+          if (response.data.code === 200) {
+            if (response.data.data.records.length>0) {
+              this.noOrder = false
+              if (this.pageDetail === 1) {
+                this.getGetUserDetailList = response.data.data.records
+                this.show_loading = false
+              } else {
+                this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+                this.show_loading = false
+              }
             } else {
-              this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+              this.stopPageDetail = this.pageDetail
+              this.noOrder = true
               this.show_loading = false
             }
-          } else if (response.data.code === 401) {
-              this.error_type = '登录超时，请重新登录'
-              this.alert_show = true
-              setTimeout(() => {this.$router.push('Login')}, 1500);
-            } else {
+          } 
+          else if (response.data.code === 401) {
+            this.show_loading = false
+            this.error_type = '登录超时，请重新登录'
+            this.alert_show = true
+            setTimeout(() => {this.$router.push('Login')}, 1500);
+          }
+          else if (response.data.code === 500) {
+            this.show_loading = false
+            this.error_type = response.data.message
+            this.alert_show = true
+          } 
+          else {
             if (this.pageDetail === 1) {
-              this.noOrder = true
+              this.stopPageDetail = this.pageDetail
+              this.noUser = true
               this.show_loading = false
               this.getGetUserDetailList = []
             } else {
@@ -213,18 +218,37 @@ export default {
       var uType = localStorage.getItem('uType')
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&sort=teamDesc&uid=' + uid + '&page=' + this.pageDetailNumber + '&userType=' + this.$store.state.userType + '&uType=' + uType,
         response => {
-          if (response.data.code === 200 & response.data.data.records.length !== 0) {
-            this.noOrder = false
-            if (this.pageDetailNumber === 1) {
-              this.getGetUserDetailList = response.data.data.records
-              this.show_loading = false
+          if (response.data.code === 200) {
+            if (response.data.data.records.length>0) {
+              this.noOrder = false
+              if (this.pageDetailNumber === 1) {
+                this.getGetUserDetailList = response.data.data.records
+                this.show_loading = false
+              } else {
+                this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+                this.show_loading = false
+              }
             } else {
-              this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+              this.stopPageDetailNumber = this.pageDetailNumber
+              this.noOrder = true
               this.show_loading = false
             }
-          } else {
+          } 
+          else if (response.data.code === 401) {
+            this.show_loading = false
+            this.error_type = '登录超时，请重新登录'
+            this.alert_show = true
+            setTimeout(() => {this.$router.push('Login')}, 1500);
+          }
+          else if (response.data.code === 500) {
+            this.show_loading = false
+            this.error_type = response.data.message
+            this.alert_show = true
+          }
+          else {
             if (this.pageDetailNumber === 1) {
-              this.noOrder = true
+             this.stopPageDetailNumber = this.pageDetailNumber
+              this.noUser = true
               this.show_loading = false
               this.getGetUserDetailList = []
             } else {
@@ -243,18 +267,36 @@ export default {
       let uType = localStorage.getItem('uType')
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&sort=underDesc&uid=' + uid + '&page=' + this.pageDetailDirectly + '&userType=' + this.$store.state.userType + '&uType=' + uType,
         response => {
-          if (response.data.code === 200 & response.data.data.records.length !== 0) {
-            this.noOrder = false
-            if (this.pageDetailDirectly === 1) {
-              this.getGetUserDetailList = response.data.data.records
-              this.show_loading = false
+          if (response.data.code === 200) {
+            if (response.data.data.records.length>0) {
+              if (this.pageDetailDirectly === 1) {
+                this.getGetUserDetailList = response.data.data.records
+                this.show_loading = false
+              } else {
+                this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+                this.show_loading = false
+              }
             } else {
-              this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+              this.stopPageDetailDirectly = this.pageDetailDirectly
+              this.noOrder = true
               this.show_loading = false
             }
-          } else {
+          }
+          else if (response.data.code === 401) {
+            this.show_loading = false
+            this.error_type = '登录超时，请重新登录'
+            this.alert_show = true
+            setTimeout(() => {this.$router.push('Login')}, 1500);
+          }
+          else if (response.data.code === 500) {
+            this.show_loading = false
+            this.error_type = response.data.message
+            this.alert_show = true
+          } 
+          else {
             if (this.pageDetailDirectly === 1) {
-              this.noOrder = true
+             this.stopPageDetailDirectly = this.pageDetailDirectly
+              this.noUser = true
               this.show_loading = false
               this.getGetUserDetailList = []
             } else {
@@ -274,7 +316,7 @@ export default {
       this.userText = this.userText
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&mobile=' + this.userText + '&uid=' + uid + '&uType=' + uType,
         response => {
-          if (response.data.data.records.length) {
+          if (response.data.code === 200) {
             this.getGetUserDetailList = response.data.data.records
             this.show_loading = false
           } else {
@@ -439,117 +481,117 @@ export default {
     margin-bottom: 30px;
     margin-top: 75px;
     li{
-        width: 599px;
-        height: 170px;
-        background: #fff;
-        position: relative;
-        margin: 0 auto;
-        margin-top: 17px;
-        .user_contain{
-            width:599px;
-            height:170px;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            .user_contain_headimg{
-                width:68px;
-                height:68px;
-                border-radius:37px;
-                position: absolute;
-                top: 27px;
-                left: 27px;
-            }
-            .user_title{
-                width:186px;
-                height:26px;
-                font-size:27px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#333;
-                position: absolute;
-                top: 32px;
-                left: 115px;
-            }
-            .p_img{
-              font-size:25px;
-              margin-top:6px;
-              padding-bottom:2px;
-              color:#999;
-            }
-            .grade_level_img{
-                min-width:102px;
-                height:30px;
-                position: absolute;
-                top: 28px;
-                left: 307px;
-            }
-            .user_name{
-                width:100px;
-                height:22px;
-                font-size:20px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#999;
-                position: absolute;
-                top: 74px;
-                left: 111px;
-            } 
-            .user_time{
-                width:160px;
-                height:22px;
-                font-size:20px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#999;
-                position: absolute;
-                top: 74px;
-                left: 211px;
-            } 
-            .user_up{
-                width:300px;
-                height:22px;
-                font-size:20px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#999;
-                position: absolute;
-                top: 99px;
-                left: 111px;
-            }
-            .user_recommend{
-                width:100px;
-                height:22px;
-                font-size:20px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#999;
-                position: absolute;
-                top: 124px;
-                left: 111px;
-            }
-            .user_direc{
-                width:100px;
-                height:22px;
-                font-size:20px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#999;
-                position: absolute;
-                top: 124px;
-                left: 226px;
-            }
-            .user_carrieroperator{
-                width:120px;
-                height:22px;
-                font-size:20px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#999;
-                position: absolute;
-                top: 124px;
-                left: 354px;
-            }
+      width: 599px;
+      height: 170px;
+      background: #fff;
+      position: relative;
+      margin: 0 auto;
+      margin-top: 17px;
+      .user_contain{
+        width:599px;
+        height:170px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        .user_contain_headimg{
+          width:68px;
+          height:68px;
+          border-radius:37px;
+          position: absolute;
+          top: 27px;
+          left: 27px;
         }
+        .user_title{
+          width:186px;
+          height:26px;
+          font-size:27px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#333;
+          position: absolute;
+          top: 32px;
+          left: 115px;
+        }
+        .p_img{
+          font-size:25px;
+          margin-top:6px;
+          padding-bottom:2px;
+          color:#999;
+        }
+        .grade_level_img{
+          min-width:102px;
+          height:30px;
+          position: absolute;
+          top: 28px;
+          left: 307px;
+        }
+        .user_name{
+          width:100px;
+          height:22px;
+          font-size:20px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#999;
+          position: absolute;
+          top: 74px;
+          left: 111px;
+        } 
+        .user_time{
+          width:160px;
+          height:22px;
+          font-size:20px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#999;
+          position: absolute;
+          top: 74px;
+          left: 211px;
+        } 
+        .user_up{
+          width:300px;
+          height:22px;
+          font-size:20px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#999;
+          position: absolute;
+          top: 99px;
+          left: 111px;
+        }
+        .user_recommend{
+          width:100px;
+          height:22px;
+          font-size:20px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#999;
+          position: absolute;
+          top: 124px;
+          left: 111px;
+        }
+        .user_direc{
+          width:100px;
+          height:22px;
+          font-size:20px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#999;
+          position: absolute;
+          top: 124px;
+          left: 226px;
+        }
+        .user_carrieroperator{
+          width:120px;
+          height:22px;
+          font-size:20px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#999;
+          position: absolute;
+          top: 124px;
+          left: 354px;
+        }
+      }
     }
   }
 }

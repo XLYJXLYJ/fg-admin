@@ -1,6 +1,5 @@
 <template>
-<div>
-  
+  <div>
     <div class="order_detail">
       <loading :show="show_loading" :text="text_loading" style="z-index:1000"></loading>
       <alert v-model="alert_show">{{error_type}}</alert>
@@ -26,11 +25,10 @@
           </li>
         </ul>
     </div>
-</div>
+  </div>
 </template>
 <script>
 import func from '@/common/func'
-// import store from '@/vuex/store'
 export default {
   data () {
     return {
@@ -93,21 +91,38 @@ export default {
       var uType = localStorage.getItem('uType')
       func.ajaxGet(this.$store.state.baseUrl + '/account/auth/itoc/listOrderInfo?osType=0&userId=' + uid + '&tkStatus=3' + '&page=' + this.page + '&uType=' + uType,
       response => {
-        if (response.data.data.records.length) {
-          this.noOrder = false
-          if (this.page === 1) {
-            this.getGetUserDetailList = response.data.data.records
-            this.show_loading = false
+        if (response.data.code === 200) {
+          if (response.data.data.records.length>0) {
+            this.noOrder = false
+            if (this.page === 1) {
+              this.getGetUserDetailList = response.data.data.records
+              this.show_loading = false
+            } else {
+              this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+              this.show_loading = false
+            }
           } else {
-            this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+            if(this.page === 1) {
+              this.noOrder = true
+            }
+            this.stopPage = this.page
             this.show_loading = false
           }
-        } else if (response.data.code === 401) {
-            this.error_type = '登录超时，请重新登录'
-            this.alert_show = true
-            setTimeout(() => {this.$router.push('Login')}, 1500);
-          } else {
+        } 
+        else if (response.data.code === 401) {
+          this.show_loading = false
+          this.error_type = '登录超时，请重新登录'
+          this.alert_show = true
+          setTimeout(() => {this.$router.push('Login')}, 1500);
+        } 
+        else if (response.data.code === 500) {
+          this.show_loading = false
+          this.error_type = response.data.message
+          this.alert_show = true
+        } 
+        else {
           if (this.page === 1) {
+            this.stopPage = this.page
             this.noOrder = true
             this.show_loading = false
           } else {
@@ -160,147 +175,147 @@ export default {
     position: relative;
     margin-top: 90px;
     li{
-        width: 100%;
-        height: 231px;
-        background: #fff;
-        margin-top: 17px;
-        position: relative;
-        .order_number{
-            width:348px;
-            height:26px;
-            font-size:20px;
-            font-family:PingFang-SC-Regular;
-            font-weight:bold;
-            color:#666;
-            line-height:31px;
-            position: absolute;
-            top: 20px;
-            left: 20px;
+      width: 100%;
+      height: 231px;
+      background: #fff;
+      margin-top: 17px;
+      position: relative;
+      .order_number{
+        width:348px;
+        height:26px;
+        font-size:20px;
+        font-family:PingFang-SC-Regular;
+        font-weight:bold;
+        color:#666;
+        line-height:31px;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+      .order_detail_line{
+        width:599px;
+        height:1px;
+        position: absolute;
+        top: 50px;
+        left: 20px;
+        background-color: #E8E8EA;
+      }
+      .order_contain{
+        width:599px;
+        height:170px;
+        position: absolute;
+        top: 60px;
+        left: 20px;
+        border-top: 1px solid #E8E8EA;
+        img{
+          width:77px;
+          height:77px;
+          border-radius:9px;
+          position: absolute;
+          top: 20px;
+          left: 0px;
         }
-        .order_detail_line{
-            width:599px;
-            height:1px;
-            position: absolute;
-            top: 50px;
-            left: 20px;
-            background-color: #E8E8EA;
+        .order_title{
+          width:471px;
+          height:54px;
+          font-size:24px;
+          font-family:PingFang-SC-Regular;
+          font-weight:bold;
+          color:#333;
+          position: absolute;
+          top: 20px;
+          left: 88px;
+          line-height:28px;
         }
-        .order_contain{
-            width:599px;
-            height:170px;
-            position: absolute;
-            top: 60px;
-            left: 20px;
-            border-top: 1px solid #E8E8EA;
-            img{
-                width:77px;
-                height:77px;
-                border-radius:9px;
-                position: absolute;
-                top: 20px;
-                left: 0px;
-            }
-            .order_title{
-                width:471px;
-                height:54px;
-                font-size:24px;
-                font-family:PingFang-SC-Regular;
-                font-weight:bold;
-                color:#333;
-                position: absolute;
-                top: 20px;
-                left: 88px;
-                line-height:28px;
-            }
-            .order_time{
-                width:296px;
-                height:15px;
-                font-size:15px;
-                font-family:PingFang-SC-Regular;
-                font-weight:bold;
-                color:#999;
-                position: absolute;
-                top: 82px;
-                left: 88px;
-            } 
-            .operation_enter{
-                width:200px;
-                height:16px;
-                font-size:15px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#333;
-                position: absolute;
-                top: 109px;
-                left: 0px;
-            }
-            .carrieroperator{
-                width:200px;
-                height:16px;
-                font-size:15px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#333;
-                position: absolute;
-                top: 109px;
-                left: 164px;
-            }
-            .one_income{
-                width:180px;
-                height:16px;
-                font-size:15px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#333;
-                position: absolute;
-                top: 109px;
-                left: 312px;
-            }
-            .up_income{
-                width:140px;
-                height:16px;
-                font-size:15px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#333;
-                position: absolute;
-                top: 109px;
-                left: 440px;
-            }
-            .one_belong{
-                width:210px;
-                height:16px;
-                font-size:15px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#333;
-                position: absolute;
-                bottom: 20px;
-                left: 0px;
-            }
-            .two_belong{
-                width:210px;
-                height:16px;
-                font-size:15px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#333;
-                position: absolute;
-                bottom: 20px;
-                left: 200px;
-            }
-            .three_belong{
-                width:210px;
-                height:16px;
-                font-size:15px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#333;
-                position: absolute;
-                bottom: 20px;
-                left: 400px;
-            }
+        .order_time{
+          width:296px;
+          height:15px;
+          font-size:15px;
+          font-family:PingFang-SC-Regular;
+          font-weight:bold;
+          color:#999;
+          position: absolute;
+          top: 82px;
+          left: 88px;
+        } 
+        .operation_enter{
+          width:200px;
+          height:16px;
+          font-size:15px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#333;
+          position: absolute;
+          top: 109px;
+          left: 0px;
         }
+        .carrieroperator{
+          width:200px;
+          height:16px;
+          font-size:15px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#333;
+          position: absolute;
+          top: 109px;
+          left: 164px;
+        }
+        .one_income{
+          width:180px;
+          height:16px;
+          font-size:15px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#333;
+          position: absolute;
+          top: 109px;
+          left: 312px;
+        }
+        .up_income{
+          width:140px;
+          height:16px;
+          font-size:15px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#333;
+          position: absolute;
+          top: 109px;
+          left: 440px;
+        }
+        .one_belong{
+          width:210px;
+          height:16px;
+          font-size:15px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#333;
+          position: absolute;
+          bottom: 20px;
+          left: 0px;
+        }
+        .two_belong{
+          width:210px;
+          height:16px;
+          font-size:15px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#333;
+          position: absolute;
+          bottom: 20px;
+          left: 200px;
+        }
+        .three_belong{
+          width:210px;
+          height:16px;
+          font-size:15px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#333;
+          position: absolute;
+          bottom: 20px;
+          left: 400px;
+        }
+      }
     }
   }
 }

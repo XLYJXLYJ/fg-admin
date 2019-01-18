@@ -2,11 +2,11 @@
   <div>
     <VHead></VHead>
     <div class="user_detail_one">
-        <!-- <alert v-model="alert_show">{{error_type}}</alert> -->
-        <div class="me">
-            <img src="../../assets/statistics_icon_back2@2x.png" @click="BackFunction()">
-            <p>运营中心协议合同</p>
-        </div>
+      <!-- <alert v-model="alert_show">{{error_type}}</alert> -->
+      <div class="me">
+        <img src="../../assets/statistics_icon_back2@2x.png" @click="BackFunction()">
+        <p>运营中心协议合同</p>
+      </div>
     </div>
   </div>
 </template>
@@ -49,11 +49,11 @@ export default {
     text-align: center;
     border-top:1px solid #E8E8EA;
     img{
-        width: 17px;
-        height: 24px;
-        position: absolute;
-        left: 26px;
-        top: 26px;
+      width: 17px;
+      height: 24px;
+      position: absolute;
+      left: 26px;
+      top: 26px;
     }
     p{
       color: #333;

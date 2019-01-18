@@ -26,8 +26,6 @@
 </template>
 <script>
 import { Tabbar, TabbarItem } from 'vux'
-// import store from '@/vuex/store'
-// import { mapActions, mapMutations } from 'vuex'
 export default {
   data () {
     return {

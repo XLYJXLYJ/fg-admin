@@ -11,7 +11,6 @@
         </span>
       </div>
       <div class="tab_class">
-        <!-- <ul v-show = '$store.state.have_order'> -->
         <ul>
           <li><router-link to="/Order/PaymentOrder" class="tab_class_order">已支付订单</router-link></li>
           <li><router-link to="/Order/ComfirmOrder" class="tab_class_order">确认结算订单</router-link></li>
@@ -25,7 +24,6 @@
 </template>
 
 <script>
-// import store from '@/vuex/store'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
 import func from '@/common/func'

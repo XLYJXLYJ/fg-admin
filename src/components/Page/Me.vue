@@ -1,13 +1,13 @@
 <template>
   <div>
     <VHead></VHead>
-      <alert v-model="alert_show">{{error_type}}</alert>
-      <confirm v-model="show"
-      title="温馨提示"
-      @on-cancel="onCancel"
-      @on-confirm="onConfirm">
-      <p style="text-align:center;">是否退出登录</p>
-      </confirm>
+    <alert v-model="alert_show">{{error_type}}</alert>
+    <confirm v-model="show"
+    title="温馨提示"
+    @on-cancel="onCancel"
+    @on-confirm="onConfirm">
+    <p style="text-align:center;">是否退出登录</p>
+    </confirm>
     <div class="me_center">
       <div class="me"><p>我的</p></div>
       <div class="edit_password">

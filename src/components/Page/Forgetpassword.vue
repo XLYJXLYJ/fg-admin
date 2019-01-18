@@ -103,22 +103,6 @@ export default {
     this.GetImgCode()
     this.phone = localStorage.getItem('mobile')
   },
-  mounted () {
-    // this.clientHeight = document.documentElement.clientHeight
-    // const that = this
-    // // 安卓手机键盘吊起挡住输入框
-    // window.onresize = function () {
-    //   if (document.documentElement.clientHeight < that.clientHeight) {
-    //   // scrollVal为负值
-    //     let scrollVal = document.documentElement.clientHeight - that.clientHeight
-    //     var div03 = document.getElementByClassName('change_password')
-    //     div03.setAttribute('marginTop', scrollVal)
-    //   } else {
-    //     var div04 = document.getElementByClassName('change_password')
-    //     div04.setAttribute('marginTop', 0)
-    //   }
-    // }
-  },
   methods: {
     // 第一个表单函数
     ForgetPasswordPhoneBlur () {
@@ -197,7 +181,17 @@ export default {
       .then(response => {
         if (response.data.code === 200) {
           this.get_picture_identifying_code = response.data.data
-        } else {
+        } 
+        else if (response.data.code === 401) {
+          this.error_type = '登录超时，请重新登录'
+          this.alert_show = true
+          setTimeout(() => {this.$router.push('Login')}, 1500);
+        }
+        else if (response.data.code === 500) {
+          this.error_type = response.data.message
+          this.alert_show = true
+        } 
+        else {
           this.error_type = response.data.message
           this.alert_show = true
         }
@@ -301,18 +295,6 @@ export default {
             this.alert_show = true
           }
         })
-        // this.axios.get(this.$store.state.baseUrl + '/user/info/modifyPassword?' + data)
-        // .then(response => {
-        //   if (response.data.code === 200) {
-        //     this.error_type = '修改密码成功'
-        //     this.alert_show = true
-        //     this.get_picture_identifying_code = response.data.data
-        //     setTimeout(() => {this.$router.push('Login')}, 1500);
-        //   } else {
-        //     this.error_type = response.data.message
-        //     this.alert_show = true
-        //   }
-        // })
       }
     }
   },
@@ -338,18 +320,18 @@ export default {
     text-align: center;
     border-top:1px solid #E8E8EA;
     .img_border{
-        width: 47px;
-        height: 34px;
-        position: absolute;
-        left: 26px;
-        top: 26px;
+      width: 47px;
+      height: 34px;
+      position: absolute;
+      left: 26px;
+      top: 26px;
     }
     img{
-        width: 17px;
-        height: 24px;
-        position: absolute;
-        left: 0px;
-        top: 0px;
+      width: 17px;
+      height: 24px;
+      position: absolute;
+      left: 0px;
+      top: 0px;
     }
     p{
       color: #333;
@@ -368,19 +350,19 @@ export default {
     background-color: #fff;
     border-bottom: 1px solid #E8E8EA;
     input{
-        width: 366px;
-        height: 36px;
-        position: absolute;
-        top: 33px;
-        left: 26px;
-        font-size: 29px;
+      width: 366px;
+      height: 36px;
+      position: absolute;
+      top: 33px;
+      left: 26px;
+      font-size: 29px;
     }
     img{
-        width: 136px;
-        height: 51px;
-        position: absolute;
-        top: 21px;
-        right: 26px; 
+      width: 136px;
+      height: 51px;
+      position: absolute;
+      top: 21px;
+      right: 26px; 
     }
   }
   .get_picture_identifying_code{
@@ -392,24 +374,24 @@ export default {
     background-color: #fff;
     border-bottom: 1px solid #E8E8EA;
     input{
-        width: 336px;
-        height: 36px;
-        position: absolute;
-        top: 33px;
-        left: 26px;
-        font-size: 29px;
+      width: 336px;
+      height: 36px;
+      position: absolute;
+      top: 33px;
+      left: 26px;
+      font-size: 29px;
     }
     img{
-        width: 137px;
-        height: 51px;
-        position: absolute;
-        top: 21px;
-        right: 26px; 
-        color: #fff;
-        font-size:24px;
-        font-family:PingFang-SC-Regular;
-        font-weight:Regular;
-        border-radius: 9px;
+      width: 137px;
+      height: 51px;
+      position: absolute;
+      top: 21px;
+      right: 26px; 
+      color: #fff;
+      font-size:24px;
+      font-family:PingFang-SC-Regular;
+      font-weight:Regular;
+      border-radius: 9px;
     }
   }
   .get_phone_identifying_code{
@@ -421,12 +403,12 @@ export default {
     background-color: #fff;
     border-bottom: 1px solid #E8E8EA;
     input{
-        width: 336px;
-        height: 36px;
-        position: absolute;
-        top: 33px;
-        left: 26px;
-        font-size: 29px;
+      width: 336px;
+      height: 36px;
+      position: absolute;
+      top: 33px;
+      left: 26px;
+      font-size: 29px;
     }
     .getCodeNumberDisabled{
       width: 171px;
@@ -443,17 +425,17 @@ export default {
       border: 1px solid #999;
     }
     .getCodeNumber{
-        width: 137px;
-        height: 51px;
-        position: absolute;
-        top: 21px;
-        right: 26px; 
-        color: #fff;
-        background-color: #FF5100;
-        font-size:24px;
-        font-family:PingFang-SC-Regular;
-        font-weight:Regular;
-        border-radius: 9px;
+      width: 137px;
+      height: 51px;
+      position: absolute;
+      top: 21px;
+      right: 26px; 
+      color: #fff;
+      background-color: #FF5100;
+      font-size:24px;
+      font-family:PingFang-SC-Regular;
+      font-weight:Regular;
+      border-radius: 9px;
     }
   }
   .set_password{
@@ -465,12 +447,12 @@ export default {
     background-color: #fff;
     border-bottom: 1px solid #E8E8EA;
     input{
-        width: 496px;
-        height: 36px;
-        position: absolute;
-        top: 33px;
-        left: 26px;
-        font-size: 29px;
+      width: 496px;
+      height: 36px;
+      position: absolute;
+      top: 33px;
+      left: 26px;
+      font-size: 29px;
     }
     .change_password_line{
       position: absolute;
@@ -491,12 +473,12 @@ export default {
     background-color: #fff;
     border-bottom: 1px solid #E8E8EA;
     input{
-        width: 496px;
-        height: 36px;
-        position: absolute;
-        top: 33px;
-        left: 26px;
-        font-size: 29px;
+      width: 496px;
+      height: 36px;
+      position: absolute;
+      top: 33px;
+      left: 26px;
+      font-size: 29px;
     }
     .change_password_line{
       position: absolute;

@@ -1,118 +1,116 @@
 <template>
   <div class="statistics_contain">
-      <VHead></VHead>
-      <alert v-model="alert_show">{{error_type}}</alert>
-      <div class="left"></div>
-      <div class="right"></div>
-      <div class="team_situation">
-        <div class="team_situation_head">
-          <img src="../../assets/statistics_icon_team@2x.png">
-          <span>团队状况</span>
-        </div>
-        <div class="team_situation_line"></div>
-        <div class="team_situation_data_number">
-          <ul>
-            <li @click="SelectUnder()">
-              <div class="circle" style="background:#FF5100"> </div><span>直属：</span><span class="number">{{underCount}}</span>
-            </li>
-            <li @click="SelectRefer()">
-              <div class="circle" style="background:#0057FF"> </div><span>运营商：</span><span class="number">{{agentCount}}</span>
-            </li>
-            <li>
-              <div class="circle" style="background:#FF8F00"> </div><span>团队人数：</span><span class="number">{{teamCount}}</span>
-            </li>
-          </ul>
-        </div>
-        <div class="zhishunum">{{derCountPercent}}%</div>
-        <div class="zhishu">{{countPercentName}}</div>
-        <div class="team_situation_right">
-          <v-chart id="canvas" ref='chart'
-            :data="data"
-            :height='height'
-            :width='width'
-            :padding="[30, 'auto']">
-            <v-tooltip disabled />
-            <v-scale y :options="yOptions" />
-            <v-pie :radius="0.6" :inner-radius="0.8" series-field="name" :colors="['#FF5100','#0057FF','#FF8F00']" />
-            <v-legend :options="legendOptions" />
-            <v-guide type="html" :options="htmlOptions" />
-          </v-chart>
-        </div>
-        <div class="team_situation_right_line"></div>
+    <VHead></VHead>
+    <alert v-model="alert_show">{{error_type}}</alert>
+    <div class="left"></div>
+    <div class="right"></div>
+    <div class="team_situation">
+      <div class="team_situation_head">
+        <img src="../../assets/statistics_icon_team@2x.png">
+        <span>团队状况</span>
       </div>
-      <div class="data_statistics">
-        <div class="data_statistics_head">
-          <img src="../../assets/statistics_icon_data@2x.png">
-          <span>数据统计</span>
-        </div>
-        <div class="data_statistics_line"></div>
-        <div class="data_statistics_middle">
-          <div class="data_statistics_middle_center_box">
-            <button class="data_statistics_middle_button1" :class="{select_button:is_select_buttn,no_select_button:!is_select_buttn}" @click.stop.prevent="IsSelectButton1()">今日</button>
-            <button class="data_statistics_middle_button2" :class="{select_button:!is_select_buttn,no_select_button:is_select_buttn}" @click.stop.prevent="IsSelectButton2()">昨日</button>
-          </div>
-        </div>
-        <div class="data_statistics_foot">
-          <ul>
-            <li>
-              <span class="data_statistics_foot_money_number">{{newTeam}}</span>
-              <p>新增团队人数</p>
-            </li>
-            <li>
-              <span class="data_statistics_foot_money_number">{{payCount}}</span>
-              <p>付款笔数</p>
-            </li>
-            <li>
-              <span class="data_statistics_foot_money_number"><span class="data_statistics_foot_money_icon">￥</span>{{commission}}</span>
-              <p>消费收益预估</p>
-            </li>
-          </ul>
+      <div class="team_situation_line"></div>
+      <div class="team_situation_data_number">
+        <ul>
+          <li @click="SelectUnder()">
+            <div class="circle" style="background:#FF5100"> </div><span>直属：</span><span class="number">{{underCount}}</span>
+          </li>
+          <li @click="SelectRefer()">
+            <div class="circle" style="background:#0057FF"> </div><span>运营商：</span><span class="number">{{agentCount}}</span>
+          </li>
+          <li>
+            <div class="circle" style="background:#FF8F00"> </div><span>团队人数：</span><span class="number">{{teamCount}}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="zhishunum">{{derCountPercent}}%</div>
+      <div class="zhishu">{{countPercentName}}</div>
+      <div class="team_situation_right">
+        <v-chart id="canvas" ref='chart'
+          :data="data"
+          :height='height'
+          :width='width'
+          :padding="[30, 'auto']">
+          <v-tooltip disabled />
+          <v-scale y :options="yOptions" />
+          <v-pie :radius="0.6" :inner-radius="0.8" series-field="name" :colors="['#FF5100','#0057FF','#FF8F00']" />
+          <v-legend :options="legendOptions" />
+          <v-guide type="html" :options="htmlOptions" />
+        </v-chart>
+      </div>
+      <div class="team_situation_right_line"></div>
+    </div>
+    <div class="data_statistics">
+      <div class="data_statistics_head">
+        <img src="../../assets/statistics_icon_data@2x.png">
+        <span>数据统计</span>
+      </div>
+      <div class="data_statistics_line"></div>
+      <div class="data_statistics_middle">
+        <div class="data_statistics_middle_center_box">
+          <button class="data_statistics_middle_button1" :class="{select_button:is_select_buttn,no_select_button:!is_select_buttn}" @click.stop.prevent="IsSelectButton1()">今日</button>
+          <button class="data_statistics_middle_button2" :class="{select_button:!is_select_buttn,no_select_button:is_select_buttn}" @click.stop.prevent="IsSelectButton2()">昨日</button>
         </div>
       </div>
-      <div class="revenue_statistics">
-        <div class="revenue_statistics_head">
-          <img src="../../assets/statistics_icon_profit@2x.png">
-          <span>收益统计</span>
-        </div>
-        <div class="revenue_statistics_line"></div>
-        <div class="revenue_statistics_middle">
-          <div class="revenue_statistics_middle_center_box">
-            <span class="revenue_statistics_money_icon">￥</span>
-            <span class="revenue_statistics_money_number">{{totalIncome}}</span>
-            <p>累计收益</p>
-          </div>
-        </div>
-        <div class="revenue_statistics_foot">
-          <ul>
-            <li>
-              <span class="revenue_statistics_foot_money_number"><span class="revenue_statistics_foot_money_icon">￥</span>{{lastMonthCommission}}</span>
-              <p>上月结算</p>
-            </li>
-            <li>
-              <span class="revenue_statistics_foot_money_number"><span class="revenue_statistics_foot_money_icon">￥</span>{{currentMonthTkMoney}}</span>
-              <p>本月预估</p>
-            </li>
-            <li>
-              <span class="revenue_statistics_foot_money_number"><span class="revenue_statistics_foot_money_icon">￥</span>{{lastMonthTkMoney}}</span>
-              <p>上月预估</p>
-            </li>
-          </ul>
+      <div class="data_statistics_foot">
+        <ul>
+          <li>
+            <span class="data_statistics_foot_money_number">{{newTeam}}</span>
+            <p>新增团队人数</p>
+          </li>
+          <li>
+            <span class="data_statistics_foot_money_number">{{payCount}}</span>
+            <p>付款笔数</p>
+          </li>
+          <li>
+            <span class="data_statistics_foot_money_number"><span class="data_statistics_foot_money_icon">￥</span>{{commission}}</span>
+            <p>消费收益预估</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="revenue_statistics">
+      <div class="revenue_statistics_head">
+        <img src="../../assets/statistics_icon_profit@2x.png">
+        <span>收益统计</span>
+      </div>
+      <div class="revenue_statistics_line"></div>
+      <div class="revenue_statistics_middle">
+        <div class="revenue_statistics_middle_center_box">
+          <span class="revenue_statistics_money_icon">￥</span>
+          <span class="revenue_statistics_money_number">{{totalIncome}}</span>
+          <p>累计收益</p>
         </div>
       </div>
-      <div class="team_statistics_box">
-        <router-link to='/StatisticsDetail'><div class="team_statistics"><span>团队统计</span><img src="../../assets/statistics_icon_enter@2x.png"></div></router-link>
-        <!-- <div class="team_statistics_line"></div>
-        <div class="team_member_statement"><span>团队会员对账单</span><img src="../../assets/statistics_icon_enter@2x.png"></div> -->
+      <div class="revenue_statistics_foot">
+        <ul>
+          <li>
+            <span class="revenue_statistics_foot_money_number"><span class="revenue_statistics_foot_money_icon">￥</span>{{lastMonthCommission}}</span>
+            <p>上月结算</p>
+          </li>
+          <li>
+            <span class="revenue_statistics_foot_money_number"><span class="revenue_statistics_foot_money_icon">￥</span>{{currentMonthTkMoney}}</span>
+            <p>本月预估</p>
+          </li>
+          <li>
+            <span class="revenue_statistics_foot_money_number"><span class="revenue_statistics_foot_money_icon">￥</span>{{lastMonthTkMoney}}</span>
+            <p>上月预估</p>
+          </li>
+        </ul>
       </div>
-      <p class="foot_text">已经到底咯~</p>
-      <foot></foot>
+    </div>
+    <div class="team_statistics_box">
+      <router-link to='/StatisticsDetail'><div class="team_statistics"><span>团队统计</span><img src="../../assets/statistics_icon_enter@2x.png"></div></router-link>
+      <!-- <div class="team_statistics_line"></div>
+      <div class="team_member_statement"><span>团队会员对账单</span><img src="../../assets/statistics_icon_enter@2x.png"></div> -->
+    </div>
+    <p class="foot_text">已经到底咯~</p>
+    <foot></foot>
   </div>
 </template>
 
 <script>
-// import store from '@/vuex/store'
 import func from '@/common/func'
-// import asyncfunc from '@/common/asyncfunc'
 import { VChart, VLine, VArea, VTooltip, VLegend, VBar, VPie, VGuide, VScale } from 'vux'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
@@ -191,7 +189,6 @@ export default {
     }
   },
   created () {
-    // console.log(MobileDevice)
     if (document.body.clientWidth > 640) {
       this.width = 380 * (600 / 412)
       this.height = 440
@@ -203,7 +200,6 @@ export default {
       this.$router.push('Login')
     } else {
       this.GetAsyncDate()
-      // this.Initialization()
       this.GetTeamSituation()
       this.IsSelectButton1()
       this.GetrevenueStatistics()
@@ -236,10 +232,6 @@ export default {
       this.derCountPercent = this.agentCountPercent
       this.countPercentName = '运营商'
     },
-    // SelectAgent () {
-    //   this.derCountPercent = this.agentCountPercent
-    //   this.countPercentName = ''
-    // },
     renderVChart ({ chart }) {
       this.GetTeamSituation()
     },
@@ -389,7 +381,6 @@ export default {
           this.underCount = response.data.data.underCount
           this.teamCount = response.data.data.teamCount
           this.agentCount = response.data.data.agentCount
-          // let sum = this.underCount + this.teamCount + this.agentCount
           this.data[0]['percent'] = this.underCount / this.teamCount
           this.data[2]['percent'] = this.teamCount / this.teamCount
           this.data[1]['percent'] = this.agentCount / this.teamCount
@@ -416,7 +407,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 .statistics_contain{
-  width: 100%;
+  width: 640px;
   min-height: 1390px;
   position: flex;
   margin: 0px;
@@ -428,7 +419,6 @@ export default {
   height: 580px;
   position: fixed;
   background: #F5F5F5;
-  left: 0px;
   top: 64px;
   z-index: 1000;
   }

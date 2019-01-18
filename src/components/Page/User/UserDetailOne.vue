@@ -85,7 +85,6 @@
 import { Confirm } from 'vux'
 import func from '@/common/func'
 import VHead from '@/components/header'
-// import store from '@/vuex/store'
 import Qs from 'qs'
 export default {
   name: 'UserDetailOne',
@@ -140,7 +139,6 @@ export default {
   },
   methods: {
     GetUserDetailOne () {
-      // let uid = localStorage.getItem('uid')
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocInfo?osType=0&uid=' + this.userid,
         response => {
           if (response.data.code === 200) {
@@ -161,24 +159,42 @@ export default {
       this.show_loading = true
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/query?osType=0&uid=' + this.userid + '&size=10' + '&page=' + this.page,
         response => {
-          if (response.data.data.records.length) {
-            this.noOrder = false
-            if (this.page === 1) {
-              this.getGetUserDetailList = response.data.data.records
-              this.show_loading = false
+          if (response.data.code === 200) {
+            if (response.data.data.records.length>0) {
+              this.noOrder = false
+              if (this.page === 1) {
+                this.getGetUserDetailList = response.data.data.records
+                this.show_loading = false
+              } else {
+                this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
+                this.show_loading = false
+              }
             } else {
-              this.getGetUserDetailList = this.getGetUserDetailList.concat(response.data.data.records)
-              this.show_loading = false
+               if (this.page===1) {
+                this.getGetUserDetailList = []
+               }
+                this.stopPage = this.page
+                this.noOrder = true
+                this.show_loading = false
             }
-          } else if (response.data.code === 401) {
-              this.error_type = '登录超时，请重新登录'
-              this.alert_show = true
-              setTimeout(() => {this.$router.push('Login')}, 1500);
-            } else {
+          }
+          else if (response.data.code === 401) {
+            this.show_loading = false
+            this.error_type = '登录超时，请重新登录'
+            this.alert_show = true
+            setTimeout(() => {this.$router.push('Login')}, 1500);
+          }
+          else if (response.data.code === 500) {
+            this.show_loading = false
+            this.error_type = response.data.message
+            this.alert_show = true
+          }
+          else {
             if (this.page === 1) {
+              this.stopPage = this.page
               this.noOrder = true
               this.show_loading = false
-              this.getGetUserDetailList = ''
+              this.getGetUserDetailList = []
             } else {
               this.stopPage = this.page
               this.error_type = '已显示全部数据'
@@ -201,12 +217,7 @@ export default {
       this.show = false
     },
     onConfirm () {
-      let loginToken = localStorage.getItem('loginToken')
-      // this.axios.post('http://47.107.48.61:8830/auth/applyUpgrade?osType=0&uid=' + this.userid,
-      //   {
-      //       headers:{'token': loginToken}
-      //   }
-      // )      
+      let loginToken = localStorage.getItem('loginToken')     
       let uid = localStorage.getItem('uid')
       let data = Qs.stringify({       
         osType: 0,
@@ -220,6 +231,7 @@ export default {
       })
       .then(function (response) {
         if (response.data.code === 200) {
+          this.userType = 2
           this.error_type = '升级成功，你还有'+ response.data.data +'次机会'
           this.alert_show = true
         } else {
@@ -227,20 +239,6 @@ export default {
           this.alert_show = true
         }
       })
-      // this.axios.post(this.$store.state.baseUrl + '/user/auth/itoc/upgradeAgent?' + data)
-      // .then(response => {
-      //   if (response.data.code === 200) {
-      //     console.log(response)
-      //     this.error_type = '升级成功，你还有'+ response.data.data +'次机会'
-      //     this.alert_show = true
-      //   } else {
-      //     this.error_type = response.data.message
-      //     this.alert_show = true
-      //   }
-      // })
-      // .catch(function (error) {
-      //     console.log(error);
-      // });
     },
     DoShowToast () {
       this.show = true
@@ -278,18 +276,18 @@ export default {
     border-top:1px solid #E8E8EA;
     z-index: 500;
     .img_border{
-        width: 47px;
-        height: 34px;
-        position: absolute;
-        left: 26px;
-        top: 26px;
+      width: 47px;
+      height: 34px;
+      position: absolute;
+      left: 26px;
+      top: 26px;
     }
     img{
-        width: 17px;
-        height: 24px;
-        position: absolute;
-        left: 0px;
-        top: 0px;
+      width: 17px;
+      height: 24px;
+      position: absolute;
+      left: 0px;
+      top: 0px;
     }
     p{
       color: #333;
@@ -307,23 +305,23 @@ export default {
     background: #fff;
     z-index: 500;
     .user_contain_headimg{
-        width:110px;
-        height:109px;
-        border-radius:57px;
-        position: absolute;
-        top: 10px;
-        left: 38px;
+      width:110px;
+      height:109px;
+      border-radius:57px;
+      position: absolute;
+      top: 10px;
+      left: 38px;
     }
     .user_title{
-        width:230px;
-        height:30px;
-        font-size:34px;
-        font-family:PingFang-SC-Medium;
-        font-weight:Medium;
-        color:#333;
-        position: absolute;
-        top: 10px;
-        left: 164px;
+      width:230px;
+      height:30px;
+      font-size:34px;
+      font-family:PingFang-SC-Medium;
+      font-weight:Medium;
+      color:#333;
+      position: absolute;
+      top: 10px;
+      left: 164px;
     }
     .p_img{
       font-size:25px;
@@ -332,59 +330,60 @@ export default {
       color:#999;
     }
     .grade_level_img{
-        min-width:102px;
-        height:30px;
-        position: absolute;
-        top: 10px;
-        left: 404px;
+      min-width:102px;
+      height:30px;
+      position: absolute;
+      top: 10px;
+      left: 404px;
     }
     .user_name{
-        width:440px;
-        height:22px;
-        font-size:20px;
-        font-family:PingFang-SC-Regular;
-        font-weight:Regular;
-        color:#999;
-        position: absolute;
-        top: 54px;
-        left: 164px;
+      width:440px;
+      height:22px;
+      font-size:20px;
+      font-family:PingFang-SC-Regular;
+      font-weight:Regular;
+      color:#999;
+      position: absolute;
+      top: 54px;
+      left: 164px;
+      overflow: hidden;
     } 
     .user_time{
-        width:210px;
-        height:22px;
-        font-size:20px;
-        font-family:PingFang-SC-Regular;
-        font-weight:Regular;
-        color:#999;
-        position: absolute;
-        top: 79px;
-        left: 164px;
+      width:210px;
+      height:22px;
+      font-size:20px;
+      font-family:PingFang-SC-Regular;
+      font-weight:Regular;
+      color:#999;
+      position: absolute;
+      top: 79px;
+      left: 164px;
     } 
     .user_up{
-        width:230px;
-        height:22px;
-        font-size:20px;
-        font-family:PingFang-SC-Regular;
-        font-weight:Regular;
-        color:#999;
-        position: absolute;
-        top: 79px;
-        left: 400px;
+      width:230px;
+      height:22px;
+      font-size:20px;
+      font-family:PingFang-SC-Regular;
+      font-weight:Regular;
+      color:#999;
+      position: absolute;
+      top: 79px;
+      left: 400px;
     }
     .user_recommend{
-        width:160px;
-        height:22px;
-        font-size:20px;
-        font-family:PingFang-SC-Regular;
-        font-weight:Regular;
-        color:#666;
-        position: absolute;
-        top: 114px;
-        left: 164px;
-        span{
-          color: #FF5100;
-          font-size:29px;
-        }
+      width:160px;
+      height:22px;
+      font-size:20px;
+      font-family:PingFang-SC-Regular;
+      font-weight:Regular;
+      color:#666;
+      position: absolute;
+      top: 114px;
+      left: 164px;
+      span{
+        color: #FF5100;
+        font-size:29px;
+      }
     }
   }
   .user_team_list_box{
@@ -423,85 +422,86 @@ export default {
     top: 409px;
     margin-bottom: 460px;
     li{
-        width: 599px;
-        height: 123px;
-        background: #fff;
-        position: relative;
-        margin: 0 auto;
-        margin-top: 17px;
-        .user_contain{
-            width:599px;
-            height:170px;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            .user_contain_headimg{
-                width:68px;
-                height:68px;
-                border-radius:37px;
-                position: absolute;
-                top: 27px;
-                left: 27px;
-            }
-            .user_title{
-                width:186px;
-                height:26px;
-                font-size:27px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#333;
-                position: absolute;
-                top: 32px;
-                left: 115px;
-            }
-            .p_img{
-              font-size:25px;
-              margin-top:6px;
-              padding-bottom:2px;
-              color:#999;
-            }
-            .grade_level_img{
-                min-width:102px;
-                height:30px;
-                position: absolute;
-                top: 28px;
-                left: 307px;
-            }
-            .user_name{
-                width:140px;
-                height:22px;
-                font-size:20px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#999;
-                position: absolute;
-                top: 74px;
-                left: 115px;
-            } 
-            .user_time{
-                width:220px;
-                height:22px;
-                font-size:20px;
-                font-family:PingFang-SC-Regular;
-                font-weight:Regular;
-                color:#999;
-                position: absolute;
-                top: 74px;
-                left: 311px;
-            } 
+      width: 599px;
+      height: 123px;
+      background: #fff;
+      position: relative;
+      margin: 0 auto;
+      margin-top: 17px;
+      .user_contain{
+        width:599px;
+        height:170px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        .user_contain_headimg{
+          width:68px;
+          height:68px;
+          border-radius:37px;
+          position: absolute;
+          top: 27px;
+          left: 27px;
         }
+        .user_title{
+          width:186px;
+          height:26px;
+          font-size:27px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#333;
+          position: absolute;
+          top: 32px;
+          left: 115px;
+        }
+        .p_img{
+          font-size:25px;
+          margin-top:6px;
+          padding-bottom:2px;
+          color:#999;
+        }
+        .grade_level_img{
+          min-width:102px;
+          height:30px;
+          position: absolute;
+          top: 28px;
+          left: 307px;
+        }
+        .user_name{
+          width:140px;
+          height:22px;
+          font-size:20px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#999;
+          position: absolute;
+          top: 74px;
+          left: 115px;
+          overflow: hidden;
+        } 
+        .user_time{
+          width:220px;
+          height:22px;
+          font-size:20px;
+          font-family:PingFang-SC-Regular;
+          font-weight:Regular;
+          color:#999;
+          position: absolute;
+          top: 74px;
+          left: 311px;
+        } 
+      }
     }
   }
   button{
-      position: fixed;
-      bottom: 0px;
-      width: 640px;
-      height: 84px;
-      color: #fff;
-      background: #FF5100;
-      font-family: PingFang-SC-Medium;
-      font-weight: Medium;
-      font-size: 29px;
+    position: fixed;
+    bottom: 0px;
+    width: 640px;
+    height: 84px;
+    color: #fff;
+    background: #FF5100;
+    font-family: PingFang-SC-Medium;
+    font-weight: Medium;
+    font-size: 29px;
   }
   .foot_text{
     position: relative;

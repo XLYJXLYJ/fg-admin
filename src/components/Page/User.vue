@@ -6,31 +6,31 @@
       <div :class="{mask:ismask}">
       </div>
     </transition>
-      <div class="user">
-        <div class="user_search">
-          <span class="search_icon">
-            <!-- <img src="../../assets/user_icon_search@2x.png" @click.stop.prevent="SearchUser()">
-            <input type="text" placeholder="请输入手机号查找会员" v-model="userText" @focus="SearchUserInput()">
-            <button @click.stop.prevent="SearchUser()">搜索</button> -->
-            <p @click="AlertUserSelect">{{whichPerson}}</p>
-            <span>
-              <img class="search_tri" src="../../assets/user_icon_screen3@2x.png" v-show="!canvas_user_show">
-              <img class="search_tri" src="../../assets/user_icon_screen4@2x.png" v-show="canvas_user_show">
-            </span>
+    <div class="user">
+      <div class="user_search">
+        <span class="search_icon">
+          <!-- <img src="../../assets/user_icon_search@2x.png" @click.stop.prevent="SearchUser()">
+          <input type="text" placeholder="请输入手机号查找会员" v-model="userText" @focus="SearchUserInput()">
+          <button @click.stop.prevent="SearchUser()">搜索</button> -->
+          <p @click="AlertUserSelect">{{whichPerson}}</p>
+          <span>
+            <img class="search_tri" src="../../assets/user_icon_screen3@2x.png" v-show="!canvas_user_show">
+            <img class="search_tri" src="../../assets/user_icon_screen4@2x.png" v-show="canvas_user_show">
           </span>
-        </div>
-      <transition name="bounceInDown">
-        <img src="../../assets/user_icon_tri.png" v-show="canvas_user_show" class="img_tri">
-      </transition>
-        <div class="tab_class">
-          <ul>
-            <li><router-link to="/User/UserTime" class="tab_class_user">注册时间</router-link></li>
-            <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserNumber" class="tab_class_user mg40">团队总数</router-link></li>
-            <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserDirectly" class="tab_class_user mg80">直属</router-link></li>
-          </ul> 
-          <router-view></router-view>
-        </div>
+        </span>
       </div>
+    <transition name="bounceInDown">
+      <img src="../../assets/user_icon_tri.png" v-show="canvas_user_show" class="img_tri">
+    </transition>
+      <div class="tab_class">
+        <ul>
+          <li><router-link to="/User/UserTime" class="tab_class_user">注册时间</router-link></li>
+          <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserNumber" class="tab_class_user mg40">团队总数</router-link></li>
+          <li @click="CloseSwitchUserIcon()"><router-link to="/User/UserDirectly" class="tab_class_user mg80">直属</router-link></li>
+        </ul> 
+        <router-view></router-view>
+      </div>
+    </div>
     <transition name="bounceInDown">
       <div class="canvas_user" v-show="canvas_user_show">
         <ul>
@@ -45,7 +45,6 @@
 </template>
 
 <script>
-// import store from '@/vuex/store'
 import foot from '@/components/foot'
 import VHead from '@/components/header'
 export default {
