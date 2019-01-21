@@ -236,7 +236,8 @@ export default {
       this.GetTeamSituation()
     },
     GetAsyncDate () {
-      this.getToken = localStorage.getItem('loginToken')
+      // this.getToken = localStorage.getItem('loginToken')
+      this.getToken = func.get('loginToken',1000*60*30)
       return new Promise((resolve, reject) => {
         this.axios.get(this.$store.state.baseUrl + '/user/auth/query?osType=0', {
           headers: {'token': this.getToken}
@@ -266,7 +267,8 @@ export default {
 
     // 初始化
     Initialization () {
-      this.getToken = localStorage.getItem('loginToken')
+      // this.getToken = localStorage.getItem('loginToken')
+      this.getToken = func.get('loginToken',1000*60*30)
       this.axios.get(this.$store.state.baseUrl + '/user/auth/query?osType=0', {
         headers: {'token': this.getToken}
       })

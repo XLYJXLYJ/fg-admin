@@ -121,20 +121,23 @@ export default {
     var _this = this
     window.onscroll = function () {
       // 变量scrollTop是滚动条滚动时，距离顶部的距离
-      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      var scrollTop = parseInt(document.documentElement.scrollTop || document.body.scrollTop) 
       // 变量windowHeight是可视区的高度
       var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       // 变量scrollHeight是滚动条的总高度
       var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       // 滚动条到底部的条件
-      if (scrollTop + windowHeight === scrollHeight && scrollTop !== 0) {
+      if (scrollTop + windowHeight === scrollHeight-1 && scrollTop !== 0) {
       // 写后台加载数据的函数
         if (_this.$route.path === '/User/UserTime') {
+          console.log(1)
           _this.pageDetail = _this.pageDetail + 1
           if (_this.pageDetail > _this.stopPageDetail) {
+                console.log(2)
             _this.error_type = '已显示全部数据'
             _this.alert_show = true
           } else {
+                console.log(3)
             _this.GetUserDetail()
           }
         } else if (_this.$route.path === '/User/UserNumber') {

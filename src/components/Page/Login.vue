@@ -113,7 +113,8 @@ export default {
           if (response.data.code === 200) {
             this.getToken = response.data.data.loginToken
             let token = response.data.data.loginToken
-            localStorage.setItem('loginToken', token)
+            // localStorage.setItem('loginToken', token)
+            func.set('loginToken', token)
             this.Initialization()
           } else {
             this.error_type = response.data.message
@@ -123,7 +124,8 @@ export default {
       }
     },
     Initialization () {
-      this.getToken = localStorage.getItem('loginToken')
+      //  this.getToken = localStorage.getItem('loginToken',1000)
+      this.getToken = func.get('loginToken',1000*60*30)
       this.axios.get(this.$store.state.baseUrl + '/user/auth/query?osType=0', {
         headers: {'token': this.getToken}
       })

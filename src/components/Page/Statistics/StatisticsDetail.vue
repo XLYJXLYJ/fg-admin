@@ -73,13 +73,13 @@ export default {
     let _this = this
     window.onscroll = function () {
       // 变量scrollTop是滚动条滚动时，距离顶部的距离
-      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      var scrollTop = parseInt(document.documentElement.scrollTop || document.body.scrollTop) 
       // 变量windowHeight是可视区的高度
       let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       // 变量scrollHeight是滚动条的总高度
       let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       // 滚动条到底部的条件
-      if (scrollTop + windowHeight === scrollHeight && scrollTop !== 0) {
+      if (scrollTop + windowHeight === scrollHeight-1 && scrollTop !== 0) {
       // 写后台加载数据的函数
         _this.page = _this.page + 1
         if (_this.page > _this.stopPage) {
@@ -200,7 +200,7 @@ export default {
     position: fixed;
     top: 65px;
     width: 640px;
-    height: 75px;
+    height: 76px;
     background-color: #fff;
     text-align: center;
     border-top:1px solid #E8E8EA;

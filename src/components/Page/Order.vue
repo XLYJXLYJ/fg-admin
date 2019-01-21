@@ -115,7 +115,7 @@ export default {
     position: fixed;
     top: 148px;
     width: 100%;
-    height: 75px;
+    height: 76px;
     background: #fff;
     z-index: 1000;
     .search_icon{
@@ -160,7 +160,7 @@ export default {
     }
   }
   .tab_class{
-    margin-top: 205px;
+    margin-top: 206px;
     margin-bottom: 67px;
     flex: 1;
     width: 100%;

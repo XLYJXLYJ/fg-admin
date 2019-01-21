@@ -21,7 +21,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .head{
-  height: 64px;
+  height: 66px;
   width: 640px;
   position: fixed;
   top: 0px;
