@@ -3,8 +3,8 @@
     <VHead></VHead>
     <alert v-model="alert_show">{{error_type}}</alert>
     <div class="left"></div>
-    <div class="right"></div>
     <div class="team_situation">
+      <div class="right"></div>
       <div class="team_situation_head">
         <img src="../../assets/statistics_icon_team@2x.png">
         <span>团队状况</span>
@@ -217,10 +217,20 @@ export default {
           this.height = 300
         } else {
           // 不是iphoneX
-          this.height = 330
+          if (screen.height === 736 && screen.width === 414) {
+            // 是iphoneX
+            this.height = 330
+          } else if (screen.height === 667 && screen.width === 375) {
+            // 是iphoneX
+            this.height = 300
+          } else if (screen.height === 568 && screen.width === 320) {
+            // 是iphoneX
+            this.height = 260
+            this.width = 367 * (document.body.clientWidth / 400)
+          }  
         }
       } else {
-        this.height = 290
+        this.height =  290
         this.width = 380 * (document.body.clientWidth / 400)
       }
     },
@@ -237,7 +247,7 @@ export default {
     },
     GetAsyncDate () {
       // this.getToken = localStorage.getItem('loginToken')
-      this.getToken = func.get('loginToken',1000*60*30)
+      this.getToken = func.get('loginToken',1000*60*60*2)
       return new Promise((resolve, reject) => {
         this.axios.get(this.$store.state.baseUrl + '/user/auth/query?osType=0', {
           headers: {'token': this.getToken}
@@ -268,7 +278,7 @@ export default {
     // 初始化
     Initialization () {
       // this.getToken = localStorage.getItem('loginToken')
-      this.getToken = func.get('loginToken',1000*60*30)
+      this.getToken = func.get('loginToken',1000*60*60*2)
       this.axios.get(this.$store.state.baseUrl + '/user/auth/query?osType=0', {
         headers: {'token': this.getToken}
       })
@@ -368,7 +378,9 @@ export default {
           if (response.data.code === 200) {
             this.newTeam = response.data.data
           } else if (response.data.code === 401) {
-            this.$router.push('Login')
+            this.error_type = '登录超时，请重新登录'
+            this.alert_show = true
+            setTimeout(() => {this.$router.push({name: 'Login'})}, 1500);
           } else {
             this.error_type = response.data.message
             this.alert_show = true
@@ -395,7 +407,9 @@ export default {
           this.agentCountPercent = this.agentCountPercent.toFixed(2)
           this.$refs.chart.rerender()
         } else if (response.data.code === 401) {
-            this.$router.push('Login')
+          this.error_type = '登录超时，请重新登录'
+          this.alert_show = true
+          setTimeout(() => {this.$router.push({name: 'Login'})}, 1500);
         } else {
         this.error_type = response.data.message
         this.alert_show = true
@@ -427,10 +441,10 @@ export default {
   .right{
   width: 20px;
   height: 580px;
-  position: fixed;
+  position: absolute;
   background: #F5F5F5;
-  right: 0px;
-  top: 64px;
+  right: -20px;
+  top: 0px;
   z-index: 1000;
   }
   .team_situation{
@@ -740,8 +754,8 @@ export default {
         }
         p{
           margin: 0 auto;
-          width:84px;
-          height:20px;
+          width:104px;
+          height:30px;
           color: #fff;
           font-family: PingFang-SC-Bold;
           font-weight: Regular;

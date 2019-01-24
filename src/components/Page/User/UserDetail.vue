@@ -12,6 +12,7 @@
     <div class="user_detail">
       <div class="img_time" v-show="user_icon_screen1" @click="SwitchUserIcon1()"><p style="opacity: 0;z-index:1000">注册时间</p><img src="../../../assets/user_icon_screen1@3x.png"></div>
       <div class="img_time" v-show="user_icon_screen2" @click="SwitchUserIcon2()"><p style="opacity: 0;z-index:1000">注册时间</p><img src="../../../assets/user_icon_screen2@2x.png"></div>
+      <div class="img_time" v-show="user_icon_screen3" @click="SwitchUserIcon3()"><p style="opacity: 0;z-index:1000">注册时间</p><img src="../../../assets/user_icon_screen1@2x.png"></div>
       <div class="no_user" v-show="noUser">
         <img src="../../../assets/user_icon_emptystate@2x.png">
         <p>您还没有会员，继续加油哦~</p>
@@ -69,6 +70,7 @@ export default {
       pageuserType: 1, // 会员类型页数
       user_icon_screen1: true, // 图片1
       user_icon_screen2: false, // 图片2
+      user_icon_screen3: false,
       alert_show: false, // 是否显示弹出框
       error_type: '', // 弹出框的弹出说明
       show_loading: false, // 是否显示加载框
@@ -89,19 +91,29 @@ export default {
       if (to.path === '/User/UserTime') {
         this.pageDetail = 1
         this.getGetUserDetailList = []
+        this.user_icon_screen1 = true
+        this.user_icon_screen2 = false
+        this.user_icon_screen3 = false
         this.GetUserDetail()
       } else if (to.path === '/User/UserNumber') {
         this.pageDetailNumber = 1
         this.getGetUserDetailList = []
+        this.user_icon_screen1 = false
+        this.user_icon_screen2 = false
+        this.user_icon_screen3 = true
         this.GetUserDetailNumber()
       } else {
         this.pageDetailDirectly = 1
         this.getGetUserDetailList = []
+        this.user_icon_screen1 = false
+        this.user_icon_screen2 = false
+        this.user_icon_screen3 = true
         this.GetUserDetailDirectly()
       }
     },
     // 检测选择选择的会员类型，对list进行重新加载
     listenUserType: function () {
+      console.log(this.$route.path)
       if (this.$route.path === '/User/UserTime') {
         this.pageDetail = 1
         this.getGetUserDetailList = []
@@ -121,23 +133,21 @@ export default {
     var _this = this
     window.onscroll = function () {
       // 变量scrollTop是滚动条滚动时，距离顶部的距离
-      var scrollTop = parseInt(document.documentElement.scrollTop || document.body.scrollTop) 
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       // 变量windowHeight是可视区的高度
       var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       // 变量scrollHeight是滚动条的总高度
       var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       // 滚动条到底部的条件
-      if (scrollTop + windowHeight === scrollHeight-1 && scrollTop !== 0) {
+      if (scrollTop + windowHeight === scrollHeight && scrollTop !== 0) {
       // 写后台加载数据的函数
         if (_this.$route.path === '/User/UserTime') {
-          console.log(1)
           _this.pageDetail = _this.pageDetail + 1
           if (_this.pageDetail > _this.stopPageDetail) {
                 console.log(2)
             _this.error_type = '已显示全部数据'
             _this.alert_show = true
           } else {
-                console.log(3)
             _this.GetUserDetail()
           }
         } else if (_this.$route.path === '/User/UserNumber') {
@@ -192,7 +202,7 @@ export default {
             this.show_loading = false
             this.error_type = '登录超时，请重新登录'
             this.alert_show = true
-            setTimeout(() => {this.$router.push('Login')}, 1500);
+            setTimeout(() => {this.$router.push({name: 'Login'})}, 1500);
           }
           else if (response.data.code === 500) {
             this.show_loading = false
@@ -241,7 +251,7 @@ export default {
             this.show_loading = false
             this.error_type = '登录超时，请重新登录'
             this.alert_show = true
-            setTimeout(() => {this.$router.push('Login')}, 1500);
+            setTimeout(() => {this.$router.push({name: 'Login'})}, 1500);
           }
           else if (response.data.code === 500) {
             this.show_loading = false
@@ -289,7 +299,7 @@ export default {
             this.show_loading = false
             this.error_type = '登录超时，请重新登录'
             this.alert_show = true
-            setTimeout(() => {this.$router.push('Login')}, 1500);
+            setTimeout(() => {this.$router.push({name: 'Login'})}, 1500);
           }
           else if (response.data.code === 500) {
             this.show_loading = false
@@ -315,7 +325,7 @@ export default {
     GetUsertext () {
       this.show_loading = true
       let uid = localStorage.getItem('uid')
-      let uType = localStorage.getItem('userType')
+      let uType = localStorage.getItem('uType')
       this.userText = this.userText
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocList?osType=0&mobile=' + this.userText + '&uid=' + uid + '&uType=' + uType,
         response => {
@@ -334,6 +344,7 @@ export default {
     SwitchUserIcon1 () {
       this.user_icon_screen1 = false
       this.user_icon_screen2 = true
+      this.user_icon_screen3 = false
       this.sort = 'registAsc'
       this.getGetUserDetailList = []
       this.pageDetail = 1
@@ -344,7 +355,19 @@ export default {
     SwitchUserIcon2 () {
       this.user_icon_screen1 = true
       this.user_icon_screen2 = false
+      this.user_icon_screen3 = false
       this.sort = 'registDesc'
+      this.getGetUserDetailList = []
+      this.pageDetail = 1
+      this.$router.push({name: 'UserTime'})
+      this.GetUserDetail()
+    },
+    // 默认排序
+    SwitchUserIcon3() {
+      this.user_icon_screen1 = true
+      this.user_icon_screen2 = false
+      this.user_icon_screen3 = false
+      this.sort = 'registAsc'
       this.getGetUserDetailList = []
       this.pageDetail = 1
       this.$router.push({name: 'UserTime'})
@@ -562,7 +585,7 @@ export default {
           left: 111px;
         }
         .user_recommend{
-          width:100px;
+          width:120px;
           height:22px;
           font-size:20px;
           font-family:PingFang-SC-Regular;
@@ -573,7 +596,7 @@ export default {
           left: 111px;
         }
         .user_direc{
-          width:100px;
+          width:120px;
           height:22px;
           font-size:20px;
           font-family:PingFang-SC-Regular;

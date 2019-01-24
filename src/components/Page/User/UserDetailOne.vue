@@ -12,7 +12,7 @@
     <div class="user_detail_one">
         <alert v-model="alert_show">{{error_type}}</alert>
         <div class="me">
-          <div @click.stop.prevent="BackFunction()" class="img_border"><img src="../../../assets/statistics_icon_back2@2x.png"></div>
+          <div @click.stop.prevent="BackFunctionUser()" class="img_border"><img src="../../../assets/statistics_icon_back2@2x.png"></div>
           <p>用户详情</p>
         </div>
         <div class="user_contain_head">
@@ -114,13 +114,13 @@ export default {
     var _this = this
     window.onscroll = function () {
       // 变量scrollTop是滚动条滚动时，距离顶部的距离
-      var scrollTop = parseInt(document.documentElement.scrollTop || document.body.scrollTop) 
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       // 变量windowHeight是可视区的高度
       var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       // 变量scrollHeight是滚动条的总高度
       var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       // 滚动条到底部的条件
-      if (scrollTop + windowHeight === scrollHeight-1 && scrollTop !== 0) {
+      if (scrollTop + windowHeight === scrollHeight && scrollTop !== 0) {
       // 写后台加载数据的函数
         _this.page = _this.page + 1
         if (_this.page > _this.stopPage) {
@@ -138,6 +138,9 @@ export default {
     this.GetUserDetailList()
   },
   methods: {
+    BackFunctionUser () {
+      this.$router.push({name: 'User'})
+    },
     GetUserDetailOne () {
       func.ajaxGet(this.$store.state.baseUrl + '/user/relation/auth/itocInfo?osType=0&uid=' + this.userid,
         response => {
@@ -182,7 +185,7 @@ export default {
             this.show_loading = false
             this.error_type = '登录超时，请重新登录'
             this.alert_show = true
-            setTimeout(() => {this.$router.push('Login')}, 1500);
+            setTimeout(() => {this.$router.push({name: 'Login'})}, 1500);
           }
           else if (response.data.code === 500) {
             this.show_loading = false
@@ -350,7 +353,7 @@ export default {
       overflow: hidden;
     } 
     .user_time{
-      width:210px;
+      width:240px;
       height:22px;
       font-size:20px;
       font-family:PingFang-SC-Regular;
@@ -372,7 +375,7 @@ export default {
       left: 400px;
     }
     .user_recommend{
-      width:160px;
+      width:180px;
       height:22px;
       font-size:20px;
       font-family:PingFang-SC-Regular;
@@ -480,7 +483,7 @@ export default {
           overflow: hidden;
         } 
         .user_time{
-          width:220px;
+          width:240px;
           height:22px;
           font-size:20px;
           font-family:PingFang-SC-Regular;

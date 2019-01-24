@@ -125,7 +125,7 @@ export default {
     },
     Initialization () {
       //  this.getToken = localStorage.getItem('loginToken',1000)
-      this.getToken = func.get('loginToken',1000*60*30)
+      this.getToken = func.get('loginToken',1000*60*60*2)
       this.axios.get(this.$store.state.baseUrl + '/user/auth/query?osType=0', {
         headers: {'token': this.getToken}
       })
@@ -225,9 +225,10 @@ export default {
 .login{
   width: 640px;
   height: 100%;
-  position: absolute;
+  position: relative;
   background-color: #fff;
   text-align: center;
+  padding-bottom: 168px;
   .fg-logo{
     width: 295px;
     height: 222px;
@@ -279,7 +280,7 @@ export default {
     left: 551px;
   }
   .forget_password_button{
-    width:111px;
+    width:121px;
     height:20px;
     color: #FF5100;
     font-size: 20px;

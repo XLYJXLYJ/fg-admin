@@ -185,7 +185,7 @@ export default {
         else if (response.data.code === 401) {
           this.error_type = '登录超时，请重新登录'
           this.alert_show = true
-          setTimeout(() => {this.$router.push('Login')}, 1500);
+          setTimeout(() => {this.$router.push({name: 'Login'})}, 1500);
         }
         else if (response.data.code === 500) {
           this.error_type = response.data.message
@@ -289,7 +289,7 @@ export default {
             this.error_type = '修改密码成功'
             this.alert_show = true
             this.get_picture_identifying_code = response.data.data
-            setTimeout(() => {this.$router.push('Login')}, 1500);
+            setTimeout(() => {this.$router.push({name: 'Login'})}, 1500);
           } else {
             this.error_type = response.data.message
             this.alert_show = true
@@ -308,7 +308,7 @@ export default {
 <style lang="less" scoped>
 .change_password{
   width: 640px;
-  height: 100%;
+  min-height: 1010px;
   position: absolute;
   background-color: #fff;
   .me{

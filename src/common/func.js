@@ -1,27 +1,28 @@
 import axios from 'axios'
-import router from '@/router'
 
 export default {
   ajaxGet (api, cb) {
     // let loginToken = localStorage.getItem('loginToken')
-    let loginToken = this.get('loginToken',1000*60*60)
+    let loginToken = this.get('loginToken',1000*60*60*2)
     axios.get(api, {
       headers: {'token': loginToken}
     })
     .then(cb)
     .catch(err => {
-      console.log(err)
+      // alert('验证已经过期，请重新登录')
+      // window.location.href = 'http://itoc.fgoushop.com/#/Login'
     })
   },
   ajaxPost (api, cb) {
     // let loginToken = localStorage.getItem('loginToken')
-    let loginToken = this.get('loginToken',1000*60*60)
+    let loginToken = this.get('loginToken',1000*60*60*2)
     axios.post(api, {
       headers: {'token': loginToken}
     })
     .then(cb)
     .catch(err => {
-      console.log(err)
+      alert('验证已经过期，请重新登录')
+      window.location.href = 'http://itoc.fgoushop.com/#/Login'
     })
   },
   set(key,value){

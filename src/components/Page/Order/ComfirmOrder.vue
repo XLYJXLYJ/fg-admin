@@ -59,13 +59,13 @@ export default {
     var _this = this
     window.onscroll = function () {
       // 变量scrollTop是滚动条滚动时，距离顶部的距离
-      var scrollTop = parseInt(document.documentElement.scrollTop || document.body.scrollTop) 
+      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       // 变量windowHeight是可视区的高度
       var windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       // 变量scrollHeight是滚动条的总高度
       var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
       // 滚动条到底部的条件
-      if (scrollTop + windowHeight === scrollHeight-1 && scrollTop !== 0) {
+      if (scrollTop + windowHeight === scrollHeight && scrollTop !== 0) {
       // 写后台加载数据的函数
         _this.page = _this.page + 1
         if (_this.page > _this.stopPage) {
@@ -79,6 +79,7 @@ export default {
   },
   mounted () {
     if (this.$route.params.data) {
+      this.getGetUserDetailList = []
       this.getGetUserDetailList = this.$route.params.data
     } else {
       this.GetComfirmOrder()
@@ -113,7 +114,7 @@ export default {
           this.show_loading = false
           this.error_type = '登录超时，请重新登录'
           this.alert_show = true
-          setTimeout(() => {this.$router.push('Login')}, 1500);
+          setTimeout(() => {this.$router.push({name: 'Login'})}, 1500);
         } 
         else if (response.data.code === 500) {
           this.show_loading = false
@@ -283,7 +284,7 @@ export default {
           left: 440px;
         }
         .one_belong{
-          width:210px;
+          width:260px;
           height:16px;
           font-size:15px;
           font-family:PingFang-SC-Regular;
@@ -294,7 +295,7 @@ export default {
           left: 0px;
         }
         .two_belong{
-          width:210px;
+          width:260px;
           height:16px;
           font-size:15px;
           font-family:PingFang-SC-Regular;
@@ -305,7 +306,7 @@ export default {
           left: 200px;
         }
         .three_belong{
-          width:210px;
+          width:220px;
           height:16px;
           font-size:15px;
           font-family:PingFang-SC-Regular;
